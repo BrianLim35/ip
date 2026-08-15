@@ -11,7 +11,7 @@ public class Penguin {
     private static final String GOODBYE_MESSAGE = "Bye. Hope to see you again soon!";
 
     /**
-     * Prints the chatbot banner and greeting
+     * Prints the chatbot banner and greeting.
      */
     private static void printIntroduction() {
         // Chatbot banner
@@ -25,11 +25,12 @@ public class Penguin {
     }
 
     /**
-     * Reads and echoes commands until the user enters "bye" or input ends
+     * Reads and echoes commands until the user enters "bye" or input ends.
      *
      * @param scanner used to read user commands
+     * @param taskList stores the user's tasks
      */
-    private static void runCommandLoop(Scanner scanner) {
+    private static void runCommandLoop(Scanner scanner, TaskList taskList) {
         while (true) {
             System.out.print("You: ");
 
@@ -37,9 +38,9 @@ public class Penguin {
                 break;
             }
 
-            String command = scanner.nextLine();
+            String command = scanner.nextLine().trim();
 
-            // Chatbot exits when user types "bye"
+            // Chatbot exits when user enters "bye"
             if (command.equalsIgnoreCase("bye")) {
                 System.out.println(LINE);
                 System.out.println(GOODBYE_MESSAGE);
@@ -49,11 +50,26 @@ public class Penguin {
 
             // Ignores empty inputs for command
             if (command.isBlank()) {
+                System.out.println("Penguin: Please input a task.");
+                System.out.println(LINE);
                 continue;
             }
 
-            // Chatbot continues the loop to prompt for user command
-            System.out.println("Penguin: " + command);
+            // Add task to list and displays list of tasks when user enters "list"
+            if (command.equalsIgnoreCase("list")) {
+                if (taskList.isEmpty()) {
+                    System.out.println("Penguin: Your task list is empty!");
+                } else {
+                    System.out.println("Penguin: Here are your tasks!");
+                    for (int i = 0; i < taskList.size(); i++) {
+                        System.out.println((i + 1) + ". " + taskList.getTask(i));
+                    }
+                }
+            } else {
+                taskList.addTask(command);
+                System.out.println("Penguin: I have added '" + command + "' to your list of tasks!");
+            }
+
             System.out.println(LINE);
         }
     }
@@ -62,9 +78,12 @@ public class Penguin {
         // Print chatbot banner and greetings
         printIntroduction();
 
-        // Chatbot echo: Echo commands entered by user, and exit when user types "bye"
         Scanner scanner = new Scanner(System.in);
-        runCommandLoop(scanner);
+        TaskList taskList = new TaskList();
+
+        // Perform commands entered by user, and exit when user enters "bye"
+        runCommandLoop(scanner, taskList);
+
         scanner.close();
     }
 }
