@@ -21,7 +21,7 @@ Aim: Verify that a task is added to the task list.
 Input:
 
 ```text
-read book
+todo read book
 bye
 ```
 
@@ -34,8 +34,8 @@ Aim: Verify that stored tasks are displayed in insertion order.
 Input:
 
 ```text
-read book
-return book
+todo read book
+todo return book
 list
 bye
 ```
@@ -49,7 +49,7 @@ Aim: Verify that a task can be marked done and then marked incomplete.
 Input:
 
 ```text
-read book
+todo read book
 mark 1
 unmark 1
 bye
@@ -80,7 +80,7 @@ Aim: Verify that invalid task numbers produce an error and do not change existin
 Input:
 
 ```text
-read book
+todo read book
 mark abc
 list
 mark 99
@@ -103,7 +103,7 @@ Aim: Verify that invalid unmark commands do not undo a valid completion.
 Input:
 
 ```text
-read book
+todo read book
 mark 1
 unmark abc
 list
@@ -133,17 +133,76 @@ Expected output, in order:
 - An empty-input error is displayed.
 - The chatbot reports that the task list is empty.
 
-## Test 9: Incomplete typed-task input is recorded for future error handling
+## Test 9: Invalid typed-task input is rejected
 
-Aim: Expose Level-5 validation gaps for incomplete Level-4 commands.
+Aim: Verify that incomplete Level-4 commands are rejected without changing the task list.
 
 Input:
 
 ```text
+todo valid task
 deadline return book
 event project meeting
+list
+todo another task
 list
 bye
 ```
 
-Expected output: The current implementation records these commands with empty date/time values. This test should be changed to expect error messages when Level-5 validation is implemented.
+Expected output: The incomplete deadline and event produce error messages. The task list remains unchanged after each invalid command.
+
+## Test 10: Empty and unknown commands are rejected
+
+Aim: Verify that empty descriptions and unknown commands do not add tasks.
+
+Input:
+
+```text
+todo
+blah
+list
+bye
+```
+
+Expected output, in order:
+
+- The empty to-do description produces an error.
+- The unknown command produces an error.
+- The chatbot reports that the task list is empty.
+
+## Test 11: Malformed separators are rejected
+
+Aim: Verify that missing and duplicate date/time separators are rejected.
+
+Input:
+
+```text
+deadline task /by Sunday /by Monday
+event meeting /from Monday
+event meeting /from Monday /to 4pm /to 5pm
+list
+bye
+```
+
+Expected output: Each malformed command produces an error, and the task list remains empty.
+
+## Test 12: Deadline validation identifies the correct error
+
+Aim: Verify that deadline errors distinguish a missing description, separator, and date/time.
+
+Input:
+
+```text
+deadline
+deadline submit report
+deadline /by Sunday
+deadline submit report /by
+bye
+```
+
+Expected output, in order:
+
+- The empty deadline description produces an error.
+- The missing `/by` separator produces an error.
+- The missing deadline description produces an error.
+- The missing deadline date/time produces an error.
