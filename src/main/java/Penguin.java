@@ -4,13 +4,17 @@ import java.util.Scanner;
  * Runs the Penguin chatbot.
  */
 public class Penguin {
+    /** Separator printed between chatbot messages. */
     private static final String LINE = "----------------------------------------------------------";
+    /** ASCII-art banner displayed when the chatbot starts. */
     private static final String BANNER = " ____  _____ _   _  ____ _   _ ___ _   _ \n"
             + "|  _ \\| ____| \\ | |/ ___| | | |_ _| \\ | |\n"
             + "| |_) |  _| |  \\| | |  _| | | || ||  \\| |\n"
             + "|  __/| |___| |\\  | |_| | |_| || || |\\  |\n"
             + "|_|   |_____|_| \\_|\\____|\\___/|___|_| \\_|";
+    /** Greeting displayed when the chatbot starts. */
     private static final String GREETING_MESSAGE = "Hello! I'm Penguin.\nWhat can I do for you?";
+    /** Farewell displayed when the chatbot exits. */
     private static final String GOODBYE_MESSAGE = "Bye. Hope to see you again soon!";
 
     /**
@@ -82,20 +86,12 @@ public class Penguin {
                     System.out.println("Penguin: Your task list is empty!");
                 } else {
                     System.out.println("Penguin: Here are your tasks!");
-                    for (int i = 0; i < taskList.size(); i++) {
-                        System.out.println((i + 1) + ". " +
-                                "[" + taskList.getTask(i).getStatus() + "] " +
-                                taskList.getTask(i));
-                    }
+                    taskList.listTasks();
                 }
             } else if (command.toLowerCase().startsWith("mark ")) {
                 try {
                     int index = getIndex(command);
-                    Task task = taskList.getTask(index);
-                    task.markDone();
-                    System.out.println("Penguin: The following task has been marked.\n" +
-                            "[" + task.getStatus() + "] " +
-                            task);
+                    taskList.markTask(index);
                 } catch (NumberFormatException e) {
                     System.out.println("Penguin: Please enter a valid task number.");
                 } catch (IndexOutOfBoundsException e) {
@@ -106,11 +102,7 @@ public class Penguin {
             } else if (command.toLowerCase().startsWith("unmark ")) {
                 try {
                     int index = getIndex(command);
-                    Task task = taskList.getTask(index);
-                    task.markUndone();
-                    System.out.println("Penguin: The following task has been unmarked.\n" +
-                            "[" + task.getStatus() + "] " +
-                            task);
+                    taskList.unmarkTask(index);
                 } catch (NumberFormatException e) {
                     System.out.println("Penguin: Please enter a valid task number.");
                 } catch (IndexOutOfBoundsException e) {
@@ -121,13 +113,13 @@ public class Penguin {
             } else {
                 Task task = new Task(command);
                 taskList.addTask(task);
-                System.out.println("Penguin: I have added '" + task + "' to your list of tasks!");
             }
 
             System.out.println(LINE);
         }
     }
 
+    /** Starts the chatbot and runs its command loop. */
     public static void main(String[] args) {
         // Print chatbot banner and greetings
         printIntroduction();

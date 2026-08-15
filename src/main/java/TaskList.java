@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * Stores the tasks entered by the user.
  */
 public class TaskList {
-    // The tasks currently stored in the list.
+    /** The tasks currently stored in the list. */
     private final ArrayList<Task> tasks = new ArrayList<>();
 
     /**
@@ -14,17 +14,40 @@ public class TaskList {
      */
     public void addTask(Task task) {
         tasks.add(task);
+        System.out.println("Penguin: I have added '" + task + "' to your list of tasks!");
     }
 
-    /**
-     * Retrieves a task based on its zero-based index.
+    /** Marks the task at the specified index as completed and displays it.
      *
-     * @param index zero-based index of the task to retrieve
-     * @return the task at the specified index
+     * @param index zero-based index of the task to mark
      * @throws IndexOutOfBoundsException if the index is invalid
      */
-    public Task getTask(int index) {
-        return tasks.get(index);
+    public void markTask(int index) {
+        tasks.get(index).markDone();
+        System.out.println("Penguin: The following task has been marked.\n" +
+                "[" + tasks.get(index).getStatus() + "] " +
+                tasks.get(index));
+    }
+
+    /** Marks the task at the specified index as incomplete and displays it.
+     *
+     * @param index zero-based index of the task to unmark
+     * @throws IndexOutOfBoundsException if the index is invalid
+     */
+    public void unmarkTask(int index) {
+        tasks.get(index).markUndone();
+        System.out.println("Penguin: The following task has been unmarked.\n" +
+                "[" + tasks.get(index).getStatus() + "] " +
+                tasks.get(index));
+    }
+
+    /** Displays all tasks in their insertion order. */
+    public void listTasks() {
+        for (int i = 0; i < size(); i++) {
+            System.out.println((i + 1) + ". " +
+                    "[" + tasks.get(i).getStatus() + "] " +
+                    tasks.get(i));
+        }
     }
 
     /**
