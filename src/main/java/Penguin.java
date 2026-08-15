@@ -40,17 +40,20 @@ public class Penguin {
      *
      * @param command user command containing the task number
      * @return zero-based task index
-     * @throws IllegalArgumentException if the command does not contain a task number
-     * @throws NumberFormatException if the task number is not an integer
+     * @throws PenguinException if the command does not contain a valid task number
      */
-    private static int getIndex(String command) {
+    private static int getIndex(String command) throws PenguinException {
         String[] parts = command.split("\\s+");
 
         if (parts.length != 2) {
-            throw new IllegalArgumentException("Please enter a task number.");
+            throw new PenguinException("Please enter a task number.");
         }
 
-        return Integer.parseInt(parts[1]) - 1;
+        try {
+            return Integer.parseInt(parts[1]) - 1;
+        } catch (NumberFormatException e) {
+            throw new PenguinException("Please enter a valid task number.");
+        }
     }
 
     /**
@@ -58,34 +61,77 @@ public class Penguin {
      *
      * @param command complete task-creation command entered by the user
      * @return a task created from the command's description and date/time values
+     * @throws PenguinException if the command is unknown or has invalid arguments
      */
-    private static Task createTask(String command) {
+    private static Task createTask(String command) throws PenguinException {
         String lowerCaseCommand = command.toLowerCase();
 
-        if (lowerCaseCommand.startsWith("todo ")) {
-            return new ToDo(command.substring(5).trim());
+        if (lowerCaseCommand.equals("todo") || lowerCaseCommand.startsWith("todo ")) {
+            String description = command.length() <= 4 ? "" : command.substring(4).trim();
+            if (description.isEmpty()) {
+                throw new PenguinException("The description of a todo cannot be empty.");
+            }
+            return new ToDo(description);
         }
 
-        if (lowerCaseCommand.startsWith("deadline ")) {
-            String content = command.substring(9);
-            String[] parts = content.split(" /by ", 2);
-            return new Deadline(parts[0].trim(), parts.length == 2 ? parts[1].trim() : "");
+        if (lowerCaseCommand.equals("deadline") || lowerCaseCommand.startsWith("deadline ")) {
+            String content = command.length() <= 9 ? "" : command.substring(9);
+            String separator = " /by";
+            String lowerCaseContent = content.toLowerCase();
+            if (content.trim().isEmpty() || lowerCaseContent.trim().equals("/by")
+                    || lowerCaseContent.trim().startsWith("/by ")) {
+                throw new PenguinException("The description of a deadline cannot be empty.");
+            }
+            if (!lowerCaseContent.contains(separator)) {
+                throw new PenguinException("A deadline must contain /by followed by a date or time.");
+            }
+            if (lowerCaseContent.indexOf(separator) != lowerCaseContent.lastIndexOf(separator)) {
+                throw new PenguinException("A deadline must contain only one /by separator.");
+            }
+            int separatorIndex = lowerCaseContent.indexOf(separator);
+            String description = content.substring(0, separatorIndex).trim();
+            String dateTime = content.substring(separatorIndex + separator.length()).trim();
+            if (description.isEmpty()) {
+                throw new PenguinException("A deadline must have a description before /by.");
+            }
+            if (dateTime.isEmpty()) {
+                throw new PenguinException("A deadline must have a date or time after /by.");
+            }
+            return new Deadline(description, dateTime);
         }
 
-        if (lowerCaseCommand.startsWith("event ")) {
-            String content = command.substring(6);
-            String[] parts = content.split(" /from | /to ");
-            String description = parts[0].trim();
-            String from = parts.length > 1 ? parts[1].trim() : "";
-            String to = parts.length > 2 ? parts[2].trim() : "";
+        if (lowerCaseCommand.equals("event") || lowerCaseCommand.startsWith("event ")) {
+            String content = command.length() <= 6 ? "" : command.substring(6);
+            String fromSeparator = " /from ";
+            String toSeparator = " /to ";
+            String lowerCaseContent = content.toLowerCase();
+            if (lowerCaseContent.startsWith("/from ") || lowerCaseContent.startsWith("/to ")) {
+                throw new PenguinException("The description of an event cannot be empty.");
+            }
+            int fromIndex = lowerCaseContent.indexOf(fromSeparator);
+            int toIndex = lowerCaseContent.indexOf(toSeparator);
+            if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex
+                    || fromIndex != lowerCaseContent.lastIndexOf(fromSeparator)
+                    || toIndex != lowerCaseContent.lastIndexOf(toSeparator)) {
+                throw new PenguinException("An event must contain one /from and one /to separator.");
+            }
+            String description = content.substring(0, fromIndex).trim();
+            String from = content.substring(fromIndex + fromSeparator.length(), toIndex).trim();
+            String to = content.substring(toIndex + toSeparator.length()).trim();
+            if (description.isEmpty()) {
+                throw new PenguinException("The description of an event cannot be empty.");
+            }
+            if (from.isEmpty() || to.isEmpty()) {
+                throw new PenguinException("An event must have both a start and an end time.");
+            }
             return new Event(description, from, to);
         }
 
-        return new Task(command);
+        throw new PenguinException("I don't understand that command.");
     }
 
     /**
-     * Reads and echoes commands until the user enters "bye" or input ends.
+     * Reads and processes commands until the user enters "bye" or input ends.
      *
      * @param scanner used to read user commands
      * @param taskList stores the user's tasks
@@ -123,35 +169,37 @@ public class Penguin {
                     System.out.println("Penguin: Here are your tasks!");
                     taskList.listTasks();
                 }
-            } else if (command.toLowerCase().startsWith("mark ")) {
+            } else if (command.equalsIgnoreCase("mark")
+                    || command.toLowerCase().startsWith("mark ")) {
                 try {
                     int index = getIndex(command);
                     Task task = taskList.markTask(index);
                     System.out.println("Penguin: The following task has been marked.\n" + task);
-                } catch (NumberFormatException e) {
-                    System.out.println("Penguin: Please enter a valid task number.");
+                } catch (PenguinException e) {
+                    System.out.println("Penguin: " + e.getMessage());
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Penguin: Invalid task index!");
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Penguin: " + e.getMessage());
                 }
-            } else if (command.toLowerCase().startsWith("unmark ")) {
+            } else if (command.equalsIgnoreCase("unmark")
+                    || command.toLowerCase().startsWith("unmark ")) {
                 try {
                     int index = getIndex(command);
                     Task task = taskList.unmarkTask(index);
                     System.out.println("Penguin: The following task has been unmarked.\n" + task);
-                } catch (NumberFormatException e) {
-                    System.out.println("Penguin: Please enter a valid task number.");
+                } catch (PenguinException e) {
+                    System.out.println("Penguin: " + e.getMessage());
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Penguin: Invalid task index!");
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Penguin: " + e.getMessage());
                 }
             } else {
-                Task task = createTask(command);
-                taskList.addTask(task);
-                System.out.println("Penguin: I have added '" + task + "' to your list of tasks."
-                        + " Now you have " + taskList.size() + " task(s) in the list.");
+                try {
+                    Task task = createTask(command);
+                    taskList.addTask(task);
+                    System.out.println("Penguin: I have added '" + task + "' to your list of tasks."
+                            + " Now you have " + taskList.size() + " task(s) in the list.");
+                } catch (PenguinException e) {
+                    System.out.println("Penguin: " + e.getMessage());
+                }
             }
 
             System.out.println(LINE);

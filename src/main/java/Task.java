@@ -40,7 +40,7 @@ public class Task {
     /**
      * Returns the task description.
      *
-     * @return the task description
+     * @return the task status and description formatted for display
      */
     @Override
     public String toString() {

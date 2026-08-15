@@ -14,7 +14,7 @@ public class TaskList {
     /**
      * Adds a task to the end of the task list.
      *
-     * @param task the task description to add
+     * @param task the task to add
      */
     public void addTask(Task task) {
         tasks.add(task);
