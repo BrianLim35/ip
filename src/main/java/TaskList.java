@@ -4,29 +4,26 @@ import java.util.ArrayList;
  * Stores the tasks entered by the user.
  */
 public class TaskList {
-    // The tasks currently stored in the list
-    private final ArrayList<String> tasks = new ArrayList<>();
+    // The tasks currently stored in the list.
+    private final ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * Adds a task to the end of the task list.
      *
      * @param task the task description to add
      */
-    public void addTask(String task) {
+    public void addTask(Task task) {
         tasks.add(task);
     }
 
     /**
-     * Retrieve the task based on its index.
+     * Retrieves a task based on its zero-based index.
      *
-     * @param index index of the task to be retrieved
-     * @return task description
+     * @param index zero-based index of the task to retrieve
+     * @return the task at the specified index
+     * @throws IndexOutOfBoundsException if the index is invalid
      */
-    public String getTask(int index) {
-        if (index < 0 || index >= tasks.size()) {
-            throw new IllegalArgumentException("Invalid task index: " + index);
-        }
-
+    public Task getTask(int index) {
         return tasks.get(index);
     }
 

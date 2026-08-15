@@ -1,5 +1,8 @@
 import java.util.Scanner;
 
+/**
+ * Runs the Penguin chatbot.
+ */
 public class Penguin {
     private static final String LINE = "----------------------------------------------------------";
     private static final String BANNER = " ____  _____ _   _  ____ _   _ ___ _   _ \n"
@@ -22,6 +25,24 @@ public class Penguin {
         // Chatbot greetings
         System.out.println(GREETING_MESSAGE);
         System.out.println(LINE);
+    }
+
+    /**
+     * Converts the task number entered by the user into zero-based index.
+     *
+     * @param command user command containing the task number
+     * @return zero-based task index
+     * @throws IllegalArgumentException if the command does not contain a task number
+     * @throws NumberFormatException if the task number is not an integer
+     */
+    private static int getIndex(String command) {
+        String[] parts = command.split("\\s+");
+
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Please enter a task number.");
+        }
+
+        return Integer.parseInt(parts[1]) - 1;
     }
 
     /**
@@ -55,19 +76,52 @@ public class Penguin {
                 continue;
             }
 
-            // Add task to list and displays list of tasks when user enters "list"
+            // Commands that user can perform: list, mark, unmark, add task to list
             if (command.equalsIgnoreCase("list")) {
                 if (taskList.isEmpty()) {
                     System.out.println("Penguin: Your task list is empty!");
                 } else {
                     System.out.println("Penguin: Here are your tasks!");
                     for (int i = 0; i < taskList.size(); i++) {
-                        System.out.println((i + 1) + ". " + taskList.getTask(i));
+                        System.out.println((i + 1) + ". " +
+                                "[" + taskList.getTask(i).getStatus() + "] " +
+                                taskList.getTask(i));
                     }
                 }
+            } else if (command.toLowerCase().startsWith("mark ")) {
+                try {
+                    int index = getIndex(command);
+                    Task task = taskList.getTask(index);
+                    task.markDone();
+                    System.out.println("Penguin: The following task has been marked.\n" +
+                            "[" + task.getStatus() + "] " +
+                            task);
+                } catch (NumberFormatException e) {
+                    System.out.println("Penguin: Please enter a valid task number.");
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Penguin: Invalid task index!");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Penguin: " + e.getMessage());
+                }
+            } else if (command.toLowerCase().startsWith("unmark ")) {
+                try {
+                    int index = getIndex(command);
+                    Task task = taskList.getTask(index);
+                    task.markUndone();
+                    System.out.println("Penguin: The following task has been unmarked.\n" +
+                            "[" + task.getStatus() + "] " +
+                            task);
+                } catch (NumberFormatException e) {
+                    System.out.println("Penguin: Please enter a valid task number.");
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Penguin: Invalid task index!");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Penguin: " + e.getMessage());
+                }
             } else {
-                taskList.addTask(command);
-                System.out.println("Penguin: I have added '" + command + "' to your list of tasks!");
+                Task task = new Task(command);
+                taskList.addTask(task);
+                System.out.println("Penguin: I have added '" + task + "' to your list of tasks!");
             }
 
             System.out.println(LINE);
