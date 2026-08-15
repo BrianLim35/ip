@@ -25,7 +25,6 @@ public class TaskList {
     public void markTask(int index) {
         tasks.get(index).markDone();
         System.out.println("Penguin: The following task has been marked.\n" +
-                "[" + tasks.get(index).getStatus() + "] " +
                 tasks.get(index));
     }
 
@@ -37,7 +36,6 @@ public class TaskList {
     public void unmarkTask(int index) {
         tasks.get(index).markUndone();
         System.out.println("Penguin: The following task has been unmarked.\n" +
-                "[" + tasks.get(index).getStatus() + "] " +
                 tasks.get(index));
     }
 
@@ -45,7 +43,6 @@ public class TaskList {
     public void listTasks() {
         for (int i = 0; i < size(); i++) {
             System.out.println((i + 1) + ". " +
-                    "[" + tasks.get(i).getStatus() + "] " +
                     tasks.get(i));
         }
     }
