@@ -7,6 +7,10 @@ public class TaskList {
     /** The tasks currently stored in the list. */
     private final ArrayList<Task> tasks = new ArrayList<>();
 
+    /** Creates an empty task list. */
+    public TaskList() {
+    }
+
     /**
      * Adds a task to the end of the task list.
      *
@@ -14,29 +18,32 @@ public class TaskList {
      */
     public void addTask(Task task) {
         tasks.add(task);
-        System.out.println("Penguin: I have added '" + task + "' to your list of tasks!");
     }
 
-    /** Marks the task at the specified index as completed and displays it.
+    /**
+     * Marks the task at the specified index as completed.
      *
      * @param index zero-based index of the task to mark
+     * @return the task after it has been marked as completed
      * @throws IndexOutOfBoundsException if the index is invalid
      */
-    public void markTask(int index) {
-        tasks.get(index).markDone();
-        System.out.println("Penguin: The following task has been marked.\n" +
-                tasks.get(index));
+    public Task markTask(int index) {
+        Task task = tasks.get(index);
+        task.markDone();
+        return task;
     }
 
-    /** Marks the task at the specified index as incomplete and displays it.
+    /**
+     * Marks the task at the specified index as incomplete.
      *
      * @param index zero-based index of the task to unmark
+     * @return the task after it has been marked as incomplete
      * @throws IndexOutOfBoundsException if the index is invalid
      */
-    public void unmarkTask(int index) {
-        tasks.get(index).markUndone();
-        System.out.println("Penguin: The following task has been unmarked.\n" +
-                tasks.get(index));
+    public Task unmarkTask(int index) {
+        Task task = tasks.get(index);
+        task.markUndone();
+        return task;
     }
 
     /** Displays all tasks in their insertion order. */

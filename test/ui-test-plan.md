@@ -56,3 +56,19 @@ bye
 ```
 
 Expected output: The chatbot reports the task as marked, then unmarked.
+
+## Test 5: Create typed tasks
+
+Aim: Verify that user input creates to-do, deadline, and event tasks with their date/time details.
+
+Input:
+
+```text
+todo borrow book
+deadline return book /by Sunday
+event project meeting /from Monday 2pm /to 4pm
+list
+bye
+```
+
+Expected output: The list contains `[T]`, `[D]`, and `[E]` task markers, with the deadline displaying `by: Sunday` and the event displaying `from: Monday 2pm to: 4pm`.
