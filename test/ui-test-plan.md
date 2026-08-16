@@ -206,3 +206,62 @@ Expected output, in order:
 - The missing `/by` separator produces an error.
 - The missing deadline description produces an error.
 - The missing deadline date/time produces an error.
+
+## Test 13: Delete a task and renumber the list
+
+Aim: Verify that deletion removes the selected task, reports the deleted task, and renumbers remaining tasks.
+
+Input:
+
+```text
+todo read book
+todo return book
+todo buy bread
+delete 2
+list
+bye
+```
+
+Expected output: The chatbot reports that `return book` was removed. The final list contains `read book` as task 1 and `buy bread` as task 2, and does not contain `return book`.
+
+## Test 14: Invalid deletion preserves the list
+
+Aim: Verify that invalid deletion commands do not remove or alter tasks.
+
+Input:
+
+```text
+todo read book
+delete
+list
+delete abc
+list
+delete 0
+list
+delete 99
+list
+bye
+```
+
+Expected output: Each invalid deletion produces an appropriate error. Every list still contains exactly `1. [T][ ] read book`.
+
+## Test 15: Delete each task type
+
+Aim: Verify that to-dos, deadlines, and events can all be deleted correctly.
+
+Input:
+
+```text
+todo borrow book
+deadline return book /by Sunday
+event project meeting /from Monday 2pm /to 4pm
+delete 1
+list
+delete 1
+list
+delete 1
+list
+bye
+```
+
+Expected output: Each deletion reports the selected task, and the final list is empty.

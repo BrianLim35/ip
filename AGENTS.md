@@ -36,8 +36,9 @@ Do not commit or push unless explicitly asked.
 
 ## Testing requirement
 
-After every code update:
+After every feature, bug fix, or behavior-changing code update:
 
-1. Update `test/ui-test-plan.md` if the behavior or test cases changed.
-2. Invoke the project-specific `test-ui` skill.
-3. Stop and report the expected and actual output if any test fails.
+1. Add or update relevant cases in `test/ui-test-plan.md` before testing.
+2. Interleave positive and negative cases where invalid input could affect state.
+3. Invoke the project-specific `test-ui` skill using the complete test plan.
+4. Stop and report the expected and actual output if any test fails.

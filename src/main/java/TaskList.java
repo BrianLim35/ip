@@ -5,10 +5,11 @@ import java.util.ArrayList;
  */
 public class TaskList {
     /** The tasks currently stored in the list. */
-    private final ArrayList<Task> tasks = new ArrayList<>();
+    private final ArrayList<Task> tasks;
 
     /** Creates an empty task list. */
     public TaskList() {
+        tasks = new ArrayList<>();
     }
 
     /**
@@ -18,6 +19,17 @@ public class TaskList {
      */
     public void addTask(Task task) {
         tasks.add(task);
+    }
+
+    /**
+     * Deletes and returns the task at the specified index.
+     *
+     * @param index zero-based index of the task to delete
+     * @return the deleted task
+     * @throws IndexOutOfBoundsException if the index is invalid
+     */
+    public Task deleteTask(int index) {
+        return tasks.remove(index);
     }
 
     /**

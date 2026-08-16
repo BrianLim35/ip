@@ -161,7 +161,7 @@ public class Penguin {
                 continue;
             }
 
-            // Commands that user can perform: list, mark, unmark, add task to list
+            // Commands that user can perform: list, mark, unmark, add task, delete task
             if (command.equalsIgnoreCase("list")) {
                 if (taskList.isEmpty()) {
                     System.out.println("Penguin: Your task list is empty!");
@@ -186,6 +186,18 @@ public class Penguin {
                     int index = getIndex(command);
                     Task task = taskList.unmarkTask(index);
                     System.out.println("Penguin: The following task has been unmarked.\n" + task);
+                } catch (PenguinException e) {
+                    System.out.println("Penguin: " + e.getMessage());
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Penguin: Invalid task index!");
+                }
+            } else if (command.equalsIgnoreCase("delete")
+                    ||  command.toLowerCase().startsWith("delete ")) {
+                try {
+                    int index = getIndex(command);
+                    Task task = taskList.deleteTask(index);
+                    System.out.println("Penguin: I have removed '" + task + "' from your list of tasks."
+                            + " Now you have " + taskList.size() + " task(s) in the list.");
                 } catch (PenguinException e) {
                     System.out.println("Penguin: " + e.getMessage());
                 } catch (IndexOutOfBoundsException e) {
