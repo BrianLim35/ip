@@ -265,3 +265,54 @@ bye
 ```
 
 Expected output: Each deletion reports the selected task, and the final list is empty.
+
+## Test 16: Display enum-based task types
+
+Aim: Verify that each task subtype uses the correct `TaskType` enum symbol.
+
+Input:
+
+```text
+todo borrow book
+deadline return book /by Sunday
+event project meeting /from Monday 2pm /to 4pm
+list
+bye
+```
+
+Expected output: The list displays `[T][ ]`, `[D][ ]`, and `[E][ ]` respectively, with each task's details unchanged.
+
+## Test 17: Enum markers survive state changes
+
+Aim: Verify that marking, unmarking, and deleting tasks do not change their enum-based type markers.
+
+Input:
+
+```text
+todo read book
+deadline return book /by Sunday
+event meeting /from Monday /to Tuesday
+mark 1
+unmark 2
+delete 1
+list
+bye
+```
+
+Expected output: The final list contains the deadline with `[D][ ]` and the event with `[E][ ]`. The deleted to-do is absent.
+
+## Test 18: Case-insensitive typed commands retain enum types
+
+Aim: Verify that uppercase command keywords and separators still create the correct enum-based task types.
+
+Input:
+
+```text
+TODO buy groceries
+DEADLINE pay bills /BY Friday
+EVENT dentist /FROM Monday /TO Tuesday
+list
+bye
+```
+
+Expected output: The list displays `[T][ ]`, `[D][ ]`, and `[E][ ]` in that order.

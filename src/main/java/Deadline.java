@@ -10,7 +10,7 @@ public class Deadline extends Task {
      * @param dateTime date or time by which the task should be completed
      */
     public Deadline(String description, String dateTime) {
-        super(description);
+        super(description, TaskType.DEADLINE);
         this.dateTime = dateTime;
     }
 
@@ -21,6 +21,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + dateTime + ")";
+        return super.toString() + " (by: " + dateTime + ")";
     }
 }

@@ -8,14 +8,28 @@ public class Task {
     /** Whether this task has been completed. */
     private boolean isDone;
 
+    /** Type of this task. */
+    private final TaskType type;
+
     /**
-     * Creates an incomplete task with the given description.
+     * Creates an incomplete task of the specified type.
      *
      * @param description the description of the task
+     * @param type the type of the task
      */
-    public Task(String description) {
+    public Task(String description, TaskType type) {
         this.description = description;
         this.isDone = false;
+        this.type = type;
+    }
+
+    /**
+     * Returns the type of this task.
+     *
+     * @return the task type
+     */
+    public TaskType getType() {
+        return type;
     }
 
     /**
@@ -44,6 +58,6 @@ public class Task {
      */
     @Override
     public String toString() {
-        return "[" + getStatus() + "] " + description;
+        return "[" + type.getSymbol() + "][" + getStatus() + "] " + description;
     }
 }
