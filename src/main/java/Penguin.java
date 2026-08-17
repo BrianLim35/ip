@@ -17,10 +17,6 @@ public class Penguin {
     /** Farewell displayed when the chatbot exits. */
     private static final String GOODBYE_MESSAGE = "Bye. Hope to see you again soon!";
 
-    /** Creates a Penguin chatbot. */
-    public Penguin() {
-    }
-
     /**
      * Prints the chatbot banner and greeting.
      */
@@ -54,6 +50,39 @@ public class Penguin {
         } catch (NumberFormatException e) {
             throw new PenguinException("Please enter a valid task number.");
         }
+    }
+
+    /**
+     * Identifies the command represented by user input.
+     *
+     * @param input complete user input
+     * @return the corresponding command type
+     * @throws PenguinException if the input does not start with a known command
+     */
+    private static CommandType getCommandType(String input) throws PenguinException {
+        String trimmedInput = input.trim();
+        String firstWord = trimmedInput.split("\\s+", 2)[0].toLowerCase();
+
+        if (firstWord.equals("bye") && !trimmedInput.equalsIgnoreCase("bye")) {
+            throw new PenguinException("The bye command does not take arguments.");
+        }
+
+        return switch (firstWord) {
+        case "todo" -> CommandType.TODO;
+        case "deadline" -> CommandType.DEADLINE;
+        case "event" -> CommandType.EVENT;
+        case "list" -> {
+            if (!trimmedInput.equalsIgnoreCase("list")) {
+                throw new PenguinException("The list command does not take arguments.");
+            }
+            yield CommandType.LIST;
+        }
+        case "mark" -> CommandType.MARK;
+        case "unmark" -> CommandType.UNMARK;
+        case "delete" -> CommandType.DELETE;
+        case "bye" -> CommandType.BYE;
+        default -> throw new PenguinException("I don't understand that command.");
+        };
     }
 
     /**
@@ -102,8 +131,8 @@ public class Penguin {
 
         if (lowerCaseCommand.equals("event") || lowerCaseCommand.startsWith("event ")) {
             String content = command.length() <= 6 ? "" : command.substring(6);
-            String fromSeparator = " /from ";
-            String toSeparator = " /to ";
+            String fromSeparator = " /from";
+            String toSeparator = " /to";
             String lowerCaseContent = content.toLowerCase();
             if (lowerCaseContent.startsWith("/from ") || lowerCaseContent.startsWith("/to ")) {
                 throw new PenguinException("The description of an event cannot be empty.");
@@ -146,14 +175,6 @@ public class Penguin {
 
             String command = scanner.nextLine().trim();
 
-            // Chatbot exits when user enters "bye"
-            if (command.equalsIgnoreCase("bye")) {
-                System.out.println(LINE);
-                System.out.println(GOODBYE_MESSAGE);
-                System.out.println(LINE);
-                break;
-            }
-
             // Ignores empty inputs for command
             if (command.isBlank()) {
                 System.out.println("Penguin: Please input a task.");
@@ -161,16 +182,23 @@ public class Penguin {
                 continue;
             }
 
-            // Commands that user can perform: list, mark, unmark, add task, delete task
-            if (command.equalsIgnoreCase("list")) {
+            try {
+                CommandType commandType = getCommandType(command);
+                switch (commandType) {
+                case BYE:
+                    System.out.println(LINE);
+                    System.out.println(GOODBYE_MESSAGE);
+                    System.out.println(LINE);
+                    return;
+                case LIST:
                 if (taskList.isEmpty()) {
                     System.out.println("Penguin: Your task list is empty!");
                 } else {
                     System.out.println("Penguin: Here are your tasks!");
                     taskList.listTasks();
                 }
-            } else if (command.equalsIgnoreCase("mark")
-                    || command.toLowerCase().startsWith("mark ")) {
+                    break;
+                case MARK:
                 try {
                     int index = getIndex(command);
                     Task task = taskList.markTask(index);
@@ -180,8 +208,8 @@ public class Penguin {
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Penguin: Invalid task index!");
                 }
-            } else if (command.equalsIgnoreCase("unmark")
-                    || command.toLowerCase().startsWith("unmark ")) {
+                    break;
+                case UNMARK:
                 try {
                     int index = getIndex(command);
                     Task task = taskList.unmarkTask(index);
@@ -191,8 +219,8 @@ public class Penguin {
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Penguin: Invalid task index!");
                 }
-            } else if (command.equalsIgnoreCase("delete")
-                    ||  command.toLowerCase().startsWith("delete ")) {
+                    break;
+                case DELETE:
                 try {
                     int index = getIndex(command);
                     Task task = taskList.deleteTask(index);
@@ -203,7 +231,10 @@ public class Penguin {
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Penguin: Invalid task index!");
                 }
-            } else {
+                    break;
+                case TODO:
+                case DEADLINE:
+                case EVENT:
                 try {
                     Task task = createTask(command);
                     taskList.addTask(task);
@@ -212,6 +243,12 @@ public class Penguin {
                 } catch (PenguinException e) {
                     System.out.println("Penguin: " + e.getMessage());
                 }
+                    break;
+                default:
+                    throw new PenguinException("I don't understand that command.");
+                }
+            } catch (PenguinException e) {
+                System.out.println("Penguin: " + e.getMessage());
             }
 
             System.out.println(LINE);

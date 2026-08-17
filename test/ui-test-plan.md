@@ -179,6 +179,7 @@ Input:
 ```text
 deadline task /by Sunday /by Monday
 event meeting /from Monday
+event meeting /from Monday /to
 event meeting /from Monday /to 4pm /to 5pm
 list
 bye
@@ -316,3 +317,38 @@ bye
 ```
 
 Expected output: The list displays `[T][ ]`, `[D][ ]`, and `[E][ ]` in that order.
+
+## Test 19: Command enum dispatch
+
+Aim: Verify that supported commands are dispatched correctly.
+
+Input:
+
+```text
+todo read book
+list
+mark 1
+unmark 1
+delete 1
+list
+bye
+```
+
+Expected output: Each command performs its intended action, the deleted task is reported correctly, and the final list is empty.
+
+## Test 20: Commands with invalid arguments
+
+Aim: Verify that recognized commands still validate their arguments.
+
+Input:
+
+```text
+list now
+mark
+delete abc
+bye now
+list
+bye
+```
+
+Expected output: Each invalid command produces a specific error. The chatbot remains running until the final valid `bye`, and the task list remains empty.

@@ -24,15 +24,6 @@ public class Task {
     }
 
     /**
-     * Returns the type of this task.
-     *
-     * @return the task type
-     */
-    public TaskType getType() {
-        return type;
-    }
-
-    /**
      * Returns the display marker for this task's completion status.
      *
      * @return {@code "X"} if the task is done, or a space otherwise
