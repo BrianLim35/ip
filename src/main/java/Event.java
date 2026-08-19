@@ -18,6 +18,11 @@ public class Event extends Task {
         this.to = to;
     }
 
+    @Override
+    public String toFileFormat() {
+        return String.format("%s | %s | %s", super.toFileFormat(), from, to);
+    }
+
     /**
      * Returns the event formatted for display.
      *

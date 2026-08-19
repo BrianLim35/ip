@@ -14,6 +14,11 @@ public class Deadline extends Task {
         this.dateTime = dateTime;
     }
 
+    @Override
+    public String toFileFormat() {
+        return String.format("%s | %s", super.toFileFormat(), dateTime);
+    }
+
     /**
      * Returns the deadline formatted for display.
      *
