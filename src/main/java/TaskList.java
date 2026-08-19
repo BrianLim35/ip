@@ -83,4 +83,19 @@ public class TaskList {
     public boolean isEmpty() {
         return tasks.isEmpty();
     }
+
+    /**
+     * Returns all tasks converted into lines for persistent storage.
+     *
+     * @return task data formatted as storage lines
+     */
+    public ArrayList<String> toFileLines() {
+        ArrayList<String> lines = new ArrayList<>();
+
+        for (Task task : tasks) {
+            lines.add(task.toFileFormat());
+        }
+
+        return lines;
+    }
 }

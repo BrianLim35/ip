@@ -2,6 +2,8 @@
 
 These tests exercise the chatbot through its console input and output.
 
+Before running a session, use an empty `data/penguin.txt` or a separate temporary working directory so saved tasks from another session do not affect the expected state.
+
 ## Test 1: Greeting and exit
 
 Aim: Verify that the chatbot displays its greeting and exits on `bye`.
@@ -352,3 +354,108 @@ bye
 ```
 
 Expected output: Each invalid command produces a specific error. The chatbot remains running until the final valid `bye`, and the task list remains empty.
+
+## Test 21: Save and reload all task types
+
+Aim: Verify that tasks are saved after changes and restored when the chatbot starts again.
+
+First session input:
+
+```text
+todo read book
+deadline return book /by Sunday
+event meeting /from Monday /to Tuesday
+mark 1
+bye
+```
+
+Restart the chatbot, then enter:
+
+```text
+list
+bye
+```
+
+Expected output after restart:
+
+```text
+1. [T][X] read book
+2. [D][ ] return book (by: Sunday)
+3. [E][ ] meeting (from: Monday to: Tuesday)
+```
+
+## Test 22: Save after deletion and unmarking
+
+Aim: Verify that deletion and unmarking are persisted across restarts.
+
+First session input:
+
+```text
+todo read book
+todo return book
+mark 1
+unmark 1
+delete 2
+bye
+```
+
+Restart the chatbot, then enter:
+
+```text
+list
+bye
+```
+
+Expected output after restart:
+
+```text
+1. [T][ ] read book
+```
+
+## Test 23: Missing storage file
+
+Aim: Verify that the chatbot starts with an empty task list when the storage file does not exist.
+
+Setup: Run the chatbot from a fresh temporary directory with no `data/penguin.txt`.
+
+Input:
+
+```text
+list
+bye
+```
+
+Expected output:
+
+```text
+Penguin: Your task list is empty!
+```
+
+## Test 24: Corrupted storage data
+
+Aim: Verify that malformed saved data produces an error instead of silently creating incorrect tasks.
+
+Setup: Place each malformed line below in `data/penguin.txt`, one test at a time:
+
+```text
+T | 2 | read book
+D | 0 | return book
+E | 0 | meeting | Monday
+X | 0 | unknown task
+```
+
+Expected output: The chatbot reports a specific loading error and does not silently treat malformed data as a valid task.
+
+## Test 25: Reserved delimiter in a description
+
+Aim: Verify that a description containing the persistence delimiter is rejected or safely handled instead of being truncated or reloaded as a different task.
+
+Input:
+
+```text
+todo read | book
+list
+bye
+```
+
+Expected output: The chatbot rejects the reserved `|` character with a clear error, both when entered with spaces (`read | book`) and without spaces (`read|book`). It must not silently save one description and reload a different one.

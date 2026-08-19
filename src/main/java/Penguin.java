@@ -1,9 +1,12 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * Runs the Penguin chatbot.
  */
 public class Penguin {
+    /** Delimiter reserved for the saved task-file format. */
+    private static final String STORAGE_DELIMITER = "|";
     /** Separator printed between chatbot messages. */
     private static final String LINE = "----------------------------------------------------------";
     /** ASCII-art banner displayed when the chatbot starts. */
@@ -104,6 +107,7 @@ public class Penguin {
             if (description.isEmpty()) {
                 throw new PenguinException("The description of a todo cannot be empty.");
             }
+            validateDescription(description);
             return new ToDo(description);
         }
 
@@ -127,6 +131,7 @@ public class Penguin {
             if (description.isEmpty()) {
                 throw new PenguinException("A deadline must have a description before /by.");
             }
+            validateDescription(description);
             if (dateTime.isEmpty()) {
                 throw new PenguinException("A deadline must have a date or time after /by.");
             }
@@ -154,6 +159,7 @@ public class Penguin {
             if (description.isEmpty()) {
                 throw new PenguinException("The description of an event cannot be empty.");
             }
+            validateDescription(description);
             if (from.isEmpty() || to.isEmpty()) {
                 throw new PenguinException("An event must have both a start and an end time.");
             }
@@ -164,12 +170,25 @@ public class Penguin {
     }
 
     /**
+     * Rejects characters that would make a saved task ambiguous.
+     *
+     * @param description task description to validate
+     * @throws PenguinException if the description contains the storage delimiter
+     */
+    private static void validateDescription(String description) throws PenguinException {
+        if (description.contains(STORAGE_DELIMITER)) {
+            throw new PenguinException("Task descriptions cannot contain the | character.");
+        }
+    }
+
+    /**
      * Reads and processes commands until the user enters "bye" or input ends.
      *
      * @param scanner used to read user commands
      * @param taskList stores the user's tasks
+     * @param storage handles saving and loading task data
      */
-    private static void runCommandLoop(Scanner scanner, TaskList taskList) {
+    private static void runCommandLoop(Scanner scanner, TaskList taskList, Storage storage) {
         while (true) {
             System.out.print("You: ");
 
@@ -206,6 +225,7 @@ public class Penguin {
                     try {
                         int index = getIndex(command);
                         Task task = taskList.markTask(index);
+                        storage.save(taskList.toFileLines());
                         System.out.println("Penguin: The following task has been marked.\n" + task);
                     } catch (PenguinException e) {
                         System.out.println("Penguin: " + e.getMessage());
@@ -217,6 +237,7 @@ public class Penguin {
                     try {
                         int index = getIndex(command);
                         Task task = taskList.unmarkTask(index);
+                        storage.save(taskList.toFileLines());
                         System.out.println("Penguin: The following task has been unmarked.\n" + task);
                     } catch (PenguinException e) {
                         System.out.println("Penguin: " + e.getMessage());
@@ -228,6 +249,7 @@ public class Penguin {
                     try {
                         int index = getIndex(command);
                         Task task = taskList.deleteTask(index);
+                        storage.save(taskList.toFileLines());
                         System.out.println("Penguin: I have removed '" + task + "' from your list of tasks."
                                 + " Now you have " + taskList.size() + " task(s) in the list.");
                     } catch (PenguinException e) {
@@ -242,6 +264,7 @@ public class Penguin {
                     try {
                         Task task = createTask(command);
                         taskList.addTask(task);
+                        storage.save(taskList.toFileLines());
                         System.out.println("Penguin: I have added '" + task + "' to your list of tasks."
                                 + " Now you have " + taskList.size() + " task(s) in the list.");
                     } catch (PenguinException e) {
@@ -270,9 +293,25 @@ public class Penguin {
 
         Scanner scanner = new Scanner(System.in);
         TaskList taskList = new TaskList();
+        Storage storage = new Storage("./data/penguin.txt");
+
+        try {
+            ArrayList<String> storageContent = storage.read();
+
+            for (String line : storageContent) {
+                try {
+                    taskList.addTask(Parser.parseTask(line));
+                } catch (PenguinException e) {
+                    System.out.println("Penguin: Skipping invalid saved task! "
+                            + e.getMessage());
+                }
+            }
+        } catch (PenguinException e) {
+            System.out.println("Penguin: Unable to load tasks: " + e.getMessage());
+        }
 
         // Perform commands entered by user, and exit when user enters "bye"
-        runCommandLoop(scanner, taskList);
+        runCommandLoop(scanner, taskList, storage);
 
         scanner.close();
     }

@@ -43,6 +43,16 @@ public class Task {
     }
 
     /**
+     * Returns this task in the format used for persistent storage.
+     *
+     * @return task type, completion status, and description separated by pipes
+     */
+    public String toFileFormat() {
+        String status = isDone ? "1" : "0";
+        return String.format("%s | %s | %s", type.getSymbol(), status, description);
+    }
+
+    /**
      * Returns the task status, type, and description formatted for display.
      *
      * @return the task status, type, and description formatted for display
