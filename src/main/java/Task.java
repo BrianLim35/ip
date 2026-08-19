@@ -43,9 +43,9 @@ public class Task {
     }
 
     /**
-     * Returns the task description.
+     * Returns the task status, type, and description formatted for display.
      *
-     * @return the task status and description formatted for display
+     * @return the task status, type, and description formatted for display
      */
     @Override
     public String toString() {
