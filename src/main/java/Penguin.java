@@ -17,6 +17,10 @@ public class Penguin {
     /** Farewell displayed when the chatbot exits. */
     private static final String GOODBYE_MESSAGE = "Bye. Hope to see you again soon!";
 
+    /** Creates a Penguin chatbot. */
+    public Penguin() {
+    }
+
     /**
      * Prints the chatbot banner and greeting.
      */
@@ -191,58 +195,58 @@ public class Penguin {
                     System.out.println(LINE);
                     return;
                 case LIST:
-                if (taskList.isEmpty()) {
-                    System.out.println("Penguin: Your task list is empty!");
-                } else {
-                    System.out.println("Penguin: Here are your tasks!");
-                    taskList.listTasks();
-                }
+                    if (taskList.isEmpty()) {
+                        System.out.println("Penguin: Your task list is empty!");
+                    } else {
+                        System.out.println("Penguin: Here are your tasks!");
+                        taskList.listTasks();
+                    }
                     break;
                 case MARK:
-                try {
-                    int index = getIndex(command);
-                    Task task = taskList.markTask(index);
-                    System.out.println("Penguin: The following task has been marked.\n" + task);
-                } catch (PenguinException e) {
-                    System.out.println("Penguin: " + e.getMessage());
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Penguin: Invalid task index!");
-                }
+                    try {
+                        int index = getIndex(command);
+                        Task task = taskList.markTask(index);
+                        System.out.println("Penguin: The following task has been marked.\n" + task);
+                    } catch (PenguinException e) {
+                        System.out.println("Penguin: " + e.getMessage());
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Penguin: Invalid task index!");
+                    }
                     break;
                 case UNMARK:
-                try {
-                    int index = getIndex(command);
-                    Task task = taskList.unmarkTask(index);
-                    System.out.println("Penguin: The following task has been unmarked.\n" + task);
-                } catch (PenguinException e) {
-                    System.out.println("Penguin: " + e.getMessage());
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Penguin: Invalid task index!");
-                }
+                    try {
+                        int index = getIndex(command);
+                        Task task = taskList.unmarkTask(index);
+                        System.out.println("Penguin: The following task has been unmarked.\n" + task);
+                    } catch (PenguinException e) {
+                        System.out.println("Penguin: " + e.getMessage());
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Penguin: Invalid task index!");
+                    }
                     break;
                 case DELETE:
-                try {
-                    int index = getIndex(command);
-                    Task task = taskList.deleteTask(index);
-                    System.out.println("Penguin: I have removed '" + task + "' from your list of tasks."
-                            + " Now you have " + taskList.size() + " task(s) in the list.");
-                } catch (PenguinException e) {
-                    System.out.println("Penguin: " + e.getMessage());
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Penguin: Invalid task index!");
-                }
+                    try {
+                        int index = getIndex(command);
+                        Task task = taskList.deleteTask(index);
+                        System.out.println("Penguin: I have removed '" + task + "' from your list of tasks."
+                                + " Now you have " + taskList.size() + " task(s) in the list.");
+                    } catch (PenguinException e) {
+                        System.out.println("Penguin: " + e.getMessage());
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Penguin: Invalid task index!");
+                    }
                     break;
                 case TODO:
                 case DEADLINE:
                 case EVENT:
-                try {
-                    Task task = createTask(command);
-                    taskList.addTask(task);
-                    System.out.println("Penguin: I have added '" + task + "' to your list of tasks."
-                            + " Now you have " + taskList.size() + " task(s) in the list.");
-                } catch (PenguinException e) {
-                    System.out.println("Penguin: " + e.getMessage());
-                }
+                    try {
+                        Task task = createTask(command);
+                        taskList.addTask(task);
+                        System.out.println("Penguin: I have added '" + task + "' to your list of tasks."
+                                + " Now you have " + taskList.size() + " task(s) in the list.");
+                    } catch (PenguinException e) {
+                        System.out.println("Penguin: " + e.getMessage());
+                    }
                     break;
                 default:
                     throw new PenguinException("I don't understand that command.");

@@ -8,14 +8,4 @@ public class ToDo extends Task {
     public ToDo(String description) {
         super(description, TaskType.TODO);
     }
-
-    /**
-     * Returns the to-do task formatted for display.
-     *
-     * @return formatted to-do description and completion status
-     */
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }
