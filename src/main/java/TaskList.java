@@ -59,12 +59,13 @@ public class TaskList {
         return task;
     }
 
-    /** Displays all tasks in their insertion order. */
-    public void listTasks() {
-        for (int i = 0; i < size(); i++) {
-            System.out.println((i + 1) + ". " +
-                    tasks.get(i));
-        }
+    /**
+     * Returns a copy of the current tasks for display purposes.
+     *
+     * @return copy of the current task list
+     */
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<>(tasks);
     }
 
     /**

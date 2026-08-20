@@ -67,13 +67,13 @@ Input:
 
 ```text
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Monday 2pm /to 4pm
+deadline return book /by 2099-12-26 1800
+event project meeting /from 2099-12-26 1400 /to 2099-12-26 1600
 list
 bye
 ```
 
-Expected output: The list contains `[T]`, `[D]`, and `[E]` task markers, with the deadline displaying `by: Sunday` and the event displaying `from: Monday 2pm to: 4pm`.
+Expected output: The list contains `[T]`, `[D]`, and `[E]` task markers, with the deadline and event displaying their saved date/time values.
 
 ## Test 6: Invalid mark input preserves task state
 
@@ -256,8 +256,8 @@ Input:
 
 ```text
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Monday 2pm /to 4pm
+deadline return book /by 2099-12-26 1800
+event project meeting /from 2099-12-26 1400 /to 2099-12-26 1600
 delete 1
 list
 delete 1
@@ -277,8 +277,8 @@ Input:
 
 ```text
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Monday 2pm /to 4pm
+deadline return book /by 2099-12-26 1800
+event project meeting /from 2099-12-26 1400 /to 2099-12-26 1600
 list
 bye
 ```
@@ -293,8 +293,8 @@ Input:
 
 ```text
 todo read book
-deadline return book /by Sunday
-event meeting /from Monday /to Tuesday
+deadline return book /by 2099-12-26 1800
+event meeting /from 2099-12-26 1400 /to 2099-12-26 1600
 mark 1
 unmark 2
 delete 1
@@ -313,7 +313,7 @@ Input:
 ```text
 TODO buy groceries
 DEADLINE pay bills /BY Friday
-EVENT dentist /FROM Monday /TO Tuesday
+EVENT dentist /FROM 2099-12-26 1400 /TO 2099-12-26 1600
 list
 bye
 ```
@@ -363,8 +363,8 @@ First session input:
 
 ```text
 todo read book
-deadline return book /by Sunday
-event meeting /from Monday /to Tuesday
+deadline return book /by 2099-12-26 1800
+event meeting /from 2099-12-26 1400 /to 2099-12-26 1600
 mark 1
 bye
 ```
@@ -380,8 +380,8 @@ Expected output after restart:
 
 ```text
 1. [T][X] read book
-2. [D][ ] return book (by: Sunday)
-3. [E][ ] meeting (from: Monday to: Tuesday)
+2. [D][ ] return book (by: 26 Dec 2099, 6:00PM)
+3. [E][ ] meeting (from: 26 Dec 2099, 2:00PM to: 26 Dec 2099, 4:00PM)
 ```
 
 ## Test 22: Save after deletion and unmarking
@@ -569,3 +569,40 @@ bye
 ```
 
 Expected output: The event is added successfully. Its start date may be before today because its end date is in the future.
+
+## Test 33: Command-object workflow regression
+
+Aim: Verify that command parsing and execution preserve the existing behavior after extracting command classes.
+
+Input:
+
+```text
+todo read book
+deadline submit report /by 2099-12-26 1800
+event project meeting /from 2026-08-19 1400 /to 2099-12-26 1600
+mark 1
+on 2099-12-26
+unmark 1
+delete 1
+list
+bye
+```
+
+Expected output: Each command executes successfully, the date search displays the deadline and event, deletion removes only the selected to-do, and the final list contains the deadline and event.
+
+## Test 34: Invalid command objects do not change state
+
+Aim: Verify that validation still occurs before command execution and invalid commands do not mutate the task list.
+
+Input:
+
+```text
+todo read book
+mark abc
+deadline invalid /by 2000-01-01 1800
+event invalid /from 2099-12-26 1800 /to 2099-12-26 1400
+list
+bye
+```
+
+Expected output: Each invalid command produces its existing specific error, and the final list still contains only the incomplete `read book` to-do.
