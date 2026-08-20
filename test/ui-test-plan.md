@@ -459,3 +459,113 @@ bye
 ```
 
 Expected output: The chatbot rejects the reserved `|` character with a clear error, both when entered with spaces (`read | book`) and without spaces (`read|book`). It must not silently save one description and reload a different one.
+
+## Test 26: Find tasks occurring on a date
+
+Aim: Verify that `on` displays deadlines and events occurring on the requested date, while excluding to-dos.
+
+Input:
+
+```text
+todo read book
+deadline submit report /by 2099-12-26 1800
+event project meeting /from 2099-12-26 1400 /to 2099-12-26 1600
+on 2099-12-26
+bye
+```
+
+Expected output: The matching deadline and event are displayed. The to-do is not displayed.
+
+## Test 27: No tasks on requested date
+
+Aim: Verify that a non-matching date produces a clear message without changing the task list.
+
+Input:
+
+```text
+deadline submit report /by 2099-12-26 1800
+on 2099-12-27
+list
+bye
+```
+
+Expected output: The chatbot reports that no deadlines or events occur on the requested date, and the original deadline remains unchanged.
+
+## Test 28: Invalid and out-of-range search dates
+
+Aim: Distinguish malformed dates from dates with invalid calendar values.
+
+Input:
+
+```text
+on tomorrow
+on 2099-13-26
+on 2099-12-26 extra
+bye
+```
+
+Expected output: The first and third commands produce format/argument errors. The second produces a date-out-of-range error. No task is added or changed.
+
+## Test 29: Reject past deadlines and events
+
+Aim: Verify that date/time values before today are rejected.
+
+Input:
+
+```text
+deadline old report /by 2000-01-01 1800
+event old meeting /from 2000-01-01 1400 /to 2000-01-01 1600
+list
+bye
+```
+
+Expected output: Both commands are rejected with clear past-date errors, and the task list remains empty.
+
+## Test 30: Event start and end ordering
+
+Aim: Verify that events cannot end before they start.
+
+Input:
+
+```text
+event invalid meeting /from 2099-12-26 1800 /to 2099-12-26 1400
+list
+bye
+```
+
+Expected output: The event is rejected and the task list remains empty.
+
+## Test 31: Date/time persistence and search after restart
+
+Aim: Verify that LocalDateTime values survive persistence and remain searchable.
+
+First session input:
+
+```text
+deadline submit report /by 2099-12-26 1800
+event project meeting /from 2099-12-26 1400 /to 2099-12-26 1600
+bye
+```
+
+Restart the chatbot and enter:
+
+```text
+on 2099-12-26
+bye
+```
+
+Expected output: The restored deadline and event are displayed by the `on` command with their correct date/time values.
+
+## Test 32: Ongoing event may start before today
+
+Aim: Verify that an event which started before today is accepted when its end is today or later.
+
+Input:
+
+```text
+event ongoing project /from 2026-08-19 1400 /to 2099-12-26 1600
+list
+bye
+```
+
+Expected output: The event is added successfully. Its start date may be before today because its end date is in the future.

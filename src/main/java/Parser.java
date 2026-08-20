@@ -48,6 +48,7 @@ public class Parser {
                     throw new PenguinException("Invalid deadline data.");
                 }
                 LocalDateTime dateTime = DateTimeUtil.parse(parts[3]);
+                DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
                 yield new Deadline(description, dateTime);
             }
             case "E" -> {
@@ -56,6 +57,7 @@ public class Parser {
                 }
                 LocalDateTime from = DateTimeUtil.parse(parts[3]);
                 LocalDateTime to = DateTimeUtil.parse(parts[4]);
+                DateTimeUtil.validateNotBeforeToday(to, "event end");
 
                 if (to.isBefore(from)) {
                     throw new PenguinException("Invalid event data. End is before start.");
