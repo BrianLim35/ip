@@ -1,4 +1,8 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -60,6 +64,24 @@ public class Penguin {
     }
 
     /**
+     * Extracts and parses the date from an on command.
+     *
+     * @param command command containing one date
+     * @return parsed date
+     * @throws PenguinException if the command does not contain exactly one date
+     */
+    private static LocalDate getDate(String command) throws PenguinException {
+        String[] parts = command.split("\\s+");
+
+        if (parts.length != 2) {
+            throw new PenguinException(
+                    "The on command requires one date in yyyy-MM-dd format.");
+        }
+
+        return DateTimeUtil.parseDate(parts[1]);
+    }
+
+    /**
      * Identifies the command represented by user input.
      *
      * @param input complete user input
@@ -87,6 +109,7 @@ public class Penguin {
         case "mark" -> CommandType.MARK;
         case "unmark" -> CommandType.UNMARK;
         case "delete" -> CommandType.DELETE;
+        case "on" -> CommandType.ON;
         case "bye" -> CommandType.BYE;
         default -> throw new PenguinException("I don't understand that command.");
         };
@@ -127,14 +150,17 @@ public class Penguin {
             }
             int separatorIndex = lowerCaseContent.indexOf(separator);
             String description = content.substring(0, separatorIndex).trim();
-            String dateTime = content.substring(separatorIndex + separator.length()).trim();
+            String dateTimeInput = content.substring(separatorIndex + separator.length()).trim();
             if (description.isEmpty()) {
                 throw new PenguinException("A deadline must have a description before /by.");
             }
             validateDescription(description);
-            if (dateTime.isEmpty()) {
+            if (dateTimeInput.isEmpty()) {
                 throw new PenguinException("A deadline must have a date or time after /by.");
             }
+            LocalDateTime dateTime = DateTimeUtil.parse(dateTimeInput);
+            DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
+
             return new Deadline(description, dateTime);
         }
 
@@ -154,15 +180,23 @@ public class Penguin {
                 throw new PenguinException("An event must contain one /from and one /to separator.");
             }
             String description = content.substring(0, fromIndex).trim();
-            String from = content.substring(fromIndex + fromSeparator.length(), toIndex).trim();
-            String to = content.substring(toIndex + toSeparator.length()).trim();
+            String fromInput = content.substring(fromIndex + fromSeparator.length(), toIndex).trim();
+            String toInput = content.substring(toIndex + toSeparator.length()).trim();
             if (description.isEmpty()) {
                 throw new PenguinException("The description of an event cannot be empty.");
             }
             validateDescription(description);
-            if (from.isEmpty() || to.isEmpty()) {
+            if (fromInput.isEmpty() || toInput.isEmpty()) {
                 throw new PenguinException("An event must have both a start and an end time.");
             }
+            LocalDateTime from = DateTimeUtil.parse(fromInput);
+            LocalDateTime to = DateTimeUtil.parse(toInput);
+            DateTimeUtil.validateNotBeforeToday(to, "event end");
+
+            if (to.isBefore(from)) {
+                throw new PenguinException("The start time must be before the end time.");
+            }
+
             return new Event(description, from, to);
         }
 
@@ -256,6 +290,29 @@ public class Penguin {
                         System.out.println("Penguin: " + e.getMessage());
                     } catch (IndexOutOfBoundsException e) {
                         System.out.println("Penguin: Invalid task index!");
+                    }
+                    break;
+                case ON:
+                    try {
+                        LocalDate date = getDate(command);
+                        ArrayList<Task> tasks = taskList.getTasksOn(date);
+                        if (tasks.isEmpty()) {
+                            System.out.printf(
+                                    "Penguin: No deadlines or events occur on %s.%n",
+                                    date.format(DateTimeFormatter.ofPattern(
+                                            "d MMM yyyy", Locale.ENGLISH)));
+                        } else {
+                            System.out.printf(
+                                    "Penguin: Here are your tasks on %s!%n",
+                                    date.format(DateTimeFormatter.ofPattern(
+                                            "d MMM yyyy", Locale.ENGLISH)));
+                            for (int i = 0; i < tasks.size(); i++) {
+                                System.out.println((i + 1) + ". " +
+                                        tasks.get(i));
+                            }
+                        }
+                    } catch (PenguinException e) {
+                        System.out.println("Penguin: " + e.getMessage());
                     }
                     break;
                 case TODO:

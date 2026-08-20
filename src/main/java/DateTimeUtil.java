@@ -1,0 +1,91 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.util.Locale;
+
+public class DateTimeUtil {
+    private static final DateTimeFormatter INPUT_FORMAT =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm")
+                    .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter OUTPUT_FORMAT =
+            DateTimeFormatter.ofPattern("d MMM yyyy, h:mma", Locale.ENGLISH);
+    private static final DateTimeFormatter DATE_FORMAT =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd")
+                    .withResolverStyle(ResolverStyle.STRICT);
+
+    /**
+     * Parses a date/time string entered by the user.
+     *
+     * @param dateTime date/time in yyyy-MM-dd HHmm format
+     * @return parsed date/time
+     * @throws PenguinException if the input is invalid
+     */
+    public static LocalDateTime parse(String dateTime) throws PenguinException {
+        String trimmedInput = dateTime.trim();
+
+        if (!trimmedInput.matches("\\d{4}-\\d{2}-\\d{2} \\d{4}")) {
+            throw new PenguinException(
+                    "Please enter date and time in yyyy-MM-dd HHmm format.");
+        }
+
+        try {
+            return LocalDateTime.parse(trimmedInput, INPUT_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new PenguinException(
+                    "The date or time is out of range.");
+        }
+    }
+
+    /**
+     * Parses a date string entered by the user.
+     *
+     * @param date date in yyyy-MM-dd format
+     * @return parsed date
+     * @throws PenguinException if the format or date range is invalid
+     */
+    public static LocalDate parseDate(String date) throws PenguinException {
+        String trimmedDate = date.trim();
+
+        if (!trimmedDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new PenguinException(
+                    "Please enter a date in yyyy-MM-dd format.");
+        }
+
+        try {
+            return LocalDate.parse(trimmedDate, DATE_FORMAT);
+        } catch (DateTimeParseException e) {
+            throw new PenguinException("The date is out of range.");
+        }
+    }
+
+    /**
+     * Ensures that a date/time is today or later.
+     *
+     * @param dateTime date/time to validate
+     * @param itemName name of the item being validated
+     * @throws PenguinException if the date is before today
+     */
+    public static void validateNotBeforeToday(
+            LocalDateTime dateTime, String itemName) throws PenguinException {
+        if (dateTime.toLocalDate().isBefore(LocalDate.now())) {
+            throw new PenguinException(
+                    "The " + itemName + " date cannot be before today.");
+        }
+    }
+
+    /**
+     * Formats a date/time for display.
+     *
+     * @param dateTime date/time to format
+     * @return formatted date/time
+     */
+    public static String format(LocalDateTime dateTime){
+        return dateTime.format(OUTPUT_FORMAT);
+    }
+
+    public static String formatForStorage(LocalDateTime dateTime){
+        return dateTime.format(INPUT_FORMAT);
+    }
+}
