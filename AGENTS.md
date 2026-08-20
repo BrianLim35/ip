@@ -36,6 +36,11 @@ Do not commit or push unless explicitly asked.
 
 ## Testing requirement
 
+Maintain JUnit coverage for approximately the top 50% of methods by value,
+prioritizing core business logic, complex parsing and validation, task state
+changes, persistence, and command execution. Update the relevant JUnit tests
+after every code change so the coverage target remains satisfied.
+
 After every feature, bug fix, or behavior-changing code update:
 
 1. Add or update relevant cases in `test/ui-test-plan.md` before testing.

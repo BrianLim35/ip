@@ -1,0 +1,94 @@
+package penguin.util;
+
+import org.junit.jupiter.api.Test;
+import penguin.exception.PenguinException;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class DateTimeUtilTest {
+    @Test
+    void parseDate_validDate_returnsExpectedLocalDate()
+            throws PenguinException {
+        LocalDate actual = DateTimeUtil.parseDate("2027-12-31");
+
+        assertEquals(LocalDate.of(2027, 12, 31), actual);
+    }
+
+    @Test
+    void parseDate_leapDay_returnsExpectedLocalDate()
+            throws PenguinException {
+        LocalDate actual = DateTimeUtil.parseDate("2028-02-29");
+
+        assertEquals(LocalDate.of(2028, 2, 29), actual);
+    }
+
+    @Test
+    void parseDate_surroundingWhitespace_returnsExpectedLocalDate()
+            throws PenguinException {
+        LocalDate actual = DateTimeUtil.parseDate(" 2027-12-31 ");
+
+        assertEquals(LocalDate.of(2027, 12, 31), actual);
+    }
+
+    @Test
+    void parseDate_invalidFormat_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> DateTimeUtil.parseDate("31-12-2027"));
+    }
+
+    @Test
+    void parseDate_outOfRangeMonth_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> DateTimeUtil.parseDate("2027-13-31"));
+    }
+
+    @Test
+    void parseDate_outOfRangeDay_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> DateTimeUtil.parseDate("2027-04-31"));
+    }
+
+    @Test
+    void parseDate_nonLeapYearFebruary29_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> DateTimeUtil.parseDate("2027-02-29"));
+    }
+
+    @Test
+    void parse_validDateTime_returnsExpectedLocalDateTime()
+            throws PenguinException {
+        assertEquals(LocalDateTime.of(2099, 12, 31, 18, 0),
+                DateTimeUtil.parse("2099-12-31 1800"));
+    }
+
+    @Test
+    void parse_invalidDate_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> DateTimeUtil.parse("2018-13-05 1800"));
+    }
+
+    @Test
+    void parse_invalidTime_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> DateTimeUtil.parse("2099-12-31 2500"));
+    }
+
+    @Test
+    void formatForStorage_validDateTime_roundTrips()
+            throws PenguinException {
+        LocalDateTime original = LocalDateTime.of(2099, 12, 31, 18, 0);
+
+        assertEquals(original,
+                DateTimeUtil.parse(DateTimeUtil.formatForStorage(original)));
+    }
+
+    @Test
+    void format_validDateTime_returnsUserFriendlyDateTime() {
+        assertEquals("31 Dec 2099, 6:00PM",
+                DateTimeUtil.format(LocalDateTime.of(2099, 12, 31, 18, 0)));
+    }
+}

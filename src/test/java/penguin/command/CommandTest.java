@@ -1,0 +1,118 @@
+package penguin.command;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import penguin.storage.Storage;
+import penguin.parser.Parser;
+import penguin.task.TaskList;
+import penguin.task.ToDo;
+import penguin.ui.Ui;
+import penguin.exception.PenguinException;
+
+import java.nio.file.Path;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class CommandTest {
+    @Test
+    void parseExit_validCommand_returnsExitCommand() throws Exception {
+        Command command = Parser.parse("bye");
+
+        assertInstanceOf(ExitCommand.class, command);
+        assertTrue(command.isExit());
+    }
+
+    @Test
+    void parseList_validCommand_returnsNonExitCommand() throws Exception {
+        Command command = Parser.parse("list");
+
+        assertInstanceOf(ListCommand.class, command);
+        assertFalse(command.isExit());
+    }
+
+    @Test
+    void addCommand_validTask_addsAndPersistsIt(@TempDir Path tempDir)
+            throws Exception {
+        TaskList tasks = new TaskList();
+        Storage storage = new Storage(
+                tempDir.resolve("data/tasks.txt").toString());
+        AddCommand command = new AddCommand(new ToDo("read book"));
+
+        command.execute(tasks, new Ui(), storage);
+
+        assertEquals(1, tasks.size());
+        assertEquals("T | 0 | read book", storage.read().get(0));
+    }
+
+    @Test
+    void exitCommand_execute_marksCommandAsExit() {
+        assertTrue(new ExitCommand().isExit());
+    }
+
+    @Test
+    void deleteCommand_validIndex_removesAndPersistsChange(
+            @TempDir Path tempDir) throws Exception {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+        Storage storage = new Storage(
+                tempDir.resolve("data/tasks.txt").toString());
+
+        new DeleteCommand(0).execute(tasks, new Ui(), storage);
+
+        assertEquals(0, tasks.size());
+        assertTrue(storage.read().isEmpty());
+    }
+
+    @Test
+    void deleteCommand_invalidIndex_throwsAndPreservesState(
+            @TempDir Path tempDir) throws Exception {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+        Storage storage = new Storage(
+                tempDir.resolve("data/tasks.txt").toString());
+        storage.save(tasks.toFileLines());
+
+        assertThrows(PenguinException.class,
+                () -> new DeleteCommand(1).execute(tasks, new Ui(), storage));
+
+        assertEquals(1, tasks.size());
+        assertEquals("T | 0 | read book", storage.read().get(0));
+    }
+
+    @Test
+    void markAndUnmarkCommands_validIndex_updateAndPersistState(
+            @TempDir Path tempDir) throws Exception {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+        Storage storage = new Storage(
+                tempDir.resolve("data/tasks.txt").toString());
+
+        new MarkCommand(0).execute(tasks, new Ui(), storage);
+        assertEquals("T | 1 | read book", storage.read().get(0));
+
+        new UnmarkCommand(0).execute(tasks, new Ui(), storage);
+        assertEquals("T | 0 | read book", storage.read().get(0));
+    }
+
+    @Test
+    void markAndUnmarkCommands_invalidIndex_throwAndPreserveState(
+            @TempDir Path tempDir) throws Exception {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+        Storage storage = new Storage(
+                tempDir.resolve("data/tasks.txt").toString());
+        storage.save(tasks.toFileLines());
+
+        assertThrows(PenguinException.class,
+                () -> new MarkCommand(-1).execute(tasks, new Ui(), storage));
+        assertThrows(PenguinException.class,
+                () -> new UnmarkCommand(1).execute(tasks, new Ui(), storage));
+
+        assertEquals("T | 0 | read book", storage.read().get(0));
+        assertEquals(" ", tasks.getTasks().get(0).getStatus());
+    }
+}
