@@ -100,9 +100,16 @@ public class TaskList {
         return lines;
     }
 
+    /**
+     * Finds deadlines and events occurring on a specified date.
+     *
+     * @param date date to search for
+     * @return tasks occurring on the specified date
+     */
     public ArrayList<Task> getTasksOn(LocalDate date) {
         ArrayList<Task> tasksOn = new ArrayList<>();
-        for  (Task task : tasks) {
+
+        for (Task task : tasks) {
             if (task.occursOn(date)) {
                 tasksOn.add(task);
             }

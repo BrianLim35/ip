@@ -5,15 +5,23 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
 
+/** Provides parsing and formatting utilities for dates and times. */
 public class DateTimeUtil {
+    /** Formatter for parsing and storing full date/time values. */
     private static final DateTimeFormatter INPUT_FORMAT =
             DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm")
                     .withResolverStyle(ResolverStyle.STRICT);
+    /** Formatter for displaying date/time values to the user. */
     private static final DateTimeFormatter OUTPUT_FORMAT =
             DateTimeFormatter.ofPattern("d MMM yyyy, h:mma", Locale.ENGLISH);
+    /** Formatter for parsing dates used by date-based searches. */
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("uuuu-MM-dd")
                     .withResolverStyle(ResolverStyle.STRICT);
+
+    /** Prevents instantiation of this utility class. */
+    private DateTimeUtil() {
+    }
 
     /**
      * Parses a date/time string entered by the user.
@@ -81,11 +89,17 @@ public class DateTimeUtil {
      * @param dateTime date/time to format
      * @return formatted date/time
      */
-    public static String format(LocalDateTime dateTime){
+    public static String format(LocalDateTime dateTime) {
         return dateTime.format(OUTPUT_FORMAT);
     }
 
-    public static String formatForStorage(LocalDateTime dateTime){
+    /**
+     * Formats a date/time for persistent storage.
+     *
+     * @param dateTime date/time to format
+     * @return date/time in yyyy-MM-dd HHmm format
+     */
+    public static String formatForStorage(LocalDateTime dateTime) {
         return dateTime.format(INPUT_FORMAT);
     }
 }

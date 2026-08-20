@@ -21,6 +21,11 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Returns the event in persistent storage format.
+     *
+     * @return serialized event data
+     */
     @Override
     public String toFileFormat() {
         return String.format("%s | %s | %s", super.toFileFormat(),
@@ -28,6 +33,12 @@ public class Event extends Task {
                 DateTimeUtil.formatForStorage(to));
     }
 
+    /**
+     * Checks whether the event spans the specified date.
+     *
+     * @param date date to check
+     * @return true if the event occurs on the specified date
+     */
     @Override
     public boolean occursOn(LocalDate date) {
         return !date.isBefore(from.toLocalDate()) && !date.isAfter(to.toLocalDate());

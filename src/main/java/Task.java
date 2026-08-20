@@ -54,6 +54,12 @@ public class Task {
         return String.format("%s | %s | %s", type.getSymbol(), status, description);
     }
 
+    /**
+     * Checks whether this task occurs on the specified date.
+     *
+     * @param date date to check
+     * @return false because a normal to-do has no date
+     */
     public boolean occursOn(LocalDate date) {
         return false;
     }

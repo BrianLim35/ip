@@ -17,12 +17,23 @@ public class Deadline extends Task {
         this.dateTime = dateTime;
     }
 
+    /**
+     * Returns the deadline in persistent storage format.
+     *
+     * @return serialized deadline data
+     */
     @Override
     public String toFileFormat() {
         return String.format("%s | %s", super.toFileFormat(),
                 DateTimeUtil.formatForStorage(dateTime));
     }
 
+    /**
+     * Checks whether the deadline occurs on a specified date.
+     *
+     * @param date date to check
+     * @return true if the deadline is on the specified date
+     */
     @Override
     public boolean occursOn(LocalDate date) {
         return this.dateTime.toLocalDate().equals(date);
