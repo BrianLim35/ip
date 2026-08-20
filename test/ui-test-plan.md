@@ -623,3 +623,78 @@ bye
 ```
 
 Expected output: The application starts normally, displays `Hello! I'm Penguin.`, and exits with `Bye. Hope to see you again soon!`.
+
+## Test 36: Whitespace and duplicate separator validation
+
+Aim: Verify that harmless whitespace is accepted while repeated separators are rejected.
+
+Input:
+
+```text
+  todo   read book  
+deadline report /by 2099-12-26 1800 /by 2099-12-27 1800
+event meeting /from 2099-12-26 1400 /from 2099-12-26 1500 /to 2099-12-26 1600
+list
+bye
+```
+
+Expected output: The to-do is added. The deadline and event with duplicate separators are rejected, and the final list contains only `read book`.
+
+## Test 37: Reserved delimiter variants
+
+Aim: Verify that both spaced and unspaced persistence delimiters are rejected in descriptions.
+
+Input:
+
+```text
+todo read | book
+todo read|book
+list
+bye
+```
+
+Expected output: Both inputs produce a clear delimiter error, and the task list remains empty.
+
+## Test 38: Corrupted record does not prevent valid records from loading
+
+Aim: Verify that an invalid saved record is skipped while later valid records remain available.
+
+Setup: Place the following lines in `data/penguin.txt`:
+
+```text
+T | 2 | invalid task
+T | 0 | valid task
+```
+
+Input:
+
+```text
+list
+bye
+```
+
+Expected output: A loading error is reported for the invalid record, and `valid task` is still displayed.
+
+## Test 39: Persistence after restart and date search
+
+Aim: Verify that dated tasks and completion state survive a restart and remain searchable.
+
+First session input:
+
+```text
+todo read book
+deadline submit report /by 2099-12-26 1800
+event project meeting /from 2099-12-26 1400 /to 2099-12-26 1600
+mark 1
+bye
+```
+
+After restarting, input:
+
+```text
+list
+on 2099-12-26
+bye
+```
+
+Expected output: The completed to-do, deadline, and event are restored. The date search displays only the deadline and event with their date/time details.
