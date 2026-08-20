@@ -1,7 +1,11 @@
+package penguin.storage;
+
+import penguin.exception.PenguinException;
+
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /** Handles saving Penguin data to a file. */

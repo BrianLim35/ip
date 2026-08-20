@@ -1,6 +1,6 @@
 ---
 name: test-ui
-description: Run the Penguin Java console program against test cases in test/ui-test-plan.md, compare actual and expected behavior, and stop at the first failure. Use after Java code changes or when asked to test the chatbot UI.
+description: Run the penguin.Penguin Java console program against test cases in test/ui-test-plan.md, compare actual and expected behavior, and stop at the first failure. Use after Java code changes or when asked to test the chatbot UI.
 ---
 
 # Test UI
@@ -15,13 +15,13 @@ Run the Java chatbot through its console interface and verify its behavior.
 
    ```bash
    mkdir -p /tmp/penguin-test-classes
-   javac -d /tmp/penguin-test-classes src/main/java/*.java
+   javac -d /tmp/penguin-test-classes $(find src/main/java -name '*.java' -type f)
    ```
 
 4. Run each test separately by piping its input to `Penguin`:
 
    ```bash
-   printf 'input here\n' | java -cp /tmp/penguin-test-classes Penguin
+   printf 'input here\n' | java -cp /tmp/penguin-test-classes penguin.Penguin
    ```
 
 5. Show the console input and output for every test.

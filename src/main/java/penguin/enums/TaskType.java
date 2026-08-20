@@ -1,3 +1,5 @@
+package penguin.enums;
+
 /** Defines the supported task types and their display symbols. */
 public enum TaskType {
     /** A task without an attached date or time. */

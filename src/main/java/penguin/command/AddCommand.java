@@ -1,3 +1,11 @@
+package penguin.command;
+
+import penguin.exception.PenguinException;
+import penguin.storage.Storage;
+import penguin.task.Task;
+import penguin.task.TaskList;
+import penguin.ui.Ui;
+
 /** Represents a command that adds a task. */
 public class AddCommand extends Command {
     /** Task to add. */

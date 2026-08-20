@@ -1,4 +1,13 @@
+package penguin;
+
 import java.util.ArrayList;
+
+import penguin.command.Command;
+import penguin.exception.PenguinException;
+import penguin.parser.Parser;
+import penguin.storage.Storage;
+import penguin.task.TaskList;
+import penguin.ui.Ui;
 
 /** Runs the Penguin chatbot. */
 public class Penguin {

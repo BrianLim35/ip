@@ -1,3 +1,7 @@
+package penguin.task;
+
+import penguin.enums.TaskType;
+
 /** Represents a task without an attached date or time. */
 public class ToDo extends Task {
     /**

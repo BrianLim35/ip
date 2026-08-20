@@ -1,3 +1,10 @@
+package penguin.command;
+
+import penguin.exception.PenguinException;
+import penguin.storage.Storage;
+import penguin.task.TaskList;
+import penguin.ui.Ui;
+
 /** Represents an executable Penguin command. */
 public abstract class Command {
     /** Creates a command. */

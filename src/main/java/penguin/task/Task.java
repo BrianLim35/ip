@@ -1,3 +1,7 @@
+package penguin.task;
+
+import penguin.enums.TaskType;
+
 import java.time.LocalDate;
 
 /**

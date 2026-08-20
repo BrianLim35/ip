@@ -1,4 +1,4 @@
 interface:
   display_name: "Test UI"
-  short_description: "Run and verify Penguin console tests"
+  short_description: "Run and verify penguin.Penguin console tests"
   default_prompt: "Run the test cases in test/ui-test-plan.md against the Java program."

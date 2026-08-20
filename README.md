@@ -1,4 +1,4 @@
-# Penguin project template
+# penguin.Penguin project template
 
 This is a project template for a greenfield Java project. It's named _Penguin_. Given below are instructions on how to use it.
 

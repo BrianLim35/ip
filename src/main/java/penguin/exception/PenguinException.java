@@ -1,3 +1,5 @@
+package penguin.exception;
+
 /** Represents a user-input error specific to the Penguin chatbot. */
 public class PenguinException extends Exception {
     /**

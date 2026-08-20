@@ -1,3 +1,8 @@
+package penguin.ui;
+
+import penguin.task.Task;
+import penguin.task.TaskList;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
