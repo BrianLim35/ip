@@ -1,7 +1,10 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /** Represents a task that must be completed by a specified date or time. */
 public class Deadline extends Task {
     /** Date or time by which the task should be completed. */
-    private final String dateTime;
+    private final LocalDateTime dateTime;
 
     /**
      * Creates a deadline with a description and due date/time.
@@ -9,14 +12,20 @@ public class Deadline extends Task {
      * @param description description of the task
      * @param dateTime date or time by which the task should be completed
      */
-    public Deadline(String description, String dateTime) {
+    public Deadline(String description, LocalDateTime dateTime) {
         super(description, TaskType.DEADLINE);
         this.dateTime = dateTime;
     }
 
     @Override
     public String toFileFormat() {
-        return String.format("%s | %s", super.toFileFormat(), dateTime);
+        return String.format("%s | %s", super.toFileFormat(),
+                DateTimeUtil.formatForStorage(dateTime));
+    }
+
+    @Override
+    public boolean occursOn(LocalDate date) {
+        return this.dateTime.toLocalDate().equals(date);
     }
 
     /**
@@ -26,6 +35,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return super.toString() + " (by: " + dateTime + ")";
+        return super.toString() + " (by: " + DateTimeUtil.format(dateTime) + ")";
     }
 }

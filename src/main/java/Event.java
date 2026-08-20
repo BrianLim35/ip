@@ -1,9 +1,12 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /** Represents a task that starts and ends at specified date or time values. */
 public class Event extends Task {
     /** Start date or time of the event. */
-    private final String from;
+    private final LocalDateTime from;
     /** End date or time of the event. */
-    private final String to;
+    private final LocalDateTime to;
 
     /**
      * Creates an event with a description, start time, and end time.
@@ -12,7 +15,7 @@ public class Event extends Task {
      * @param from date or time when the event starts
      * @param to date or time when the event ends
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description, TaskType.EVENT);
         this.from = from;
         this.to = to;
@@ -20,7 +23,14 @@ public class Event extends Task {
 
     @Override
     public String toFileFormat() {
-        return String.format("%s | %s | %s", super.toFileFormat(), from, to);
+        return String.format("%s | %s | %s", super.toFileFormat(),
+                DateTimeUtil.formatForStorage(from),
+                DateTimeUtil.formatForStorage(to));
+    }
+
+    @Override
+    public boolean occursOn(LocalDate date) {
+        return !date.isBefore(from.toLocalDate()) && !date.isAfter(to.toLocalDate());
     }
 
     /**
@@ -30,6 +40,8 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return super.toString() + " (from: " + from + " to: " + to + ")";
+        return super.toString() + " (from: " +
+                DateTimeUtil.format(from) + " to: " +
+                DateTimeUtil.format(to) + ")";
     }
 }

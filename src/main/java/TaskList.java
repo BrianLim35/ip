@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -97,5 +98,15 @@ public class TaskList {
         }
 
         return lines;
+    }
+
+    public ArrayList<Task> getTasksOn(LocalDate date) {
+        ArrayList<Task> tasksOn = new ArrayList<>();
+        for  (Task task : tasks) {
+            if (task.occursOn(date)) {
+                tasksOn.add(task);
+            }
+        }
+        return tasksOn;
     }
 }

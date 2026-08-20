@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 /**
  * Represents a task that can be marked as completed or incomplete.
  */
@@ -50,6 +52,10 @@ public class Task {
     public String toFileFormat() {
         String status = isDone ? "1" : "0";
         return String.format("%s | %s | %s", type.getSymbol(), status, description);
+    }
+
+    public boolean occursOn(LocalDate date) {
+        return false;
     }
 
     /**

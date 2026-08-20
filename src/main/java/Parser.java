@@ -1,3 +1,5 @@
+import java.time.LocalDateTime;
+
 /**
  * Converts saved task data into Task objects.
  */
@@ -45,13 +47,21 @@ public class Parser {
                 if (parts.length != 4 || parts[3].isBlank()) {
                     throw new PenguinException("Invalid deadline data.");
                 }
-                yield new Deadline(description, parts[3]);
+                LocalDateTime dateTime = DateTimeUtil.parse(parts[3]);
+                yield new Deadline(description, dateTime);
             }
             case "E" -> {
                 if (parts.length != 5 || parts[3].isBlank() || parts[4].isBlank()) {
                     throw new PenguinException("Invalid event data.");
                 }
-                yield new Event(description, parts[3], parts[4]);
+                LocalDateTime from = DateTimeUtil.parse(parts[3]);
+                LocalDateTime to = DateTimeUtil.parse(parts[4]);
+
+                if (to.isBefore(from)) {
+                    throw new PenguinException("Invalid event data. End is before start.");
+                }
+
+                yield new Event(description, from, to);
             }
             default -> throw new PenguinException("Unknown task type.");
         };

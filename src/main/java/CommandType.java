@@ -14,6 +14,8 @@ public enum CommandType {
     UNMARK,
     /** Deletes a task. */
     DELETE,
+    /** Prints deadlines/events occuring on a specific date. */
+    ON,
     /** Exits the chatbot. */
     BYE
 }
