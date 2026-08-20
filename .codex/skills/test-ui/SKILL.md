@@ -1,6 +1,6 @@
 ---
 name: test-ui
-description: Run the penguin.Penguin Java console program against test cases in test/ui-test-plan.md, compare actual and expected behavior, and stop at the first failure. Use after Java code changes or when asked to test the chatbot UI.
+description: Run the Penguin Java console program against test cases in test/ui-test-plan.md, compare actual and expected behavior, and stop at the first failure. Use after Java code changes or when asked to test the chatbot UI.
 ---
 
 # Test UI

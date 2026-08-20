@@ -22,5 +22,5 @@ text-ui-test/EXPECTED-UNIX.TXT
 # Java compiled files
 *.class
 
-# penguin.Penguin runtime data
+# Penguin runtime data
 /data/

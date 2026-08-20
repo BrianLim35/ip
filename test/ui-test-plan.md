@@ -1,4 +1,4 @@
-# penguin.Penguin UI Test Plan
+# Penguin UI Test Plan
 
 These tests exercise the chatbot through its console input and output.
 
@@ -192,7 +192,7 @@ bye
 
 Expected output: Each malformed command produces an error, and the task list remains empty.
 
-## Test 12: penguin.task.Deadline validation identifies the correct error
+## Test 12: Deadline validation identifies the correct error
 
 Aim: Verify that deadline errors distinguish a missing description, separator, and date/time.
 
@@ -323,7 +323,7 @@ bye
 
 Expected output: The list displays `[T][ ]`, `[D][ ]`, and `[E][ ]` in that order.
 
-## Test 19: penguin.command.Command enum dispatch
+## Test 19: Command dispatch
 
 Aim: Verify that supported commands are dispatched correctly.
 
@@ -431,7 +431,7 @@ bye
 Expected output:
 
 ```text
-penguin.Penguin: Your task list is empty!
+Penguin: Your task list is empty!
 ```
 
 ## Test 24: Corrupted storage data
@@ -524,7 +524,7 @@ bye
 
 Expected output: Both commands are rejected with clear past-date errors, and the task list remains empty.
 
-## Test 30: penguin.task.Event start and end ordering
+## Test 30: Event start and end ordering
 
 Aim: Verify that events cannot end before they start.
 
@@ -573,7 +573,7 @@ bye
 
 Expected output: The event is added successfully. Its start date may be before today because its end date is in the future.
 
-## Test 33: penguin.command.Command-object workflow regression
+## Test 33: Command-object workflow regression
 
 Aim: Verify that command parsing and execution preserve the existing behavior after extracting command classes.
 
