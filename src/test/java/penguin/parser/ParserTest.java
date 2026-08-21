@@ -4,9 +4,12 @@ import org.junit.jupiter.api.Test;
 import penguin.command.AddCommand;
 import penguin.command.Command;
 import penguin.command.FindCommand;
+import penguin.command.OnCommand;
 import penguin.exception.PenguinException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParserTest {
     @Test
@@ -36,9 +39,30 @@ class ParserTest {
     }
 
     @Test
-    void parseOn_validCommand_returnsFindCommand() throws PenguinException {
-        assertInstanceOf(FindCommand.class,
+    void parseOn_validCommand_returnsOnCommand() throws PenguinException {
+        assertInstanceOf(OnCommand.class,
                 Parser.parse("on 2099-12-31"));
+    }
+
+    @Test
+    void parseFind_validKeyword_returnsFindCommand() throws PenguinException {
+        assertInstanceOf(FindCommand.class,
+                Parser.parse("find read book"));
+    }
+
+    @Test
+    void parseFind_repeatedWhitespace_returnsFindCommand()
+            throws PenguinException {
+        assertInstanceOf(FindCommand.class,
+                Parser.parse("find   read   book"));
+    }
+
+    @Test
+    void parseFind_missingKeyword_throwsException() {
+        PenguinException exception = assertThrows(PenguinException.class,
+                () -> Parser.parse("find"));
+
+        assertEquals("Please enter a keyword.", exception.getMessage());
     }
 
     @Test

@@ -73,6 +73,38 @@ class PenguinTest {
     }
 
     @Test
+    void run_findCommand_displaysMatchingTasksOnly(@TempDir Path tempDir) {
+        String output = runDirectorySession(tempDir,
+                "todo read book\n"
+                        + "todo return laptop\n"
+                        + "deadline submit report /by 2099-12-26 1800\n"
+                        + "find read book\nlist\nbye\n");
+
+        assertTrue(output.contains("1. [T][ ] read book"));
+        assertFalse(output.contains("1. [T][ ] return laptop"));
+        assertFalse(output.contains("1. [D][ ] submit report"));
+    }
+
+    @Test
+    void run_findCommand_noMatches_showsNoMatchMessage(
+            @TempDir Path tempDir) {
+        String output = runDirectorySession(tempDir,
+                "todo read book\nfind laptop\nbye\n");
+
+        assertTrue(output.contains(
+                "No tasks found when searching for laptop."));
+    }
+
+    @Test
+    void run_findCommand_caseSensitiveKeyword_matchesExactCase(
+            @TempDir Path tempDir) {
+        String output = runDirectorySession(tempDir,
+                "todo Read book\nfind read\nbye\n");
+
+        assertTrue(output.contains("No tasks found when searching for read."));
+    }
+
+    @Test
     void run_restart_restoresTasksAndState(@TempDir Path tempDir) {
         runDirectorySession(tempDir, "todo read book\nmark 1\nbye\n");
 
