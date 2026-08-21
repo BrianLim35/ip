@@ -117,6 +117,24 @@ public class Ui {
     }
 
     /**
+     * Displays tasks matching a keyword or a no-match message.
+     *
+     * @param keyword keyword or phrase used for the search
+     * @param tasks matching tasks to display
+     */
+    public void showTasksFind(String keyword, ArrayList<Task> tasks) {
+        if (tasks.isEmpty()) {
+            showMessage(String.format("No tasks found when searching for %s.",
+                    keyword));
+            return;
+        }
+
+        showMessage(String.format("Here are the matching tasks containing %s in your list:",
+                keyword));
+        showTaskLines(tasks);
+    }
+
+    /**
      * Displays numbered task lines.
      *
      * @param tasks tasks to display

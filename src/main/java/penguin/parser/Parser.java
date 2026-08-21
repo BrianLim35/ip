@@ -1,13 +1,14 @@
 package penguin.parser;
 
-import penguin.command.AddCommand;
 import penguin.command.Command;
+import penguin.command.AddCommand;
 import penguin.command.DeleteCommand;
 import penguin.command.ExitCommand;
-import penguin.command.FindCommand;
 import penguin.command.ListCommand;
 import penguin.command.MarkCommand;
 import penguin.command.UnmarkCommand;
+import penguin.command.OnCommand;
+import penguin.command.FindCommand;
 import penguin.exception.PenguinException;
 import penguin.task.Deadline;
 import penguin.task.Event;
@@ -55,7 +56,8 @@ public class Parser {
         case "mark" -> new MarkCommand(parseTaskIndex(trimmedInput));
         case "unmark" -> new UnmarkCommand(parseTaskIndex(trimmedInput));
         case "delete" -> new DeleteCommand(parseTaskIndex(trimmedInput));
-        case "on" -> new FindCommand(parseDate(trimmedInput));
+        case "on" -> new OnCommand(parseDate(trimmedInput));
+        case "find" -> new FindCommand(parseKeyword(trimmedInput));
         case "bye" -> new ExitCommand();
         default -> throw new PenguinException("I don't understand that command.");
         };
@@ -80,6 +82,24 @@ public class Parser {
         } catch (NumberFormatException e) {
             throw new PenguinException("Please enter a valid task number.");
         }
+    }
+
+    /**
+     * Parses the keyword or phrase from a find command.
+     *
+     * @param command command containing a keyword or phrase
+     * @return trimmed keyword or phrase
+     * @throws PenguinException if no keyword is provided
+     */
+    private static String parseKeyword(String command)
+            throws PenguinException {
+        String[] parts = command.split("\\s+", 2);
+
+        if (parts.length != 2 || parts[1].isBlank()) {
+            throw new PenguinException("Please enter a keyword.");
+        }
+
+        return parts[1].trim().replaceAll("\\s+", " ");
     }
 
     /**

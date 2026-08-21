@@ -698,3 +698,51 @@ bye
 ```
 
 Expected output: The completed to-do, deadline, and event are restored. The date search displays only the deadline and event with their date/time details.
+
+## Test 40: Find tasks by keyword
+
+Aim: Verify that `find` displays only tasks whose descriptions contain the supplied keyword or phrase.
+
+Input:
+
+```text
+todo read book
+todo return laptop
+deadline submit report /by 2099-12-26 1800
+find read book
+list
+bye
+```
+
+Expected output: The search displays `read book` only. The later list still contains all three tasks.
+
+## Test 41: Find with whitespace and missing keyword
+
+Aim: Verify that repeated whitespace is accepted and a missing keyword is rejected without changing state.
+
+Input:
+
+```text
+todo read book
+find   read   book
+find
+list
+bye
+```
+
+Expected output: The first search finds `read book`. The missing-keyword command shows a keyword-specific error, and the final list still contains exactly one task.
+
+## Test 42: Find with no matching tasks
+
+Aim: Verify that a search with no matches displays a clear message and leaves the task list unchanged.
+
+Input:
+
+```text
+todo read book
+find laptop
+list
+bye
+```
+
+Expected output: Penguin reports that no tasks match `laptop`, and the list still contains `read book`.

@@ -4,24 +4,28 @@ import penguin.storage.Storage;
 import penguin.task.TaskList;
 import penguin.ui.Ui;
 
-import java.time.LocalDate;
-
-/** Represents a command that finds dated tasks. */
+/** Represents a command that finds tasks containing a keyword. */
 public class FindCommand extends Command {
-    /** Date to search for. */
-    private final LocalDate date;
+    /** Keyword used to filter tasks. */
+    private final String keyword;
 
     /**
-     * Creates a date-search command.
+     * Creates a keyword-search command.
      *
-     * @param date date to search for
+     * @param keyword keyword or phrase to search for
      */
-    public FindCommand(LocalDate date) {
-        this.date = date;
+    public FindCommand(String keyword) {
+        this.keyword = keyword;
     }
 
-    @Override
+    /**
+     * Displays tasks whose descriptions contain the search keyword.
+     *
+     * @param tasks task list to search
+     * @param ui interface used for output
+     * @param storage storage used by the command framework
+     */
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showTasksOn(date, tasks.getTasksOn(date));
+        ui.showTasksFind(keyword, tasks.getTasksMatch(keyword));
     }
 }
