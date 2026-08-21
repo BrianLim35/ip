@@ -119,4 +119,21 @@ public class TaskList {
         }
         return tasksOn;
     }
+
+    /**
+     * Returns tasks whose descriptions contain the specified keyword.
+     *
+     * @param keyword keyword or phrase to search for
+     * @return matching tasks in their original order
+     */
+    public ArrayList<Task> getTasksMatch(String keyword) {
+        ArrayList<Task> tasksMatch = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (task.containsWord(keyword)) {
+                tasksMatch.add(task);
+            }
+        }
+        return tasksMatch;
+    }
 }
