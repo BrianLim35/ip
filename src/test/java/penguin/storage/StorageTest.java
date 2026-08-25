@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import penguin.exception.PenguinException;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -48,5 +49,24 @@ class StorageTest {
         Storage storage = new Storage(tempDir.toString());
 
         assertThrows(PenguinException.class, storage::read);
+    }
+
+    @Test
+    void save_directoryPath_throwsPenguinException(@TempDir Path tempDir) {
+        Storage storage = new Storage(tempDir.toString());
+
+        assertThrows(PenguinException.class,
+                () -> storage.save(new ArrayList<>()));
+    }
+
+    @Test
+    void read_emptyFile_returnsEmptyList(@TempDir Path tempDir)
+            throws Exception {
+        Path filePath = tempDir.resolve("data/tasks.txt");
+        Files.createDirectories(filePath.getParent());
+        Files.createFile(filePath);
+        Storage storage = new Storage(filePath.toString());
+
+        assertEquals(new ArrayList<>(), storage.read());
     }
 }

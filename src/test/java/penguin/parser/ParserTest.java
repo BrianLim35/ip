@@ -151,4 +151,29 @@ class ParserTest {
         assertThrows(PenguinException.class,
                 () -> Parser.parseTask("X | 0 | read book"));
     }
+
+    @Test
+    void parseTask_blankDescription_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseTask("T | 0 | "));
+    }
+
+    @Test
+    void parseTask_extraFields_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseTask("T | 0 | read book | unexpected"));
+    }
+
+    @Test
+    void parseTask_invalidDateTime_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseTask("D | 0 | submit report | 2099-13-31 1800"));
+    }
+
+    @Test
+    void parseTask_eventEndBeforeStart_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseTask("E | 0 | meeting | 2099-12-31 1800"
+                        + " | 2099-12-31 1400"));
+    }
 }

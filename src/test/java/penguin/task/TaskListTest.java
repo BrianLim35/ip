@@ -76,4 +76,37 @@ class TaskListTest {
 
         assertEquals(1, tasks.getTasksOn(LocalDate.of(2099, 12, 31)).size());
     }
+
+    @Test
+    void getTasksOn_eventStartingOnDate_includesEvent() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new Event("conference",
+                LocalDateTime.of(2099, 12, 31, 9, 0),
+                LocalDateTime.of(2099, 12, 31, 17, 0)));
+
+        assertEquals(1, tasks.getTasksOn(LocalDate.of(2099, 12, 31)).size());
+    }
+
+    @Test
+    void getTasksOn_eventOutsideDate_excludesEvent() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new Event("conference",
+                LocalDateTime.of(2099, 12, 30, 9, 0),
+                LocalDateTime.of(2099, 12, 30, 17, 0)));
+
+        assertEquals(0, tasks.getTasksOn(LocalDate.of(2099, 12, 31)).size());
+    }
+
+    @Test
+    void deleteTask_validIndex_preservesRemainingOrder() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("first task"));
+        tasks.addTask(new ToDo("second task"));
+        tasks.addTask(new ToDo("third task"));
+
+        tasks.deleteTask(1);
+
+        assertEquals("[T][ ] first task", tasks.getTasks().get(0).toString());
+        assertEquals("[T][ ] third task", tasks.getTasks().get(1).toString());
+    }
 }

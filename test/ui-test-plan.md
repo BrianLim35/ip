@@ -746,3 +746,52 @@ bye
 ```
 
 Expected output: Penguin reports that no tasks match `laptop`, and the list still contains `read book`.
+
+## Test 43: Malformed saved records with extra fields
+
+Aim: Verify that saved records with unexpected fields are skipped without
+creating an incorrect task.
+
+Setup: Place `T | 0 | read book | unexpected` in `data/penguin.txt`.
+
+Input:
+
+```text
+list
+bye
+```
+
+Expected output: Penguin reports an invalid saved task and the list does not
+contain the malformed record.
+
+## Test 44: Date search on an event boundary
+
+Aim: Verify that an event is returned when the requested date is exactly its
+start date, and is excluded on a date outside its range.
+
+Input:
+
+```text
+event conference /from 2099-12-31 0900 /to 2099-12-31 1700
+on 2099-12-31
+on 2100-01-01
+bye
+```
+
+Expected output: The event appears for `2099-12-31`, but no event appears for
+`2100-01-01`.
+
+## Test 45: Display a non-empty task list
+
+Aim: Verify that a non-empty list displays tasks with numbering and type
+markers.
+
+Input:
+
+```text
+todo read book
+list
+bye
+```
+
+Expected output: The list contains `1. [T][ ] read book`.
