@@ -14,10 +14,10 @@ public class MarkCommand extends Command {
     /**
      * Creates a mark command.
      *
-     * @param index zero-based task index
+     * @param taskIndex zero-based task index
      */
-    public MarkCommand(int index) {
-        this.index = index;
+    public MarkCommand(int taskIndex) {
+        this.index = taskIndex;
     }
 
     @Override

@@ -12,10 +12,10 @@ public class FindCommand extends Command {
     /**
      * Creates a keyword-search command.
      *
-     * @param keyword keyword or phrase to search for
+     * @param searchKeyword keyword or phrase to search for
      */
-    public FindCommand(String keyword) {
-        this.keyword = keyword;
+    public FindCommand(String searchKeyword) {
+        this.keyword = searchKeyword;
     }
 
     /**

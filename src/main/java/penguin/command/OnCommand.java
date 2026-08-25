@@ -14,10 +14,10 @@ public class OnCommand extends Command {
     /**
      * Creates a date-search command.
      *
-     * @param date date to search for
+     * @param searchDate date to search for
      */
-    public OnCommand(LocalDate date) {
-        this.date = date;
+    public OnCommand(LocalDate searchDate) {
+        this.date = searchDate;
     }
 
     @Override

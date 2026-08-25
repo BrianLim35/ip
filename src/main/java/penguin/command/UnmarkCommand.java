@@ -14,10 +14,10 @@ public class UnmarkCommand extends Command {
     /**
      * Creates an unmark command.
      *
-     * @param index zero-based task index
+     * @param taskIndex zero-based task index
      */
-    public UnmarkCommand(int index) {
-        this.index = index;
+    public UnmarkCommand(int taskIndex) {
+        this.index = taskIndex;
     }
 
     @Override

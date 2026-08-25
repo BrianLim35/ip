@@ -15,11 +15,11 @@ public class Deadline extends Task {
      * Creates a deadline with a description and due date/time.
      *
      * @param description description of the task
-     * @param dateTime date or time by which the task should be completed
+     * @param deadlineDateTime date or time by which the task should be completed
      */
-    public Deadline(String description, LocalDateTime dateTime) {
+    public Deadline(String description, LocalDateTime deadlineDateTime) {
         super(description, TaskType.DEADLINE);
-        this.dateTime = dateTime;
+        this.dateTime = deadlineDateTime;
     }
 
     /**

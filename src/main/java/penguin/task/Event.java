@@ -17,13 +17,13 @@ public class Event extends Task {
      * Creates an event with a description, start time, and end time.
      *
      * @param description description of the event
-     * @param from date or time when the event starts
-     * @param to date or time when the event ends
+     * @param startDateTime date or time when the event starts
+     * @param endDateTime date or time when the event ends
      */
-    public Event(String description, LocalDateTime from, LocalDateTime to) {
+    public Event(String description, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         super(description, TaskType.EVENT);
-        this.from = from;
-        this.to = to;
+        this.from = startDateTime;
+        this.to = endDateTime;
     }
 
     /**
