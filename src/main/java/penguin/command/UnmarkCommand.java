@@ -21,8 +21,7 @@ public class UnmarkCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage)
-            throws PenguinException {
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         try {
             Task task = tasks.unmarkTask(index);
             storage.save(tasks.toFileLines());

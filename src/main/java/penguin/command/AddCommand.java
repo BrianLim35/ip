@@ -21,8 +21,7 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage)
-            throws PenguinException {
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         tasks.addTask(task);
         storage.save(tasks.toFileLines());
         ui.showMessage("I have added '" + task + "' to your list of tasks."

@@ -45,21 +45,21 @@ public class Parser {
         }
 
         return switch (firstWord) {
-        case "todo", "deadline", "event" ->
-                new AddCommand(parseTaskCommand(trimmedInput));
-        case "list" -> {
-            if (!trimmedInput.equalsIgnoreCase("list")) {
-                throw new PenguinException("The list command does not take arguments.");
+            case "todo", "deadline", "event" ->
+                    new AddCommand(parseTaskCommand(trimmedInput));
+            case "list" -> {
+                if (!trimmedInput.equalsIgnoreCase("list")) {
+                    throw new PenguinException("The list command does not take arguments.");
+                }
+                yield new ListCommand();
             }
-            yield new ListCommand();
-        }
-        case "mark" -> new MarkCommand(parseTaskIndex(trimmedInput));
-        case "unmark" -> new UnmarkCommand(parseTaskIndex(trimmedInput));
-        case "delete" -> new DeleteCommand(parseTaskIndex(trimmedInput));
-        case "on" -> new OnCommand(parseDate(trimmedInput));
-        case "find" -> new FindCommand(parseKeyword(trimmedInput));
-        case "bye" -> new ExitCommand();
-        default -> throw new PenguinException("I don't understand that command.");
+            case "mark" -> new MarkCommand(parseTaskIndex(trimmedInput));
+            case "unmark" -> new UnmarkCommand(parseTaskIndex(trimmedInput));
+            case "delete" -> new DeleteCommand(parseTaskIndex(trimmedInput));
+            case "on" -> new OnCommand(parseDate(trimmedInput));
+            case "find" -> new FindCommand(parseKeyword(trimmedInput));
+            case "bye" -> new ExitCommand();
+            default -> throw new PenguinException("I don't understand that command.");
         };
     }
 
@@ -91,8 +91,7 @@ public class Parser {
      * @return trimmed keyword or phrase
      * @throws PenguinException if no keyword is provided
      */
-    private static String parseKeyword(String command)
-            throws PenguinException {
+    private static String parseKeyword(String command) throws PenguinException {
         String[] parts = command.split("\\s+", 2);
 
         if (parts.length != 2 || parts[1].isBlank()) {
@@ -109,8 +108,7 @@ public class Parser {
      * @return parsed date
      * @throws PenguinException if the date is invalid
      */
-    private static LocalDate parseDate(String command)
-            throws PenguinException {
+    private static LocalDate parseDate(String command) throws PenguinException {
         String[] parts = command.split("\\s+");
 
         if (parts.length != 2) {
@@ -128,8 +126,7 @@ public class Parser {
      * @return created task
      * @throws PenguinException if the command is invalid
      */
-    private static Task parseTaskCommand(String command)
-            throws PenguinException {
+    private static Task parseTaskCommand(String command) throws PenguinException {
         String lowerCaseCommand = command.toLowerCase();
 
         if (lowerCaseCommand.equals("todo")
@@ -247,8 +244,7 @@ public class Parser {
      * @param description task description
      * @throws PenguinException if the delimiter is present
      */
-    private static void validateDescription(String description)
-            throws PenguinException {
+    private static void validateDescription(String description) throws PenguinException {
         if (description.contains("|")) {
             throw new PenguinException(
                     "Task descriptions cannot contain the | character.");
