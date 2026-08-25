@@ -56,3 +56,23 @@ After every feature, bug fix, or behavior-changing code update:
 2. Interleave positive and negative cases where invalid input could affect state.
 3. Invoke the project-specific `test-ui` skill using the complete test plan.
 4. Stop and report the expected and actual output if any test fails.
+
+## Code review workflow
+
+When asked to review the current code for a project level:
+
+1. Check whether the implementation satisfies the project requirements.
+2. Check Java conventions, naming, formatting, OOP design, and Javadoc accuracy.
+3. Inspect edge cases, invalid inputs, malformed saved data, and unwanted output.
+4. Update `test/ui-test-plan.md` with positive, negative, persistence, and edge-case tests.
+5. Run Java 25 compilation and invoke the project-specific `test-ui` skill using the complete test plan.
+6. Stop at the first failing test and report the expected versus actual output.
+7. Do not commit or push unless explicitly asked.
+8. Update JUnit tests with positive, negative, persistence, and edge-case tests.
+   Follow JUnit conventions and name test cases using
+   `featureUnderTest_testScenario_expectedBehavior()`.
+9. At the end, summarize the changes, test results, remaining warnings, and suggest a suitable commit message.
+
+During this workflow, do not modify project files except Java documentation and
+test cases. Changes to `test/ui-test-plan.md` are permitted because updating the
+test plan is part of the review workflow.
