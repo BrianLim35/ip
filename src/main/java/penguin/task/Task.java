@@ -20,13 +20,13 @@ public class Task {
     /**
      * Creates an incomplete task of the specified type.
      *
-     * @param description the description of the task
-     * @param type the type of the task
+     * @param taskDescription the description of the task
+     * @param taskType the type of the task
      */
-    public Task(String description, TaskType type) {
-        this.description = description;
+    public Task(String taskDescription, TaskType taskType) {
+        this.description = taskDescription;
         this.isDone = false;
-        this.type = type;
+        this.type = taskType;
     }
 
     /**

@@ -16,10 +16,10 @@ public class Storage {
     /**
      * Creates storage using the given file path.
      *
-     * @param filePath path of the task data file
+     * @param taskFilePath path of the task data file
      */
-    public Storage(String filePath) {
-        this.filePath = Path.of(filePath);
+    public Storage(String taskFilePath) {
+        this.filePath = Path.of(taskFilePath);
     }
 
     /**

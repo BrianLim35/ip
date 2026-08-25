@@ -15,10 +15,10 @@ public enum TaskType {
     /**
      * Creates a task type with its display symbol.
      *
-     * @param symbol symbol used when displaying the task type
+     * @param displaySymbol symbol used when displaying the task type
      */
-    TaskType(String symbol) {
-        this.symbol = symbol;
+    TaskType(String displaySymbol) {
+        this.symbol = displaySymbol;
     }
 
     /**

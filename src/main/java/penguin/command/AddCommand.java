@@ -14,10 +14,10 @@ public class AddCommand extends Command {
     /**
      * Creates an add command.
      *
-     * @param task task to add
+     * @param newTask task to add
      */
-    public AddCommand(Task task) {
-        this.task = task;
+    public AddCommand(Task newTask) {
+        this.task = newTask;
     }
 
     @Override

@@ -14,10 +14,10 @@ public class DeleteCommand extends Command {
     /**
      * Creates a delete command.
      *
-     * @param index zero-based task index
+     * @param taskIndex zero-based task index
      */
-    public DeleteCommand(int index) {
-        this.index = index;
+    public DeleteCommand(int taskIndex) {
+        this.index = taskIndex;
     }
 
     @Override
