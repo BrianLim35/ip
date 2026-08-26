@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UiTest {
@@ -89,5 +90,23 @@ class UiTest {
         }
 
         assertTrue(output.toString().contains("Penguin: Invalid command."));
+    }
+
+    @Test
+    void showMessage_guiMode_buffersResponseWithoutConsoleOutput() {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOutput = System.out;
+
+        try {
+            System.setOut(new PrintStream(output));
+            Ui ui = new Ui(false);
+            ui.showMessage("GUI message.");
+
+            assertEquals("Penguin: GUI message.", ui.getResponse());
+        } finally {
+            System.setOut(originalOutput);
+        }
+
+        assertEquals("", output.toString());
     }
 }

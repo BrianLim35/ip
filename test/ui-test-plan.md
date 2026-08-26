@@ -795,3 +795,101 @@ bye
 ```
 
 Expected output: The list contains `1. [T][ ] read book`.
+
+## Test 46: GUI sends a valid command
+
+Aim: Verify that the GUI displays both the user's command and Penguin's
+response when a valid command is submitted.
+
+Input through the GUI:
+
+```text
+todo read book
+```
+
+Expected output: The GUI displays the submitted command and confirms that
+`read book` was added.
+
+## Test 47: GUI rejects blank input
+
+Aim: Verify that blank or whitespace-only input produces an error and does not
+change the task list.
+
+Input through the GUI:
+
+```text
+<whitespace only>
+```
+
+Expected output: The GUI displays a Penguin dialog containing
+`Please input a task.` and does not create a task.
+
+## Test 48: GUI handles invalid commands
+
+Aim: Verify that invalid commands display an error and keep the GUI running.
+
+Input through the GUI:
+
+```text
+unknown command
+list
+```
+
+Expected output: The GUI displays an unknown-command error, then successfully
+displays the empty task list when `list` is submitted.
+
+## Test 49: GUI bye command exits
+
+Aim: Verify that a valid `bye` command displays the farewell and closes the
+GUI.
+
+Input through the GUI:
+
+```text
+bye
+```
+
+Expected output: The GUI displays `Bye. Hope to see you again soon!` and then
+closes.
+
+## Test 50: GUI does not print responses to the console
+
+Aim: Verify that GUI responses are shown in dialog boxes without unwanted
+console output.
+
+Input through the GUI:
+
+```text
+todo read book
+```
+
+Expected output: The response appears in the GUI and no duplicate response is
+printed in the terminal.
+
+## Test 51: Styled GUI displays welcome message
+
+Aim: Verify that the GUI applies its visual styling and displays Penguin's
+welcome message when it starts.
+
+Input through the GUI:
+
+```text
+Launch the application
+```
+
+Expected output: The GUI uses the themed background, rounded input and Send
+button, styled dialog bubbles, and displays Penguin's welcome message.
+
+## Test 52: Responsive chat layout and message animation
+
+Aim: Verify that long messages remain inside the chat area and new messages
+fade and slide into view without overlapping existing messages.
+
+Input through the GUI:
+
+```text
+find a very long keyword that does not exist
+```
+
+Expected output: The response wraps within the chat window, the input controls
+remain visible, and the new dialog enters with a short fade-and-slide animation.

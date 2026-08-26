@@ -1,0 +1,65 @@
+.main-window {
+    -fx-background-color: linear-gradient(to bottom right, #10182f, #261b45, #102f3d);
+    -fx-font-family: "Consolas";
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10;
+    -fx-fit-to-width: true;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.text-field {
+    -fx-background-color: #171d3b;
+    -fx-background-radius: 20;
+    -fx-border-color: #00bcd4;
+    -fx-border-radius: 20;
+    -fx-padding: 8 14;
+    -fx-prompt-text-fill: #7e8bb2;
+    -fx-text-fill: #e6f7ff;
+}
+
+.button {
+    -fx-background-color: #00bcd4;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-text-fill: #07101f;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: #62efff;
+    -fx-effect: dropshadow(gaussian, #00e5ff, 15, 0.5, 0, 0);
+}
+
+.user-dialog,
+.penguin-dialog {
+    -fx-max-width: 780;
+    -fx-background-radius: 16;
+    -fx-padding: 8;
+}
+
+.user-dialog {
+    -fx-background-color: #073b4c;
+    -fx-border-color: #00e5ff;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, #00e5ff66, 12, 0.3, 0, 0);
+}
+
+.penguin-dialog {
+    -fx-background-color: #171d3b;
+    -fx-border-color: #9b5cff;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, #9b5cff55, 12, 0.3, 0, 0);
+}
+
+.user-dialog .label,
+.penguin-dialog .label {
+    -fx-padding: 8;
+    -fx-text-fill: #e6f7ff;
+}

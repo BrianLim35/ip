@@ -137,6 +137,37 @@ class PenguinTest {
         assertTrue(output.contains("ongoing project"));
     }
 
+    @Test
+    void getResponse_blankInput_returnsInputError(@TempDir Path tempDir) {
+        Penguin penguin = new Penguin(
+                tempDir.resolve("data/penguin.txt").toString());
+
+        assertTrue(penguin.getResponse("   ").contains("Please input a task."));
+        assertFalse(penguin.isExitRequested());
+    }
+
+    @Test
+    void getResponse_byeCommand_returnsGoodbyeAndRequestsExit(
+            @TempDir Path tempDir) {
+        Penguin penguin = new Penguin(
+                tempDir.resolve("data/penguin.txt").toString());
+
+        assertTrue(penguin.getResponse("bye")
+                .contains("Bye. Hope to see you again soon!"));
+        assertTrue(penguin.isExitRequested());
+    }
+
+    @Test
+    void getResponse_invalidCommand_returnsErrorWithoutExit(
+            @TempDir Path tempDir) {
+        Penguin penguin = new Penguin(
+                tempDir.resolve("data/penguin.txt").toString());
+
+        assertTrue(penguin.getResponse("unknown command")
+                .contains("I don't understand that command."));
+        assertFalse(penguin.isExitRequested());
+    }
+
     /** Runs one isolated console session and returns its output. */
     private String runDirectorySession(Path directory, String input) {
         return runSession(directory.resolve("data/penguin.txt"), input);
