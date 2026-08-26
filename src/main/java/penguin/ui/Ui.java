@@ -13,15 +13,18 @@ import java.util.Scanner;
 public class Ui {
     /** Separator printed between chatbot messages. */
     private static final String LINE = "----------------------------------------------------------";
+
     /** ASCII-art banner displayed when the chatbot starts. */
     private static final String BANNER = " ____  _____ _   _  ____ _   _ ___ _   _ \n"
             + "|  _ \\| ____| \\ | |/ ___| | | |_ _| \\ | |\n"
             + "| |_) |  _| |  \\| | |  _| | | || ||  \\| |\n"
             + "|  __/| |___| |\\  | |_| | |_| || || |\\  |\n"
             + "|_|   |_____|_| \\_|\\____|\\___/|___|_| \\_|";
+
     /** Greeting displayed when the chatbot starts. */
     private static final String GREETING_MESSAGE =
             "Hello! I'm Penguin.\nWhat can I do for you?";
+
     /** Farewell displayed when the chatbot exits. */
     private static final String GOODBYE_MESSAGE =
             "Bye. Hope to see you again soon!";
@@ -29,9 +32,25 @@ public class Ui {
     /** Scanner used to read user commands. */
     private final Scanner scanner;
 
+    /** Stores the latest response for non-console clients such as the GUI. */
+    private final StringBuilder response = new StringBuilder();
+
+    /** Whether responses should also be printed to standard output. */
+    private final boolean consoleOutputEnabled;
+
     /** Creates a user interface using standard input. */
     public Ui() {
+        this(true);
+    }
+
+    /**
+     * Creates a user interface with configurable console output.
+     *
+     * @param enableConsoleOutput whether responses should be printed
+     */
+    public Ui(boolean enableConsoleOutput) {
         scanner = new Scanner(System.in);
+        this.consoleOutputEnabled = enableConsoleOutput;
     }
 
     /** Displays the welcome message. */
@@ -64,7 +83,7 @@ public class Ui {
      * @param message message to display
      */
     public void showMessage(String message) {
-        System.out.println("Penguin: " + message);
+        record("Penguin: " + message);
     }
 
     /**
@@ -78,7 +97,33 @@ public class Ui {
 
     /** Displays the farewell message. */
     public void showGoodbye() {
-        System.out.println(GOODBYE_MESSAGE);
+        record(GOODBYE_MESSAGE);
+    }
+
+    /**
+     * Stores a response and optionally prints it to the console.
+     *
+     * @param message response to store and display
+     */
+    private void record(String message) {
+        response.append(message).append(System.lineSeparator());
+        if (consoleOutputEnabled) {
+            System.out.println(message);
+        }
+    }
+
+    /** Clears the response buffer. */
+    public void clearResponse() {
+        response.setLength(0);
+    }
+
+    /**
+     * Gets the latest buffered response.
+     *
+     * @return latest response without trailing whitespace
+     */
+    public String getResponse() {
+        return response.toString().trim();
     }
 
     /**
@@ -141,7 +186,7 @@ public class Ui {
      */
     private void showTaskLines(ArrayList<Task> tasks) {
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " + tasks.get(i));
+            record((i + 1) + ". " + tasks.get(i));
         }
     }
 }
