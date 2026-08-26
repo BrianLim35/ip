@@ -1,4 +1,4 @@
-package penguin;
+package penguin.gui;
 
 import java.io.IOException;
 import java.util.Collections;

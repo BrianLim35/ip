@@ -2,6 +2,8 @@ package penguin;
 
 import javafx.application.Application;
 
+import penguin.gui.PenguinGUI;
+
 /**
  * A launcher class to workaround classpath issues.
  */

@@ -1,4 +1,4 @@
-package penguin;
+package penguin.gui;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
@@ -12,6 +12,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 import javafx.util.Duration;
+
+import penguin.Penguin;
 
 /**
  * Controller for the main GUI.

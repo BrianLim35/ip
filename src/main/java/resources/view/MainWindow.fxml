@@ -12,7 +12,7 @@
             styleClass="main-window"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="penguin.MainWindow">
+            fx:controller="penguin.gui.MainWindow">
     <children>
         <TextField fx:id="userInput"
                    onAction="#handleUserInput"
