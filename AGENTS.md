@@ -59,20 +59,29 @@ After every feature, bug fix, or behavior-changing code update:
 
 ## Code review workflow
 
-When asked to review the current code for a project level:
+When asked to review the current code for a project level, execute every step
+below explicitly and in order. Do not silently skip, combine, or assume
+completion of any step.
 
 1. Check whether the implementation satisfies the project requirements.
 2. Check Java conventions, naming, formatting, OOP design, and Javadoc accuracy.
 3. Inspect edge cases, invalid inputs, malformed saved data, and unwanted output.
 4. Update `test/ui-test-plan.md` with positive, negative, persistence, and edge-case tests.
-5. Run Java 25 compilation and invoke the project-specific `test-ui` skill using the complete test plan.
-6. Stop at the first failing test and report the expected versus actual output.
+5. Run Java 25 compilation and invoke the project-specific `test-ui` skill
+   using the complete test plan.
+6. Stop at the first failing test and report the test case, expected output,
+   actual output, and likely cause.
 7. Do not commit or push unless explicitly asked.
 8. Update JUnit tests with positive, negative, persistence, and edge-case tests.
    Follow JUnit conventions and name test cases using
    `featureUnderTest_testScenario_expectedBehavior()`.
 9. At the end, summarize the changes, test results, remaining warnings, and suggest a suitable commit message.
 
-During this workflow, do not modify project files except Java documentation and
-test cases. Changes to `test/ui-test-plan.md` are permitted because updating the
-test plan is part of the review workflow.
+During a review, do not modify production code or other project files except
+for Java documentation, JUnit tests, and `test/ui-test-plan.md`. These
+exceptions are permitted because updating documentation and tests is part of
+the review workflow.
+
+The final response must include a checklist marking every step as `PASS`,
+`FAIL`, or `BLOCKED`. If a required skill is unavailable, mark that step as
+`BLOCKED` and do not claim that it was completed.
