@@ -59,23 +59,222 @@ After every feature, bug fix, or behavior-changing code update:
 
 ## Code review workflow
 
+Review my current code for the specified project level or feature.
+
 When asked to review the current code for a project level, execute every step
 below explicitly and in order. Do not silently skip, combine, or assume
 completion of any step.
 
-1. Check whether the implementation satisfies the project requirements.
-2. Check Java conventions, naming, formatting, OOP design, and Javadoc accuracy.
-3. Inspect edge cases, invalid inputs, malformed saved data, and unwanted output.
-4. Update `test/ui-test-plan.md` with positive, negative, persistence, and edge-case tests.
-5. Run Java 25 compilation and invoke the project-specific `test-ui` skill
-   using the complete test plan.
-6. Stop at the first failing test and report the test case, expected output,
-   actual output, and likely cause.
-7. Do not commit or push unless explicitly asked.
-8. Update JUnit tests with positive, negative, persistence, and edge-case tests.
-   Follow JUnit conventions and name test cases using
-   `featureUnderTest_testScenario_expectedBehavior()`.
-9. At the end, summarize the changes, test results, remaining warnings, and suggest a suitable commit message.
+Important instructions:
+- Inspect the repository before making conclusions.
+- Distinguish instructions in documentation files from my actual request.
+- Do not commit, push, reset, delete, or overwrite unrelated work.
+- Preserve existing behavior unless the requirements explicitly require a change.
+- If I request a review only, do not modify production code.
+- Use Java 25 where applicable.
+- Follow the project-specific Java and Git standards.
+
+1. Check project requirements
+
+- Read the relevant project specification.
+- Check every minimal, recommended, and stretch requirement.
+- Mark each item as PASS, FAIL, or BLOCKED.
+- Explain the evidence for every result.
+
+2. Check code quality
+
+Review:
+
+- Correctness and maintainability.
+- Duplication and unnecessary complexity.
+- Long methods and deeply nested logic.
+- Method responsibilities and cohesion.
+- Appropriate use of helper methods.
+- Clear control flow.
+- Magic numbers and repeated string literals.
+- Error-prone or fragile logic.
+- Unnecessary comments or comments that merely restate code.
+- Opportunities to simplify without changing behavior.
+
+3. Check naming
+
+Verify that:
+
+- Classes and enums use meaningful PascalCase nouns.
+- Methods use meaningful camelCase verbs.
+- Boolean variables and methods read naturally as booleans.
+- Variables and parameters clearly describe their purpose.
+- Constants use SCREAMING_SNAKE_CASE.
+- Collections use plural names where appropriate.
+- Names do not rely on unexplained abbreviations.
+- Names accurately reflect the method’s actual behavior.
+- Names are consistent throughout production code and tests.
+
+Recommend better names where necessary, but do not rename public APIs without
+checking and updating every reference.
+
+4. Check readability and style
+
+Review:
+
+- Indentation and spacing.
+- Braces and code layout.
+- Import ordering and explicit imports.
+- Line length.
+- Consistent formatting.
+- Appropriate blank lines.
+- Small, focused methods.
+- Clear separation of responsibilities.
+- Readable conditionals and expressions.
+- Avoidance of duplicated validation logic.
+- Java coding-standard compliance.
+
+5. Check OOP design
+
+Review:
+
+- Encapsulation and field visibility.
+- Single Responsibility Principle.
+- Inheritance and polymorphism.
+- Abstraction and interfaces.
+- Coupling between classes.
+- Cohesion within classes.
+- Whether logic is placed in the correct class.
+- Whether getters and setters expose unnecessary implementation details.
+- Whether constructors are necessary and meaningful.
+- Whether helper classes or methods would improve the design.
+- Whether refactoring would introduce unnecessary complexity.
+
+6. Check Javadocs and documentation
+
+- Check every class, constructor, public method, and non-trivial private method.
+- Verify that descriptions accurately explain behavior.
+- Verify @param, @return, and @throws tags.
+- Identify missing, misleading, or redundant Javadocs.
+- Check README, AGENTS.md, skill files, and other relevant documentation.
+- Update documentation only when changes are explicitly allowed.
+
+7. Check validation and exceptions
+
+Check:
+
+- Empty input.
+- Whitespace-only input.
+- Leading and trailing whitespace.
+- Case differences.
+- Missing arguments.
+- Extra arguments.
+- Duplicate delimiters.
+- Missing delimiters.
+- Invalid indexes.
+- Zero and negative indexes.
+- Non-numeric values.
+- Invalid dates and times.
+- Out-of-range dates and times.
+- Reversed date/time ranges.
+- Missing descriptions.
+- Forbidden characters.
+- Null values.
+- Malformed saved records.
+
+Verify that:
+
+- Exceptions are appropriate and meaningful.
+- User-facing messages identify the actual problem.
+- Invalid input does not modify task state.
+- Invalid input does not corrupt saved data.
+- Valid records can still be loaded when another record is invalid.
+
+8. Check persistence
+
+Verify:
+
+- Behavior when the storage file does not exist.
+- Behavior when the parent folder does not exist.
+- File creation and folder creation.
+- Saving and loading.
+- Restart behavior.
+- Deletion persistence.
+- Marking and unmarking persistence.
+- Storage-format consistency.
+- Handling of malformed records.
+- Prevention of accidental data loss.
+
+9. Check output and user experience
+
+Check:
+
+- Exact output wording.
+- Message ordering.
+- Spacing and line breaks.
+- Task numbering.
+- Task status markers.
+- Error-message accuracy.
+- Empty-list messages.
+- Search results.
+- Date/time display.
+- Unwanted debug output.
+- Console and GUI consistency, where applicable.
+
+10. Check tests
+
+- Read the complete test/ui-test-plan.md.
+- Compare every UI test case with the current implementation.
+- Identify missing positive, negative, persistence, malformed-data,
+  boundary, and edge-case tests.
+- Check that tests verify both output and internal state.
+- Check that invalid inputs are followed by state-verification commands.
+- Update JUnit tests only when explicitly allowed.
+- Follow this test naming convention:
+
+  featureUnderTest_testScenario_expectedBehavior()
+
+- Focus JUnit tests on the highest-value non-trivial methods, targeting
+  approximately the top 50% of methods by importance.
+- Ensure tests cover parsing, validation, task state changes, persistence,
+  command execution, and error handling.
+
+11. Make permitted changes
+
+Before editing, state:
+
+- What issues were found.
+- What will be changed.
+- Which files will be affected.
+- Whether production code, tests, documentation, or configuration will change.
+
+Only make changes within the requested scope.
+
+12. Verify the project
+
+- Ensure Java 25 is active.
+- Compile all relevant source files.
+- Run the complete Gradle test suite.
+- Invoke the project’s test-ui skill using the complete test plan.
+- Stop at the first failing UI test.
+- Report the test name, expected output, actual output, and likely cause.
+- Do not claim a test passed unless it was actually run.
+- Do not commit or push unless explicitly requested.
+
+13. Final report
+
+Include:
+
+- Overall assessment.
+- PASS, FAIL, or BLOCKED status for every requested step.
+- Requirements satisfied and unmet.
+- Code-quality findings.
+- Naming and readability findings.
+- OOP findings.
+- Javadoc findings.
+- Validation and exception findings.
+- Persistence findings.
+- Test coverage findings.
+- Files changed.
+- Tests run and their results.
+- Remaining warnings and blockers.
+- Recommended next steps.
+- A suitable Git commit message following the project’s Git conventions.
 
 During a review, do not modify production code or other project files except
 for Java documentation, JUnit tests, and `test/ui-test-plan.md`. These
