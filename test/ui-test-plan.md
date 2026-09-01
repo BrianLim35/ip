@@ -893,3 +893,19 @@ find a very long keyword that does not exist
 
 Expected output: The response wraps within the chat window, the input controls
 remain visible, and the new dialog enters with a short fade-and-slide animation.
+
+## Test 53: Assertions preserve normal command behaviour
+
+Aim: Verify that enabled development assertions do not interfere with valid
+commands.
+
+Input through the application:
+
+```text
+todo read book
+list
+bye
+```
+
+Expected output: The task is added, displayed, and the application exits
+normally without an assertion error.

@@ -23,6 +23,9 @@ public class UnmarkCommand extends Command {
     /** Marks the selected task as incomplete and persists the updated list. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
+        assert tasks != null : "Unmark command requires a task list";
+        assert ui != null : "Unmark command requires a user interface";
+        assert storage != null : "Unmark command requires storage";
         try {
             Task task = tasks.unmarkTask(index);
             storage.saveTaskLines(tasks.toStorageLines());
