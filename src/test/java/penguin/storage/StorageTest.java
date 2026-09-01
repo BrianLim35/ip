@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StorageTest {
     @Test
-    void saveAndRead_validContent_roundTrips(@TempDir Path tempDir) throws PenguinException {
+    void saveAndLoadTaskLines_validContent_roundTrips(@TempDir Path tempDir) throws PenguinException {
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
         ArrayList<String> content = new ArrayList<>();
@@ -25,7 +25,7 @@ class StorageTest {
     }
 
     @Test
-    void read_missingFile_returnsEmptyList(@TempDir Path tempDir)
+    void loadTaskLines_missingFile_returnsEmptyList(@TempDir Path tempDir)
             throws PenguinException {
         Storage storage = new Storage(
                 tempDir.resolve("missing/tasks.txt").toString());
@@ -34,7 +34,7 @@ class StorageTest {
     }
 
     @Test
-    void save_emptyContent_createsEmptyFile(@TempDir Path tempDir)
+    void saveTaskLines_emptyContent_createsEmptyFile(@TempDir Path tempDir)
             throws PenguinException {
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
@@ -45,14 +45,14 @@ class StorageTest {
     }
 
     @Test
-    void read_directoryPath_throwsPenguinException(@TempDir Path tempDir) {
+    void loadTaskLines_directoryPath_throwsPenguinException(@TempDir Path tempDir) {
         Storage storage = new Storage(tempDir.toString());
 
         assertThrows(PenguinException.class, storage::loadTaskLines);
     }
 
     @Test
-    void save_directoryPath_throwsPenguinException(@TempDir Path tempDir) {
+    void saveTaskLines_directoryPath_throwsPenguinException(@TempDir Path tempDir) {
         Storage storage = new Storage(tempDir.toString());
 
         assertThrows(PenguinException.class,
@@ -60,7 +60,7 @@ class StorageTest {
     }
 
     @Test
-    void read_emptyFile_returnsEmptyList(@TempDir Path tempDir)
+    void loadTaskLines_emptyFile_returnsEmptyList(@TempDir Path tempDir)
             throws Exception {
         Path filePath = tempDir.resolve("data/tasks.txt");
         Files.createDirectories(filePath.getParent());

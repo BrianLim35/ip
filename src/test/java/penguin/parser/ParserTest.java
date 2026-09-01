@@ -100,7 +100,7 @@ class ParserTest {
     }
 
     @Test
-    void parseTask_malformedData_throwsException() {
+    void parseSavedTask_malformedData_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("D | 0 | report"));
     }
@@ -135,43 +135,43 @@ class ParserTest {
     }
 
     @Test
-    void parseTask_completedStatus_restoresCompletedState() throws PenguinException {
+    void parseSavedTask_completedStatus_restoresCompletedState() throws PenguinException {
         assertEquals("[T][X] read book",
                 Parser.parseSavedTask("T | 1 | read book").toString());
     }
 
     @Test
-    void parseTask_invalidStatus_throwsException() {
+    void parseSavedTask_invalidStatus_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("T | 2 | read book"));
     }
 
     @Test
-    void parseTask_unknownType_throwsException() {
+    void parseSavedTask_unknownType_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("X | 0 | read book"));
     }
 
     @Test
-    void parseTask_blankDescription_throwsException() {
+    void parseSavedTask_blankDescription_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("T | 0 | "));
     }
 
     @Test
-    void parseTask_extraFields_throwsException() {
+    void parseSavedTask_extraFields_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("T | 0 | read book | unexpected"));
     }
 
     @Test
-    void parseTask_invalidDateTime_throwsException() {
+    void parseSavedTask_invalidDateTime_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("D | 0 | submit report | 2099-13-31 1800"));
     }
 
     @Test
-    void parseTask_eventEndBeforeStart_throwsException() {
+    void parseSavedTask_eventEndBeforeStart_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("E | 0 | meeting | 2099-12-31 1800"
                         + " | 2099-12-31 1400"));

@@ -30,7 +30,7 @@ class TaskListTest {
     }
 
     @Test
-    void getTasksOn_matchingDate_returnsOnlyDatedTasks() {
+    void findTasksOnDate_matchingDate_returnsOnlyDatedTasks() {
         TaskList tasks = new TaskList();
         tasks.addTask(new ToDo("read book"));
         tasks.addTask(new Deadline("submit report",
@@ -68,7 +68,7 @@ class TaskListTest {
     }
 
     @Test
-    void getTasksOn_spanningEvent_returnsEventOnDate() {
+    void findTasksOnDate_spanningEvent_returnsEventOnDate() {
         TaskList tasks = new TaskList();
         tasks.addTask(new Event("conference",
                 LocalDateTime.of(2099, 12, 30, 9, 0),
@@ -78,7 +78,7 @@ class TaskListTest {
     }
 
     @Test
-    void getTasksOn_eventStartingOnDate_includesEvent() {
+    void findTasksOnDate_eventStartingOnDate_includesEvent() {
         TaskList tasks = new TaskList();
         tasks.addTask(new Event("conference",
                 LocalDateTime.of(2099, 12, 31, 9, 0),
@@ -88,7 +88,7 @@ class TaskListTest {
     }
 
     @Test
-    void getTasksOn_eventOutsideDate_excludesEvent() {
+    void findTasksOnDate_eventOutsideDate_excludesEvent() {
         TaskList tasks = new TaskList();
         tasks.addTask(new Event("conference",
                 LocalDateTime.of(2099, 12, 30, 9, 0),
