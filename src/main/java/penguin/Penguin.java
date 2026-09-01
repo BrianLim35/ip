@@ -108,27 +108,31 @@ public class Penguin {
         boolean isExit = false;
 
         while (!isExit) {
-            String fullCommand = ui.readCommand();
+            isExit = processNextCommand();
+        }
+    }
 
-            if (fullCommand == null) {
-                break;
+    /** Reads, parses, and executes one command from the console. */
+    private boolean processNextCommand() {
+        String fullCommand = ui.readCommand();
+        if (fullCommand == null) {
+            return true;
+        }
+
+        ui.showDivider();
+        try {
+            if (fullCommand.isBlank()) {
+                throw new PenguinException("Please input a task.");
             }
 
+            Command command = Parser.parseCommand(fullCommand);
+            command.execute(taskList, ui, storage);
+            return command.isExit();
+        } catch (PenguinException e) {
+            ui.showError(e.getMessage());
+            return false;
+        } finally {
             ui.showDivider();
-
-            try {
-                if (fullCommand.isBlank()) {
-                    throw new PenguinException("Please input a task.");
-                }
-
-                Command command = Parser.parseCommand(fullCommand);
-                command.execute(taskList, ui, storage);
-                isExit = command.isExit();
-            } catch (PenguinException e) {
-                ui.showError(e.getMessage());
-            } finally {
-                ui.showDivider();
-            }
         }
     }
 

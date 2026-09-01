@@ -131,111 +131,102 @@ public class Parser {
 
         if (lowerCaseCommand.equals("todo")
                 || lowerCaseCommand.startsWith("todo ")) {
-            String description = command.length() <= 4
-                    ? "" : command.substring(4).trim();
-            if (description.isEmpty()) {
-                throw new PenguinException(
-                        "The description of a todo cannot be empty.");
-            }
-            validateDescription(description);
-            return new ToDo(description);
+            return parseTodoCommand(command);
         }
 
         if (lowerCaseCommand.equals("deadline")
                 || lowerCaseCommand.startsWith("deadline ")) {
-            String content = command.length() <= 9
-                    ? "" : command.substring(9);
-            String separator = " /by";
-            String lowerCaseContent = content.toLowerCase();
-
-            if (content.trim().isEmpty()
-                    || lowerCaseContent.trim().equals("/by")
-                    || lowerCaseContent.trim().startsWith("/by ")) {
-                throw new PenguinException(
-                        "The description of a deadline cannot be empty.");
-            }
-            if (!lowerCaseContent.contains(separator)) {
-                throw new PenguinException(
-                        "A deadline must contain /by followed by a date or time.");
-            }
-            if (lowerCaseContent.indexOf(separator)
-                    != lowerCaseContent.lastIndexOf(separator)) {
-                throw new PenguinException(
-                        "A deadline must contain only one /by separator.");
-            }
-
-            int separatorIndex = lowerCaseContent.indexOf(separator);
-            String description = content.substring(0, separatorIndex).trim();
-            String dateTimeInput = content.substring(
-                    separatorIndex + separator.length()).trim();
-
-            if (description.isEmpty()) {
-                throw new PenguinException(
-                        "A deadline must have a description before /by.");
-            }
-            validateDescription(description);
-            if (dateTimeInput.isEmpty()) {
-                throw new PenguinException(
-                        "A deadline must have a date or time after /by.");
-            }
-
-            LocalDateTime dateTime = DateTimeUtil.parseDateTime(dateTimeInput);
-            DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
-            return new Deadline(description, dateTime);
+            return parseDeadlineCommand(command);
         }
 
         if (lowerCaseCommand.equals("event")
                 || lowerCaseCommand.startsWith("event ")) {
-            String content = command.length() <= 6
-                    ? "" : command.substring(6);
-            String fromSeparator = " /from";
-            String toSeparator = " /to";
-            String lowerCaseContent = content.toLowerCase();
-
-            if (lowerCaseContent.startsWith("/from ")
-                    || lowerCaseContent.startsWith("/to ")) {
-                throw new PenguinException(
-                        "The description of an event cannot be empty.");
-            }
-
-            int fromIndex = lowerCaseContent.indexOf(fromSeparator);
-            int toIndex = lowerCaseContent.indexOf(toSeparator);
-            if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex
-                    || fromIndex != lowerCaseContent.lastIndexOf(fromSeparator)
-                    || toIndex != lowerCaseContent.lastIndexOf(toSeparator)) {
-                throw new PenguinException(
-                        "An event must contain one /from and one /to separator.");
-            }
-
-            String description = content.substring(0, fromIndex).trim();
-            String fromInput = content.substring(
-                    fromIndex + fromSeparator.length(), toIndex).trim();
-            String toInput = content.substring(
-                    toIndex + toSeparator.length()).trim();
-
-            if (description.isEmpty()) {
-                throw new PenguinException(
-                        "The description of an event cannot be empty.");
-            }
-            validateDescription(description);
-            if (fromInput.isEmpty() || toInput.isEmpty()) {
-                throw new PenguinException(
-                        "An event must have both a start and an end time.");
-            }
-
-            LocalDateTime from = DateTimeUtil.parseDateTime(fromInput);
-            LocalDateTime to = DateTimeUtil.parseDateTime(toInput);
-            DateTimeUtil.validateNotBeforeToday(to, "event end");
-
-            if (to.isBefore(from)) {
-                throw new PenguinException(
-                        "The start time must be before the end time.");
-            }
-
-            return new Event(description, from, to);
+            return parseEventCommand(command);
         }
 
         throw new PenguinException("I don't understand that command.");
+    }
+
+    /** Parses a to-do creation command. */
+    private static Task parseTodoCommand(String command) throws PenguinException {
+        String description = command.length() <= 4 ? "" : command.substring(4).trim();
+        if (description.isEmpty()) {
+            throw new PenguinException("The description of a todo cannot be empty.");
+        }
+        validateDescription(description);
+        return new ToDo(description);
+    }
+
+    /** Parses a deadline creation command. */
+    private static Task parseDeadlineCommand(String command) throws PenguinException {
+        String content = command.length() <= 9 ? "" : command.substring(9);
+        String separator = " /by";
+        String lowerCaseContent = content.toLowerCase();
+
+        if (content.trim().isEmpty() || lowerCaseContent.trim().equals("/by")
+                || lowerCaseContent.trim().startsWith("/by ")) {
+            throw new PenguinException("The description of a deadline cannot be empty.");
+        }
+        if (!lowerCaseContent.contains(separator)) {
+            throw new PenguinException("A deadline must contain /by followed by a date or time.");
+        }
+        if (lowerCaseContent.indexOf(separator) != lowerCaseContent.lastIndexOf(separator)) {
+            throw new PenguinException("A deadline must contain only one /by separator.");
+        }
+
+        int separatorIndex = lowerCaseContent.indexOf(separator);
+        String description = content.substring(0, separatorIndex).trim();
+        String dateTimeInput = content.substring(separatorIndex + separator.length()).trim();
+        if (description.isEmpty()) {
+            throw new PenguinException("A deadline must have a description before /by.");
+        }
+        validateDescription(description);
+        if (dateTimeInput.isEmpty()) {
+            throw new PenguinException("A deadline must have a date or time after /by.");
+        }
+
+        LocalDateTime dateTime = DateTimeUtil.parseDateTime(dateTimeInput);
+        DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
+        return new Deadline(description, dateTime);
+    }
+
+    /** Parses an event creation command. */
+    private static Task parseEventCommand(String command) throws PenguinException {
+        String content = command.length() <= 6 ? "" : command.substring(6);
+        String fromSeparator = " /from";
+        String toSeparator = " /to";
+        String lowerCaseContent = content.toLowerCase();
+
+        if (lowerCaseContent.startsWith("/from ") || lowerCaseContent.startsWith("/to ")) {
+            throw new PenguinException("The description of an event cannot be empty.");
+        }
+
+        int fromIndex = lowerCaseContent.indexOf(fromSeparator);
+        int toIndex = lowerCaseContent.indexOf(toSeparator);
+        if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex
+                || fromIndex != lowerCaseContent.lastIndexOf(fromSeparator)
+                || toIndex != lowerCaseContent.lastIndexOf(toSeparator)) {
+            throw new PenguinException("An event must contain one /from and one /to separator.");
+        }
+
+        String description = content.substring(0, fromIndex).trim();
+        String fromInput = content.substring(fromIndex + fromSeparator.length(), toIndex).trim();
+        String toInput = content.substring(toIndex + toSeparator.length()).trim();
+        if (description.isEmpty()) {
+            throw new PenguinException("The description of an event cannot be empty.");
+        }
+        validateDescription(description);
+        if (fromInput.isEmpty() || toInput.isEmpty()) {
+            throw new PenguinException("An event must have both a start and an end time.");
+        }
+
+        LocalDateTime from = DateTimeUtil.parseDateTime(fromInput);
+        LocalDateTime to = DateTimeUtil.parseDateTime(toInput);
+        DateTimeUtil.validateNotBeforeToday(to, "event end");
+        if (to.isBefore(from)) {
+            throw new PenguinException("The start time must be before the end time.");
+        }
+        return new Event(description, from, to);
     }
 
     /**
@@ -278,42 +269,58 @@ public class Parser {
                     "Descriptions cannot contain the | character.");
         }
 
-        Task task = switch (type) {
-            case "T" -> {
-                if (parts.length != 3) {
-                    throw new PenguinException("Invalid todo data.");
-                }
-                yield new ToDo(description);
-            }
-            case "D" -> {
-                if (parts.length != 4 || parts[3].isBlank()) {
-                    throw new PenguinException("Invalid deadline data.");
-                }
-                LocalDateTime dateTime = DateTimeUtil.parseDateTime(parts[3]);
-                DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
-                yield new Deadline(description, dateTime);
-            }
-            case "E" -> {
-                if (parts.length != 5 || parts[3].isBlank() || parts[4].isBlank()) {
-                    throw new PenguinException("Invalid event data.");
-                }
-                LocalDateTime from = DateTimeUtil.parseDateTime(parts[3]);
-                LocalDateTime to = DateTimeUtil.parseDateTime(parts[4]);
-                DateTimeUtil.validateNotBeforeToday(to, "event end");
-
-                if (to.isBefore(from)) {
-                    throw new PenguinException("Invalid event data. End is before start.");
-                }
-
-                yield new Event(description, from, to);
-            }
-            default -> throw new PenguinException("Unknown task type.");
-        };
+        Task task = createSavedTask(type, parts, description);
 
         if (isDone) {
             task.markDone();
         }
 
         return task;
+    }
+
+    /** Creates a task from its validated saved-data fields. */
+    private static Task createSavedTask(String type, String[] parts, String description)
+            throws PenguinException {
+        return switch (type) {
+            case "T" -> parseSavedTodo(parts, description);
+            case "D" -> parseSavedDeadline(parts, description);
+            case "E" -> parseSavedEvent(parts, description);
+            default -> throw new PenguinException("Unknown task type.");
+        };
+    }
+
+    /** Parses a saved to-do record. */
+    private static Task parseSavedTodo(String[] parts, String description)
+            throws PenguinException {
+        if (parts.length != 3) {
+            throw new PenguinException("Invalid todo data.");
+        }
+        return new ToDo(description);
+    }
+
+    /** Parses a saved deadline record. */
+    private static Task parseSavedDeadline(String[] parts, String description)
+            throws PenguinException {
+        if (parts.length != 4 || parts[3].isBlank()) {
+            throw new PenguinException("Invalid deadline data.");
+        }
+        LocalDateTime dateTime = DateTimeUtil.parseDateTime(parts[3]);
+        DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
+        return new Deadline(description, dateTime);
+    }
+
+    /** Parses a saved event record. */
+    private static Task parseSavedEvent(String[] parts, String description)
+            throws PenguinException {
+        if (parts.length != 5 || parts[3].isBlank() || parts[4].isBlank()) {
+            throw new PenguinException("Invalid event data.");
+        }
+        LocalDateTime from = DateTimeUtil.parseDateTime(parts[3]);
+        LocalDateTime to = DateTimeUtil.parseDateTime(parts[4]);
+        DateTimeUtil.validateNotBeforeToday(to, "event end");
+        if (to.isBefore(from)) {
+            throw new PenguinException("Invalid event data. End is before start.");
+        }
+        return new Event(description, from, to);
     }
 }

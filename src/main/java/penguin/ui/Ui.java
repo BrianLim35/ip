@@ -150,15 +150,17 @@ public class Ui {
     public void showTasksOnDate(LocalDate date, ArrayList<Task> tasks) {
         if (tasks.isEmpty()) {
             showMessage(String.format("No deadlines or events occur on %s.",
-                    date.format(DateTimeFormatter.ofPattern(
-                            "d MMM yyyy", Locale.ENGLISH))));
+                    formatDate(date)));
             return;
         }
 
-        showMessage(String.format("Here are your tasks on %s!",
-                date.format(DateTimeFormatter.ofPattern(
-                        "d MMM yyyy", Locale.ENGLISH))));
+        showMessage(String.format("Here are your tasks on %s!", formatDate(date)));
         showTaskLines(tasks);
+    }
+
+    /** Formats a date using the display format shown to users. */
+    private String formatDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
     }
 
     /**
