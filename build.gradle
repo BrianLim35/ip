@@ -57,7 +57,6 @@ dependencies {
 test {
     useJUnitPlatform()
     enableAssertions = true
-    enableAssertions = true;
 
     testLogging {
         events 'passed', 'skipped', 'failed'
