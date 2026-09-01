@@ -35,7 +35,7 @@ public class Parser {
      * @return executable command
      * @throws PenguinException if the command is invalid
      */
-    public static Command parse(String input) throws PenguinException {
+    public static Command parseCommand(String input) throws PenguinException {
         String trimmedInput = input.trim();
         String firstWord = trimmedInput.split("\\s+", 2)[0].toLowerCase();
 
@@ -179,7 +179,7 @@ public class Parser {
                         "A deadline must have a date or time after /by.");
             }
 
-            LocalDateTime dateTime = DateTimeUtil.parse(dateTimeInput);
+            LocalDateTime dateTime = DateTimeUtil.parseDateTime(dateTimeInput);
             DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
             return new Deadline(description, dateTime);
         }
@@ -223,8 +223,8 @@ public class Parser {
                         "An event must have both a start and an end time.");
             }
 
-            LocalDateTime from = DateTimeUtil.parse(fromInput);
-            LocalDateTime to = DateTimeUtil.parse(toInput);
+            LocalDateTime from = DateTimeUtil.parseDateTime(fromInput);
+            LocalDateTime to = DateTimeUtil.parseDateTime(toInput);
             DateTimeUtil.validateNotBeforeToday(to, "event end");
 
             if (to.isBefore(from)) {
@@ -258,7 +258,7 @@ public class Parser {
      * @return task represented by the line
      * @throws PenguinException if the line is malformed
      */
-    public static Task parseTask(String line) throws PenguinException {
+    public static Task parseSavedTask(String line) throws PenguinException {
         String[] parts = line.split(" \\| ");
 
         if (parts.length < 3 || parts[2].isBlank()) {
@@ -289,7 +289,7 @@ public class Parser {
                 if (parts.length != 4 || parts[3].isBlank()) {
                     throw new PenguinException("Invalid deadline data.");
                 }
-                LocalDateTime dateTime = DateTimeUtil.parse(parts[3]);
+                LocalDateTime dateTime = DateTimeUtil.parseDateTime(parts[3]);
                 DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
                 yield new Deadline(description, dateTime);
             }
@@ -297,8 +297,8 @@ public class Parser {
                 if (parts.length != 5 || parts[3].isBlank() || parts[4].isBlank()) {
                     throw new PenguinException("Invalid event data.");
                 }
-                LocalDateTime from = DateTimeUtil.parse(parts[3]);
-                LocalDateTime to = DateTimeUtil.parse(parts[4]);
+                LocalDateTime from = DateTimeUtil.parseDateTime(parts[3]);
+                LocalDateTime to = DateTimeUtil.parseDateTime(parts[4]);
                 DateTimeUtil.validateNotBeforeToday(to, "event end");
 
                 if (to.isBefore(from)) {

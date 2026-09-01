@@ -62,19 +62,19 @@ class DateTimeUtilTest {
     void parse_validDateTime_returnsExpectedLocalDateTime()
             throws PenguinException {
         assertEquals(LocalDateTime.of(2099, 12, 31, 18, 0),
-                DateTimeUtil.parse("2099-12-31 1800"));
+                DateTimeUtil.parseDateTime("2099-12-31 1800"));
     }
 
     @Test
     void parse_invalidDate_throwsException() {
         assertThrows(PenguinException.class,
-                () -> DateTimeUtil.parse("2018-13-05 1800"));
+                () -> DateTimeUtil.parseDateTime("2018-13-05 1800"));
     }
 
     @Test
     void parse_invalidTime_throwsException() {
         assertThrows(PenguinException.class,
-                () -> DateTimeUtil.parse("2099-12-31 2500"));
+                () -> DateTimeUtil.parseDateTime("2099-12-31 2500"));
     }
 
     @Test
@@ -83,12 +83,12 @@ class DateTimeUtilTest {
         LocalDateTime original = LocalDateTime.of(2099, 12, 31, 18, 0);
 
         assertEquals(original,
-                DateTimeUtil.parse(DateTimeUtil.formatForStorage(original)));
+                DateTimeUtil.parseDateTime(DateTimeUtil.formatForStorage(original)));
     }
 
     @Test
     void format_validDateTime_returnsUserFriendlyDateTime() {
         assertEquals("31 Dec 2099, 6:00PM",
-                DateTimeUtil.format(LocalDateTime.of(2099, 12, 31, 18, 0)));
+                DateTimeUtil.formatForDisplay(LocalDateTime.of(2099, 12, 31, 18, 0)));
     }
 }

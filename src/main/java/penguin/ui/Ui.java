@@ -73,7 +73,7 @@ public class Ui {
     }
 
     /** Displays the message divider. */
-    public void showLine() {
+    public void showDivider() {
         System.out.println(LINE);
     }
 
@@ -147,7 +147,7 @@ public class Ui {
      * @param date date being displayed
      * @param tasks matching tasks
      */
-    public void showTasksOn(LocalDate date, ArrayList<Task> tasks) {
+    public void showTasksOnDate(LocalDate date, ArrayList<Task> tasks) {
         if (tasks.isEmpty()) {
             showMessage(String.format("No deadlines or events occur on %s.",
                     date.format(DateTimeFormatter.ofPattern(
@@ -167,7 +167,7 @@ public class Ui {
      * @param keyword keyword or phrase used for the search
      * @param tasks matching tasks to display
      */
-    public void showTasksFind(String keyword, ArrayList<Task> tasks) {
+    public void showMatchingTasks(String keyword, ArrayList<Task> tasks) {
         if (tasks.isEmpty()) {
             showMessage(String.format("No tasks found when searching for %s.",
                     keyword));

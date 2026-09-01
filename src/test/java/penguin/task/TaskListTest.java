@@ -36,7 +36,7 @@ class TaskListTest {
         tasks.addTask(new Deadline("submit report",
                 LocalDateTime.of(2099, 12, 31, 18, 0)));
 
-        assertEquals(1, tasks.getTasksOn(LocalDate.of(2099, 12, 31)).size());
+        assertEquals(1, tasks.findTasksOnDate(LocalDate.of(2099, 12, 31)).size());
     }
 
     @Test
@@ -53,7 +53,7 @@ class TaskListTest {
 
         assertEquals(0, tasks.size());
         assertEquals(0, tasks.getTasks().size());
-        assertEquals(0, tasks.toFileLines().size());
+        assertEquals(0, tasks.toStorageLines().size());
     }
 
     @Test
@@ -74,7 +74,7 @@ class TaskListTest {
                 LocalDateTime.of(2099, 12, 30, 9, 0),
                 LocalDateTime.of(2099, 12, 31, 17, 0)));
 
-        assertEquals(1, tasks.getTasksOn(LocalDate.of(2099, 12, 31)).size());
+        assertEquals(1, tasks.findTasksOnDate(LocalDate.of(2099, 12, 31)).size());
     }
 
     @Test
@@ -84,7 +84,7 @@ class TaskListTest {
                 LocalDateTime.of(2099, 12, 31, 9, 0),
                 LocalDateTime.of(2099, 12, 31, 17, 0)));
 
-        assertEquals(1, tasks.getTasksOn(LocalDate.of(2099, 12, 31)).size());
+        assertEquals(1, tasks.findTasksOnDate(LocalDate.of(2099, 12, 31)).size());
     }
 
     @Test
@@ -94,7 +94,7 @@ class TaskListTest {
                 LocalDateTime.of(2099, 12, 30, 9, 0),
                 LocalDateTime.of(2099, 12, 30, 17, 0)));
 
-        assertEquals(0, tasks.getTasksOn(LocalDate.of(2099, 12, 31)).size());
+        assertEquals(0, tasks.findTasksOnDate(LocalDate.of(2099, 12, 31)).size());
     }
 
     @Test

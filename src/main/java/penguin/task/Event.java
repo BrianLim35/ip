@@ -32,8 +32,8 @@ public class Event extends Task {
      * @return serialized event data
      */
     @Override
-    public String toFileFormat() {
-        return String.format("%s | %s | %s", super.toFileFormat(),
+    public String toStorageFormat() {
+        return String.format("%s | %s | %s", super.toStorageFormat(),
                 DateTimeUtil.formatForStorage(from),
                 DateTimeUtil.formatForStorage(to));
     }
@@ -57,7 +57,7 @@ public class Event extends Task {
     @Override
     public String toString() {
         return super.toString() + " (from: " +
-                DateTimeUtil.format(from) + " to: " +
-                DateTimeUtil.format(to) + ")";
+                DateTimeUtil.formatForDisplay(from) + " to: " +
+                DateTimeUtil.formatForDisplay(to) + ")";
     }
 }

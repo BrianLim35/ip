@@ -19,9 +19,9 @@ class StorageTest {
         ArrayList<String> content = new ArrayList<>();
         content.add("T | 0 | read book");
 
-        storage.save(content);
+        storage.saveTaskLines(content);
 
-        assertEquals(content, storage.read());
+        assertEquals(content, storage.loadTaskLines());
     }
 
     @Test
@@ -30,7 +30,7 @@ class StorageTest {
         Storage storage = new Storage(
                 tempDir.resolve("missing/tasks.txt").toString());
 
-        assertEquals(new ArrayList<>(), storage.read());
+        assertEquals(new ArrayList<>(), storage.loadTaskLines());
     }
 
     @Test
@@ -39,16 +39,16 @@ class StorageTest {
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
 
-        storage.save(new ArrayList<>());
+        storage.saveTaskLines(new ArrayList<>());
 
-        assertEquals(new ArrayList<>(), storage.read());
+        assertEquals(new ArrayList<>(), storage.loadTaskLines());
     }
 
     @Test
     void read_directoryPath_throwsPenguinException(@TempDir Path tempDir) {
         Storage storage = new Storage(tempDir.toString());
 
-        assertThrows(PenguinException.class, storage::read);
+        assertThrows(PenguinException.class, storage::loadTaskLines);
     }
 
     @Test
@@ -56,7 +56,7 @@ class StorageTest {
         Storage storage = new Storage(tempDir.toString());
 
         assertThrows(PenguinException.class,
-                () -> storage.save(new ArrayList<>()));
+                () -> storage.saveTaskLines(new ArrayList<>()));
     }
 
     @Test
@@ -67,6 +67,6 @@ class StorageTest {
         Files.createFile(filePath);
         Storage storage = new Storage(filePath.toString());
 
-        assertEquals(new ArrayList<>(), storage.read());
+        assertEquals(new ArrayList<>(), storage.loadTaskLines());
     }
 }

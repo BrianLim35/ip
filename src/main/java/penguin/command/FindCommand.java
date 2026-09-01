@@ -26,6 +26,6 @@ public class FindCommand extends Command {
      * @param storage storage used by the command framework
      */
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showTasksFind(keyword, tasks.getTasksMatch(keyword));
+        ui.showMatchingTasks(keyword, tasks.findMatchingTasks(keyword));
     }
 }

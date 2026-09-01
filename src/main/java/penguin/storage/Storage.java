@@ -28,7 +28,7 @@ public class Storage {
      * @param content lines to write to the storage file
      * @throws PenguinException if the file cannot be written
      */
-    public void save(ArrayList<String> content) throws PenguinException {
+    public void saveTaskLines(ArrayList<String> content) throws PenguinException {
         try {
             Path parent = filePath.getParent();
 
@@ -48,7 +48,7 @@ public class Storage {
      * @return saved task lines, or an empty list if the file does not exist
      * @throws PenguinException if the file cannot be read
      */
-    public ArrayList<String> read() throws PenguinException {
+    public ArrayList<String> loadTaskLines() throws PenguinException {
         try {
             if (Files.notExists(filePath)) {
                 return new ArrayList<>();

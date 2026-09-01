@@ -53,11 +53,11 @@ public class Penguin {
     /** Loads valid saved tasks and reports invalid records individually. */
     private void loadTasks() {
         try {
-            ArrayList<String> storageContent = storage.read();
+            ArrayList<String> storageContent = storage.loadTaskLines();
 
             for (String line : storageContent) {
                 try {
-                    taskList.addTask(Parser.parseTask(line));
+                    taskList.addTask(Parser.parseSavedTask(line));
                 } catch (PenguinException e) {
                     ui.showError("Skipping invalid saved task! "
                             + e.getMessage());
@@ -83,7 +83,7 @@ public class Penguin {
                 throw new PenguinException("Please input a task.");
             }
 
-            Command command = Parser.parse(input);
+            Command command = Parser.parseCommand(input);
             command.execute(taskList, ui, storage);
             isExitRequested = command.isExit();
         } catch (PenguinException e) {
@@ -114,20 +114,20 @@ public class Penguin {
                 break;
             }
 
-            ui.showLine();
+            ui.showDivider();
 
             try {
                 if (fullCommand.isBlank()) {
                     throw new PenguinException("Please input a task.");
                 }
 
-                Command command = Parser.parse(fullCommand);
+                Command command = Parser.parseCommand(fullCommand);
                 command.execute(taskList, ui, storage);
                 isExit = command.isExit();
             } catch (PenguinException e) {
                 ui.showError(e.getMessage());
             } finally {
-                ui.showLine();
+                ui.showDivider();
             }
         }
     }

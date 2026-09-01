@@ -24,7 +24,7 @@ public class MarkCommand extends Command {
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         try {
             Task task = tasks.markTask(index);
-            storage.save(tasks.toFileLines());
+            storage.saveTaskLines(tasks.toStorageLines());
             ui.showMessage("The following task has been marked.\n" + task);
         } catch (IndexOutOfBoundsException e) {
             throw new PenguinException("Invalid task index!");

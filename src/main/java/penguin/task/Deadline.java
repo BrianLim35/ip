@@ -28,8 +28,8 @@ public class Deadline extends Task {
      * @return serialized deadline data
      */
     @Override
-    public String toFileFormat() {
-        return String.format("%s | %s", super.toFileFormat(),
+    public String toStorageFormat() {
+        return String.format("%s | %s", super.toStorageFormat(),
                 DateTimeUtil.formatForStorage(dateTime));
     }
 
@@ -51,6 +51,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return super.toString() + " (by: " + DateTimeUtil.format(dateTime) + ")";
+        return super.toString() + " (by: " + DateTimeUtil.formatForDisplay(dateTime) + ")";
     }
 }

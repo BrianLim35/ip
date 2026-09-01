@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CommandTest {
     @Test
     void parseExit_validCommand_returnsExitCommand() throws Exception {
-        Command command = Parser.parse("bye");
+        Command command = Parser.parseCommand("bye");
 
         assertInstanceOf(ExitCommand.class, command);
         assertTrue(command.isExit());
@@ -28,7 +28,7 @@ class CommandTest {
 
     @Test
     void parseList_validCommand_returnsNonExitCommand() throws Exception {
-        Command command = Parser.parse("list");
+        Command command = Parser.parseCommand("list");
 
         assertInstanceOf(ListCommand.class, command);
         assertFalse(command.isExit());
@@ -45,7 +45,7 @@ class CommandTest {
         command.execute(tasks, new Ui(), storage);
 
         assertEquals(1, tasks.size());
-        assertEquals("T | 0 | read book", storage.read().get(0));
+        assertEquals("T | 0 | read book", storage.loadTaskLines().get(0));
     }
 
     @Test
@@ -64,7 +64,7 @@ class CommandTest {
         new DeleteCommand(0).execute(tasks, new Ui(), storage);
 
         assertEquals(0, tasks.size());
-        assertTrue(storage.read().isEmpty());
+        assertTrue(storage.loadTaskLines().isEmpty());
     }
 
     @Test
@@ -74,13 +74,13 @@ class CommandTest {
         tasks.addTask(new ToDo("read book"));
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
-        storage.save(tasks.toFileLines());
+        storage.saveTaskLines(tasks.toStorageLines());
 
         assertThrows(PenguinException.class,
                 () -> new DeleteCommand(1).execute(tasks, new Ui(), storage));
 
         assertEquals(1, tasks.size());
-        assertEquals("T | 0 | read book", storage.read().get(0));
+        assertEquals("T | 0 | read book", storage.loadTaskLines().get(0));
     }
 
     @Test
@@ -92,10 +92,10 @@ class CommandTest {
                 tempDir.resolve("data/tasks.txt").toString());
 
         new MarkCommand(0).execute(tasks, new Ui(), storage);
-        assertEquals("T | 1 | read book", storage.read().get(0));
+        assertEquals("T | 1 | read book", storage.loadTaskLines().get(0));
 
         new UnmarkCommand(0).execute(tasks, new Ui(), storage);
-        assertEquals("T | 0 | read book", storage.read().get(0));
+        assertEquals("T | 0 | read book", storage.loadTaskLines().get(0));
     }
 
     @Test
@@ -105,14 +105,14 @@ class CommandTest {
         tasks.addTask(new ToDo("read book"));
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
-        storage.save(tasks.toFileLines());
+        storage.saveTaskLines(tasks.toStorageLines());
 
         assertThrows(PenguinException.class,
                 () -> new MarkCommand(-1).execute(tasks, new Ui(), storage));
         assertThrows(PenguinException.class,
                 () -> new UnmarkCommand(1).execute(tasks, new Ui(), storage));
 
-        assertEquals("T | 0 | read book", storage.read().get(0));
+        assertEquals("T | 0 | read book", storage.loadTaskLines().get(0));
         assertEquals(" ", tasks.getTasks().get(0).getStatus());
     }
 }

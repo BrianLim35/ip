@@ -93,11 +93,11 @@ public class TaskList {
      *
      * @return task data formatted as storage lines
      */
-    public ArrayList<String> toFileLines() {
+    public ArrayList<String> toStorageLines() {
         ArrayList<String> lines = new ArrayList<>();
 
         for (Task task : tasks) {
-            lines.add(task.toFileFormat());
+            lines.add(task.toStorageFormat());
         }
 
         return lines;
@@ -109,7 +109,7 @@ public class TaskList {
      * @param date date to search for
      * @return tasks occurring on the specified date
      */
-    public ArrayList<Task> getTasksOn(LocalDate date) {
+    public ArrayList<Task> findTasksOnDate(LocalDate date) {
         ArrayList<Task> tasksOn = new ArrayList<>();
 
         for (Task task : tasks) {
@@ -126,11 +126,11 @@ public class TaskList {
      * @param keyword keyword or phrase to search for
      * @return matching tasks in their original order
      */
-    public ArrayList<Task> getTasksMatch(String keyword) {
+    public ArrayList<Task> findMatchingTasks(String keyword) {
         ArrayList<Task> tasksMatch = new ArrayList<>();
 
         for (Task task : tasks) {
-            if (task.containsWord(keyword)) {
+            if (task.containsKeyword(keyword)) {
                 tasksMatch.add(task);
             }
         }

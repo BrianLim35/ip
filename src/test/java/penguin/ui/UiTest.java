@@ -50,7 +50,7 @@ class UiTest {
 
         try {
             System.setOut(new PrintStream(output));
-            new Ui().showTasksOn(LocalDate.of(2099, 12, 31),
+            new Ui().showTasksOnDate(LocalDate.of(2099, 12, 31),
                     new ArrayList<>());
         } finally {
             System.setOut(originalOutput);

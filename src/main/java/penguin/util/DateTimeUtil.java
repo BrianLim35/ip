@@ -34,7 +34,7 @@ public class DateTimeUtil {
      * @return parsed date/time
      * @throws PenguinException if the input is invalid
      */
-    public static LocalDateTime parse(String dateTime) throws PenguinException {
+    public static LocalDateTime parseDateTime(String dateTime) throws PenguinException {
         String trimmedInput = dateTime.trim();
 
         if (!trimmedInput.matches("\\d{4}-\\d{2}-\\d{2} \\d{4}")) {
@@ -93,7 +93,7 @@ public class DateTimeUtil {
      * @param dateTime date/time to format
      * @return formatted date/time
      */
-    public static String format(LocalDateTime dateTime) {
+    public static String formatForDisplay(LocalDateTime dateTime) {
         return dateTime.format(OUTPUT_FORMAT);
     }
 

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ParserTest {
     @Test
     void parseTodo_validCommand_returnsAddCommand() throws PenguinException {
-        Command command = Parser.parse("todo read book");
+        Command command = Parser.parseCommand("todo read book");
 
         assertInstanceOf(AddCommand.class, command);
     }
@@ -22,45 +22,45 @@ class ParserTest {
     @Test
     void parseUnknownCommand_invalidInput_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("unknown command"));
+                () -> Parser.parseCommand("unknown command"));
     }
 
     @Test
     void parseDeadline_validCommand_returnsAddCommand() throws PenguinException {
         assertInstanceOf(AddCommand.class,
-                Parser.parse("deadline submit report /by 2099-12-31 1800"));
+                Parser.parseCommand("deadline submit report /by 2099-12-31 1800"));
     }
 
     @Test
     void parseEvent_validCommand_returnsAddCommand() throws PenguinException {
         assertInstanceOf(AddCommand.class,
-                Parser.parse("event meeting /from 2099-12-31 1400"
+                Parser.parseCommand("event meeting /from 2099-12-31 1400"
                         + " /to 2099-12-31 1600"));
     }
 
     @Test
     void parseOn_validCommand_returnsOnCommand() throws PenguinException {
         assertInstanceOf(OnCommand.class,
-                Parser.parse("on 2099-12-31"));
+                Parser.parseCommand("on 2099-12-31"));
     }
 
     @Test
     void parseFind_validKeyword_returnsFindCommand() throws PenguinException {
         assertInstanceOf(FindCommand.class,
-                Parser.parse("find read book"));
+                Parser.parseCommand("find read book"));
     }
 
     @Test
     void parseFind_repeatedWhitespace_returnsFindCommand()
             throws PenguinException {
         assertInstanceOf(FindCommand.class,
-                Parser.parse("find   read   book"));
+                Parser.parseCommand("find   read   book"));
     }
 
     @Test
     void parseFind_missingKeyword_throwsException() {
         PenguinException exception = assertThrows(PenguinException.class,
-                () -> Parser.parse("find"));
+                () -> Parser.parseCommand("find"));
 
         assertEquals("Please enter a keyword.", exception.getMessage());
     }
@@ -68,112 +68,112 @@ class ParserTest {
     @Test
     void parseDeadline_pastDate_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("deadline report /by 2000-01-01 1800"));
+                () -> Parser.parseCommand("deadline report /by 2000-01-01 1800"));
     }
 
     @Test
     void parseTodo_surroundingWhitespace_returnsAddCommand()
             throws PenguinException {
         assertInstanceOf(AddCommand.class,
-                Parser.parse("  todo   read book  "));
+                Parser.parseCommand("  todo   read book  "));
     }
 
     @Test
     void parseDeadline_duplicateBySeparators_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("deadline report /by 2099-12-31 1800"
+                () -> Parser.parseCommand("deadline report /by 2099-12-31 1800"
                         + " /by 2099-12-31 1900"));
     }
 
     @Test
     void parseEvent_duplicateFromSeparator_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("event meeting /from 2099-12-31 1400"
+                () -> Parser.parseCommand("event meeting /from 2099-12-31 1400"
                         + " /from 2099-12-31 1500 /to 2099-12-31 1600"));
     }
 
     @Test
     void parseEvent_duplicateToSeparator_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("event meeting /from 2099-12-31 1400"
+                () -> Parser.parseCommand("event meeting /from 2099-12-31 1400"
                         + " /to 2099-12-31 1600 /to 2099-12-31 1700"));
     }
 
     @Test
     void parseTask_malformedData_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parseTask("D | 0 | report"));
+                () -> Parser.parseSavedTask("D | 0 | report"));
     }
 
     @Test
     void parseMark_nonNumericIndex_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("mark abc"));
+                () -> Parser.parseCommand("mark abc"));
     }
 
     @Test
     void parseCommand_missingArgument_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("delete"));
+                () -> Parser.parseCommand("delete"));
         assertThrows(PenguinException.class,
-                () -> Parser.parse("on"));
+                () -> Parser.parseCommand("on"));
     }
 
     @Test
     void parseCommand_unexpectedArgument_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("list now"));
+                () -> Parser.parseCommand("list now"));
         assertThrows(PenguinException.class,
-                () -> Parser.parse("bye now"));
+                () -> Parser.parseCommand("bye now"));
     }
 
     @Test
     void parseEvent_endBeforeStart_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parse("event meeting /from 2099-12-31 1800"
+                () -> Parser.parseCommand("event meeting /from 2099-12-31 1800"
                         + " /to 2099-12-31 1400"));
     }
 
     @Test
     void parseTask_completedStatus_restoresCompletedState() throws PenguinException {
         assertEquals("[T][X] read book",
-                Parser.parseTask("T | 1 | read book").toString());
+                Parser.parseSavedTask("T | 1 | read book").toString());
     }
 
     @Test
     void parseTask_invalidStatus_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parseTask("T | 2 | read book"));
+                () -> Parser.parseSavedTask("T | 2 | read book"));
     }
 
     @Test
     void parseTask_unknownType_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parseTask("X | 0 | read book"));
+                () -> Parser.parseSavedTask("X | 0 | read book"));
     }
 
     @Test
     void parseTask_blankDescription_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parseTask("T | 0 | "));
+                () -> Parser.parseSavedTask("T | 0 | "));
     }
 
     @Test
     void parseTask_extraFields_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parseTask("T | 0 | read book | unexpected"));
+                () -> Parser.parseSavedTask("T | 0 | read book | unexpected"));
     }
 
     @Test
     void parseTask_invalidDateTime_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parseTask("D | 0 | submit report | 2099-13-31 1800"));
+                () -> Parser.parseSavedTask("D | 0 | submit report | 2099-13-31 1800"));
     }
 
     @Test
     void parseTask_eventEndBeforeStart_throwsException() {
         assertThrows(PenguinException.class,
-                () -> Parser.parseTask("E | 0 | meeting | 2099-12-31 1800"
+                () -> Parser.parseSavedTask("E | 0 | meeting | 2099-12-31 1800"
                         + " | 2099-12-31 1400"));
     }
 }

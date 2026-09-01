@@ -53,7 +53,7 @@ public class Task {
      *
      * @return task type, completion status, and description separated by pipes
      */
-    public String toFileFormat() {
+    public String toStorageFormat() {
         String status = isDone ? "1" : "0";
         return String.format("%s | %s | %s", type.getSymbol(), status, description);
     }
@@ -74,7 +74,7 @@ public class Task {
      * @param keyword keyword or phrase to search for
      * @return true if the description contains the keyword
      */
-    public boolean containsWord(String keyword) {
+    public boolean containsKeyword(String keyword) {
         return description.contains(keyword);
     }
 

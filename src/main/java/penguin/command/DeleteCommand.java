@@ -24,7 +24,7 @@ public class DeleteCommand extends Command {
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         try {
             Task task = tasks.deleteTask(index);
-            storage.save(tasks.toFileLines());
+            storage.saveTaskLines(tasks.toStorageLines());
             ui.showMessage("I have removed '" + task
                     + "' from your list of tasks. Now you have "
                     + tasks.size() + " task(s) in the list.");

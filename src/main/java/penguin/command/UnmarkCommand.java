@@ -24,7 +24,7 @@ public class UnmarkCommand extends Command {
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         try {
             Task task = tasks.unmarkTask(index);
-            storage.save(tasks.toFileLines());
+            storage.saveTaskLines(tasks.toStorageLines());
             ui.showMessage("The following task has been unmarked.\n" + task);
         } catch (IndexOutOfBoundsException e) {
             throw new PenguinException("Invalid task index!");
