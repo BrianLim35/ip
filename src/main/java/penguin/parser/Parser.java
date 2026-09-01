@@ -147,7 +147,13 @@ public class Parser {
         throw new PenguinException("I don't understand that command.");
     }
 
-    /** Parses a to-do creation command. */
+    /**
+     * Parses a to-do creation command and creates a task.
+     *
+     * @param command complete to-do command
+     * @return newly created to-do task
+     * @throws PenguinException if the description is invalid
+     */
     private static Task parseTodoCommand(String command) throws PenguinException {
         String description = command.length() <= 4 ? "" : command.substring(4).trim();
         if (description.isEmpty()) {
@@ -157,7 +163,13 @@ public class Parser {
         return new ToDo(description);
     }
 
-    /** Parses a deadline creation command. */
+    /**
+     * Parses a deadline creation command and validates its date/time.
+     *
+     * @param command complete deadline command
+     * @return newly created deadline task
+     * @throws PenguinException if the format or date/time is invalid
+     */
     private static Task parseDeadlineCommand(String command) throws PenguinException {
         String content = command.length() <= 9 ? "" : command.substring(9);
         String separator = " /by";
@@ -190,7 +202,13 @@ public class Parser {
         return new Deadline(description, dateTime);
     }
 
-    /** Parses an event creation command. */
+    /**
+     * Parses an event creation command and validates its time range.
+     *
+     * @param command complete event command
+     * @return newly created event task
+     * @throws PenguinException if the format, date/time, or ordering is invalid
+     */
     private static Task parseEventCommand(String command) throws PenguinException {
         String content = command.length() <= 6 ? "" : command.substring(6);
         String fromSeparator = " /from";
@@ -278,7 +296,15 @@ public class Parser {
         return task;
     }
 
-    /** Creates a task from its validated saved-data fields. */
+    /**
+     * Creates a task from validated fields in a saved record.
+     *
+     * @param type saved task type symbol
+     * @param parts fields from the saved record
+     * @param description saved task description
+     * @return reconstructed task
+     * @throws PenguinException if the task type or fields are invalid
+     */
     private static Task createSavedTask(String type, String[] parts, String description)
             throws PenguinException {
         return switch (type) {
@@ -289,7 +315,14 @@ public class Parser {
         };
     }
 
-    /** Parses a saved to-do record. */
+    /**
+     * Parses a saved to-do record.
+     *
+     * @param parts fields from the saved record
+     * @param description saved task description
+     * @return reconstructed to-do task
+     * @throws PenguinException if the record has an invalid number of fields
+     */
     private static Task parseSavedTodo(String[] parts, String description)
             throws PenguinException {
         if (parts.length != 3) {
@@ -298,7 +331,14 @@ public class Parser {
         return new ToDo(description);
     }
 
-    /** Parses a saved deadline record. */
+    /**
+     * Parses a saved deadline record and validates its date/time.
+     *
+     * @param parts fields from the saved record
+     * @param description saved task description
+     * @return reconstructed deadline task
+     * @throws PenguinException if the record or date/time is invalid
+     */
     private static Task parseSavedDeadline(String[] parts, String description)
             throws PenguinException {
         if (parts.length != 4 || parts[3].isBlank()) {
@@ -309,7 +349,14 @@ public class Parser {
         return new Deadline(description, dateTime);
     }
 
-    /** Parses a saved event record. */
+    /**
+     * Parses a saved event record and validates its time range.
+     *
+     * @param parts fields from the saved record
+     * @param description saved task description
+     * @return reconstructed event task
+     * @throws PenguinException if the record, date/time, or ordering is invalid
+     */
     private static Task parseSavedEvent(String[] parts, String description)
             throws PenguinException {
         if (parts.length != 5 || parts[3].isBlank() || parts[4].isBlank()) {

@@ -20,6 +20,7 @@ public class MarkCommand extends Command {
         this.index = taskIndex;
     }
 
+    /** Marks the selected task as completed and persists the updated list. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         try {

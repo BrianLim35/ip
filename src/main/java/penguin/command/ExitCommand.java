@@ -10,11 +10,17 @@ public class ExitCommand extends Command {
     public ExitCommand() {
     }
 
+    /** Displays the farewell message. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         ui.showGoodbye();
     }
 
+    /**
+     * Indicates that this command terminates the application.
+     *
+     * @return always {@code true}
+     */
     @Override
     public boolean isExit() {
         return true;

@@ -18,6 +18,12 @@ public class PenguinGUI extends Application {
     /** Chatbot instance used by the GUI. */
     private final Penguin penguin = new Penguin("./data/penguin.txt", false);
 
+    /**
+     * Loads and displays the main Penguin window.
+     *
+     * @param stage primary JavaFX stage
+     * @throws IllegalStateException if the FXML or stylesheet cannot be loaded
+     */
     @Override
     public void start(Stage stage) {
         try {

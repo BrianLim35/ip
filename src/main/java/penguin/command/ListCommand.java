@@ -10,6 +10,7 @@ public class ListCommand extends Command {
     public ListCommand() {
     }
 
+    /** Displays all tasks in the task list. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         ui.showTasks(tasks);

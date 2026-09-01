@@ -20,6 +20,7 @@ public class OnCommand extends Command {
         this.date = searchDate;
     }
 
+    /** Displays tasks occurring on the configured date. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         ui.showTasksOnDate(date, tasks.findTasksOnDate(date));

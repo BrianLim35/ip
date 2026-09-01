@@ -20,6 +20,7 @@ public class DeleteCommand extends Command {
         this.index = taskIndex;
     }
 
+    /** Deletes the selected task, persists the updated list, and reports the result. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         try {
