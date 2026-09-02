@@ -21,6 +21,8 @@ public class TaskList {
      * @param task the task to add
      */
     public void addTask(Task task) {
+        assert task != null : "Task must not be null";
+
         tasks.add(task);
     }
 
@@ -97,6 +99,7 @@ public class TaskList {
         ArrayList<String> lines = new ArrayList<>();
 
         for (Task task : tasks) {
+            assert task != null : "Task list must not contain null tasks";
             lines.add(task.toStorageFormat());
         }
 
@@ -110,6 +113,8 @@ public class TaskList {
      * @return tasks occurring on the specified date
      */
     public ArrayList<Task> findTasksOnDate(LocalDate date) {
+        assert date != null : "Date must be parsed before searching";
+
         ArrayList<Task> tasksOn = new ArrayList<>();
 
         for (Task task : tasks) {
@@ -130,6 +135,8 @@ public class TaskList {
         ArrayList<Task> tasksMatch = new ArrayList<>();
 
         for (Task task : tasks) {
+            assert task != null : "Task must not be null";
+
             if (task.containsKeyword(keyword)) {
                 tasksMatch.add(task);
             }
