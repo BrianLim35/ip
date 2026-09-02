@@ -1,5 +1,8 @@
 package penguin.parser;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import penguin.command.Command;
 import penguin.command.AddCommand;
 import penguin.command.DeleteCommand;
@@ -16,8 +19,6 @@ import penguin.task.Task;
 import penguin.task.ToDo;
 import penguin.util.DateTimeUtil;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Converts saved task data into Task objects.

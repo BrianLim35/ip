@@ -25,10 +25,10 @@ public class Storage {
     /**
      * Writes task data to the storage file, creating its parent directory if necessary.
      *
-     * @param content lines to write to the storage file
+     * @param taskLines lines to write to the storage file
      * @throws PenguinException if the file cannot be written
      */
-    public void saveTaskLines(ArrayList<String> content) throws PenguinException {
+    public void saveTaskLines(ArrayList<String> taskLines) throws PenguinException {
         try {
             Path parent = filePath.getParent();
 
@@ -36,7 +36,7 @@ public class Storage {
                 Files.createDirectories(parent);
             }
 
-            Files.write(filePath, content, StandardCharsets.UTF_8);
+            Files.write(filePath, taskLines, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new PenguinException("Unable to save tasks: " + e.getMessage());
         }

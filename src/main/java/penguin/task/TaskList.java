@@ -110,14 +110,14 @@ public class TaskList {
      * @return tasks occurring on the specified date
      */
     public ArrayList<Task> findTasksOnDate(LocalDate date) {
-        ArrayList<Task> tasksOn = new ArrayList<>();
+        ArrayList<Task> tasksOnDate = new ArrayList<>();
 
         for (Task task : tasks) {
             if (task.occursOn(date)) {
-                tasksOn.add(task);
+                tasksOnDate.add(task);
             }
         }
-        return tasksOn;
+        return tasksOnDate;
     }
 
     /**
@@ -127,13 +127,13 @@ public class TaskList {
      * @return matching tasks in their original order
      */
     public ArrayList<Task> findMatchingTasks(String keyword) {
-        ArrayList<Task> tasksMatch = new ArrayList<>();
+        ArrayList<Task> matchingTasks = new ArrayList<>();
 
         for (Task task : tasks) {
             if (task.containsKeyword(keyword)) {
-                tasksMatch.add(task);
+                matchingTasks.add(task);
             }
         }
-        return tasksMatch;
+        return matchingTasks;
     }
 }
