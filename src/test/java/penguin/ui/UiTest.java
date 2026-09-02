@@ -44,7 +44,7 @@ class UiTest {
     }
 
     @Test
-    void showTasksOn_noMatchingTasks_showsNoTasksMessage() {
+    void showTasksOnDate_noMatchingTasks_showsNoTasksMessage() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintStream originalOutput = System.out;
 

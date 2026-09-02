@@ -31,8 +31,8 @@ public class PenguinGUI extends Application {
                     PenguinGUI.class.getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
-            String stylesheet = PenguinGUI.class
-                    .getResource("/view/style.css").toExternalForm();
+            String stylesheet = PenguinGUI.class.getResource(
+                    "/view/style.css").toExternalForm();
             scene.getStylesheets().add(stylesheet);
             stage.setScene(scene);
             stage.setMinWidth(620);
