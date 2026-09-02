@@ -57,36 +57,6 @@ After every feature, bug fix, or behavior-changing code update:
 3. Invoke the project-specific `test-ui` skill using the complete test plan.
 4. Stop and report the expected and actual output if any test fails.
 
-### Commit message body structure
-
-When asked for commit message(s), inspect the complete uncommitted or staged
-diff and first group related changes into logical commits.
-
-If the changes contain multiple independent purposes, provide one commit message
-for each proposed group. For each group, list the included files and explain
-why they belong together.
-
-If all changes serve one purpose, provide one commit message. Commit message must
-align with https://se-education.org/guides/conventions/git.html.
-
-Do not commit or push unless explicitly requested. Do not create unnecessary
-commits by separating files that are required for the same change.
-
-For every non-trivial commit, use this exact structure:
-
-{current situation} — use present tense
-
-{why it needs to change}
-
-{what is being done about it} — use imperative mood
-
-{why it is done that way}
-
-{any other relevant information, if applicable}
-
-The message must describe all relevant changes, not only the most recent change.
-Do not assume the scope from `git status --short` or the latest edit alone.
-
 ## Code review workflow
 
 Review my current code for the specified project level or feature.
@@ -106,6 +76,16 @@ Important instructions:
 - If I request a review only, do not modify production code.
 - Use Java 25 where applicable.
 - Follow the project-specific Java and Git standards.
+
+For every potential finding, identify the exact file and line(s), quote only
+the smallest relevant fragment, name the applicable guideline, explain the
+maintainability impact, suggest a concrete improvement, and label confidence
+as `Definite violation`, `Likely issue`, or `Possible improvement`.
+
+After the line-level review, perform a second class/file-level pass for methods
+with too many responsibilities, misplaced responsibilities, repeated patterns,
+inconsistent abstraction levels, poor organization, and cross-file naming
+inconsistencies. Balance extraction recommendations against KISS.
 
 1. Check project requirements
 
@@ -127,7 +107,24 @@ Review:
 - Magic numbers and repeated string literals.
 - Error-prone or fragile logic.
 - Unnecessary comments or comments that merely restate code.
+- Comments that explain WHAT or WHY for future readers rather than HOW, and
+  consistency of comments across the project.
 - Opportunities to simplify without changing behavior.
+- Methods longer than approximately 30 lines, unless splitting would reduce
+  clarity.
+- More than three levels of nesting or arrowhead-shaped control flow.
+- Complicated expressions, excessive negation, and unexplained magic literals.
+- Logical ordering so each method reads like a story and follows one
+  abstraction level (SLAP).
+- KISS, the prominent happy path, guard clauses, and avoidance of premature
+  optimization.
+- Unused parameters, confusing data flow, recycled variables, multiple
+  statements per line, and values changed before being used.
+- Missing `default` branches, empty catch blocks, dead code, unnecessary scope,
+  and duplication.
+- Whether enums are suitable for small finite sets of values.
+- Whether refactoring genuinely improves clarity rather than adding needless
+  abstraction.
 
 3. Check naming
 
@@ -200,6 +197,12 @@ Review:
 - Check every class, constructor, public method, and non-trivial private method.
 - Verify that descriptions accurately explain behavior.
 - Verify @param, @return, and @throws tags.
+- Require complete Javadocs for every non-trivial private method: describe its
+  behavior and include an @param tag for every parameter, an @return tag for
+  every non-void return value, and an @throws tag for every documented
+  exception.
+- Do not consider a one-line summary comment sufficient for a non-trivial
+  private method with parameters, a return value, or thrown exceptions.
 - Identify missing, misleading, or redundant Javadocs.
 - Check README, AGENTS.md, skill files, and other relevant documentation.
 - Update documentation only when changes are explicitly allowed.
@@ -331,78 +334,6 @@ for Java documentation, JUnit tests, and `test/ui-test-plan.md`. These
 exceptions are permitted because updating documentation and tests is part of
 the review workflow.
 
-### Detailed readability and code-quality criteria
-
-During the review, also apply the following criteria. These criteria are
-guidelines, not mechanical rules; do not recommend a refactoring when it would
-make the code less understandable.
-
-#### Readability
-
-- Avoid methods longer than approximately 30 lines unless splitting them would
-  reduce clarity.
-- Avoid more than about three levels of nesting and look for arrowhead-shaped
-  code; consider guard clauses and simpler control flow.
-- Avoid complicated expressions with excessive negation or multiple concepts.
-- Replace unexplained magic numbers and literals with meaningful constants.
-- Prefer explicit, obvious code over clever or unnecessarily implicit code.
-- Use enums for values representing a small, finite set of states when suitable.
-
-#### Logical structure and abstraction
-
-- Organize code so it reads like a story, with related statements grouped and
-  operations appearing in a logical order.
-- Look for unused parameters, confusing data flow, inconsistent similar code,
-  multiple statements on one line, and values changed before being used.
-- Apply KISS: avoid complexity for hypothetical future needs.
-- Do not sacrifice correctness or readability for premature optimization.
-- Apply the Single Level of Abstraction Principle: do not mix high-level
-  operations with low-level implementation details in the same method unless
-  doing so is clearer.
-- Keep the happy path prominent and handle unusual cases early where practical.
-
-#### Naming
-
-- Use nouns for classes and data, and verbs for actions.
-- Distinguish single values from collections using clear singular and plural
-  names.
-- Use correctly spelled, standard English words and sensible word order.
-- Avoid vague, misleading, overly short, overly long, or nearly identical
-  names; do not distinguish names only by numbers or letter case.
-- Ensure names accurately describe the entity's actual purpose and behavior.
-
-#### Safe implementation practices
-
-- Include an appropriate `default` branch in switches for unexpected values.
-- Do not recycle variables or parameters for unrelated purposes.
-- Avoid empty catch blocks and never silently ignore exceptions.
-- Remove dead code, unused methods, unused variables, unreachable code, and
-  commented-out obsolete implementations.
-- Minimize variable scope and unnecessary class-level state.
-- Minimize duplication where extraction genuinely improves clarity.
-
-#### Comments and consistency
-
-- Prefer self-explanatory code over comments.
-- Do not repeat obvious statements in comments.
-- Write comments for future readers and explain what and why, not the mechanics
-  of straightforward code.
-- Check that the same coding standard is applied consistently throughout the
-  project, and do not report personal stylistic preferences as violations.
-
-#### Evidence required for review findings
-
-For every potential issue, identify the exact file and line(s), quote only the
-smallest relevant fragment, name the applicable guideline, explain the
-maintainability impact, suggest a concrete improvement, and state confidence as
-`Definite violation`, `Likely issue`, or `Possible improvement`.
-
-After the line-level review, perform a second class/file-level pass for methods
-with too many responsibilities, misplaced responsibilities, repeated patterns,
-inconsistent abstraction levels, poor organization, and cross-file naming
-inconsistencies. Do not call something a violation unless the guideline clearly
-supports that conclusion, and balance extraction recommendations against KISS.
-
 ### Review findings and approved changes
 
 During a code review, inspect and report all findings before editing. Do not
@@ -426,3 +357,44 @@ run and their results, and any blocked checks.
 The final response must include a checklist marking every step as `PASS`,
 `FAIL`, or `BLOCKED`. If a required skill is unavailable, mark that step as
 `BLOCKED` and do not claim that it was completed.
+
+## Review completion gate
+
+When reviewing code and applying requested fixes:
+
+1. Inspect the complete repository, specification, tests, and UI test plan before editing.
+2. Record all findings first, including code, design, documentation, testing, persistence,
+   validation, and requirements findings.
+3. Fix every actionable finding in the same goal unless the user explicitly limits the scope.
+4. Do not declare the review complete while known actionable findings remain.
+5. After editing, rerun the complete review checklist from the beginning.
+6. Run Java 25 compilation, Checkstyle, the full Gradle test suite, and the complete UI test plan.
+7. Clearly separate fixed findings, remaining findings, externally blocked checks, and checks
+   that were not executable.
+8. If a check is blocked, state the exact blocker and do not mark that check as passed.
+9. Before the final response, verify that every previously reported finding is fixed,
+   reclassified with evidence, or explicitly blocked.
+
+Do not perform partial fixes and then wait for another review to discover related issues.
+When the user asks to fix review findings, treat all findings from the latest review as one
+complete implementation task.
+
+## Commit message completion gate
+
+When asked to propose commit messages:
+
+1. Inspect the complete uncommitted or staged diff.
+2. Group files by logical purpose before drafting messages.
+3. Use one commit message per logical group.
+4. For every non-trivial commit, use exactly five body paragraphs:
+   1. Current situation, in present tense.
+   2. Why the change is needed.
+   3. What should be done, in imperative mood.
+   4. Why that approach is used.
+   5. Any other relevant information, such as tests or affected files.
+5. Keep the subject imperative, capitalized, punctuation-free, and within 72
+   characters.
+6. Wrap body lines at 72 characters.
+7. Before responding, verify that all five body paragraphs are present and
+   that the message describes the complete logical commit group.
+8. Do not commit, amend, tag, or push unless explicitly requested.
