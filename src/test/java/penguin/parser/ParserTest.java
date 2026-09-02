@@ -5,6 +5,7 @@ import penguin.command.AddCommand;
 import penguin.command.Command;
 import penguin.command.FindCommand;
 import penguin.command.OnCommand;
+import penguin.command.UndoCommand;
 import penguin.exception.PenguinException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,6 +13,22 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParserTest {
+    @Test
+    void parseUndo_validCommand_returnsUndoCommand() throws PenguinException {
+        assertInstanceOf(UndoCommand.class, Parser.parseCommand("undo"));
+    }
+
+    @Test
+    void parseUndo_extraArgument_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseCommand("undo now"));
+    }
+
+    @Test
+    void parseUndo_caseInsensitive_returnsUndoCommand() throws PenguinException {
+        assertInstanceOf(UndoCommand.class, Parser.parseCommand("UNDO"));
+    }
+
     @Test
     void parseTodo_validCommand_returnsAddCommand() throws PenguinException {
         Command command = Parser.parseCommand("todo read book");

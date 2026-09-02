@@ -10,6 +10,7 @@ import penguin.command.ExitCommand;
 import penguin.command.ListCommand;
 import penguin.command.MarkCommand;
 import penguin.command.UnmarkCommand;
+import penguin.command.UndoCommand;
 import penguin.command.OnCommand;
 import penguin.command.FindCommand;
 import penguin.exception.PenguinException;
@@ -59,6 +60,12 @@ public class Parser {
             case "delete" -> new DeleteCommand(parseTaskIndex(trimmedInput));
             case "on" -> new OnCommand(parseDate(trimmedInput));
             case "find" -> new FindCommand(parseKeyword(trimmedInput));
+            case "undo" -> {
+                if (!trimmedInput.equalsIgnoreCase("undo")) {
+                    throw new PenguinException("The undo command does not take arguments.");
+                }
+                yield new UndoCommand();
+            }
             case "bye" -> new ExitCommand();
             default -> throw new PenguinException("I don't understand that command.");
         };

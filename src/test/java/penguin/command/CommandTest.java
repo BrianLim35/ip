@@ -54,6 +54,20 @@ class CommandTest {
     }
 
     @Test
+    void undoCommand_markedTask_restoresAndPersistsPreviousState(
+            @TempDir Path tempDir) throws Exception {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+        Storage storage = new Storage(
+                tempDir.resolve("data/tasks.txt").toString());
+        new MarkCommand(0).execute(tasks, new Ui(), storage);
+
+        new UndoCommand().execute(tasks, new Ui(), storage);
+
+        assertEquals("T | 0 | read book", storage.loadTaskLines().get(0));
+    }
+
+    @Test
     void deleteCommand_validIndex_removesAndPersistsChange(
             @TempDir Path tempDir) throws Exception {
         TaskList tasks = new TaskList();

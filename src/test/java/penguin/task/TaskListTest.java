@@ -7,8 +7,87 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TaskListTest {
+    @Test
+    void undo_markedTask_restoresPreviousStatus() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+        tasks.markTask(0);
+
+        tasks.undo();
+
+        assertEquals("[T][ ] read book", tasks.getTasks().get(0).toString());
+    }
+
+    @Test
+    void undo_withoutHistory_throwsException() {
+        TaskList tasks = new TaskList();
+
+        assertThrows(IllegalStateException.class, tasks::undo);
+    }
+
+    @Test
+    void addLoadedTask_doesNotCreateUndoHistory() {
+        TaskList tasks = new TaskList();
+        tasks.addLoadedTask(new ToDo("saved task"));
+
+        assertThrows(IllegalStateException.class, tasks::undo);
+        assertEquals(1, tasks.size());
+    }
+
+    @Test
+    void undo_addedTask_restoresEmptyTaskList() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+
+        tasks.undo();
+
+        assertTrue(tasks.isEmpty());
+    }
+
+    @Test
+    void undo_deletedTask_restoresTaskAndPosition() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new ToDo("buy milk"));
+        tasks.deleteTask(0);
+
+        tasks.undo();
+
+        assertEquals("[T][ ] read book", tasks.getTasks().get(0).toString());
+        assertEquals("[T][ ] buy milk", tasks.getTasks().get(1).toString());
+    }
+
+    @Test
+    void undo_unmarkedTask_restoresCompletedStatus() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new ToDo("read book"));
+        tasks.markTask(0);
+        tasks.unmarkTask(0);
+
+        tasks.undo();
+
+        assertEquals("[T][X] read book", tasks.getTasks().get(0).toString());
+    }
+
+    @Test
+    void undo_sixthChange_keepsOnlyFiveUndoStates() {
+        TaskList tasks = new TaskList();
+        for (int i = 1; i <= 6; i++) {
+            tasks.addTask(new ToDo("task " + i));
+        }
+
+        for (int i = 0; i < 5; i++) {
+            tasks.undo();
+        }
+
+        assertEquals(1, tasks.size());
+        assertEquals("[T][ ] task 1", tasks.getTasks().get(0).toString());
+        assertThrows(IllegalStateException.class, tasks::undo);
+    }
+
     @Test
     void addTask_nullTask_throwsNullPointerException() {
         TaskList tasks = new TaskList();
