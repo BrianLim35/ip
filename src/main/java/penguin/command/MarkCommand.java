@@ -23,6 +23,9 @@ public class MarkCommand extends Command {
     /** Marks the selected task as completed and persists the updated list. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
+        assert tasks != null : "Mark command requires a task list";
+        assert ui != null : "Mark command requires a user interface";
+        assert storage != null : "Mark command requires storage";
         try {
             Task task = tasks.markTask(index);
             storage.saveTaskLines(tasks.toStorageLines());

@@ -26,6 +26,10 @@ public class FindCommand extends Command {
      * @param storage storage used by the command framework
      */
     public void execute(TaskList tasks, Ui ui, Storage storage) {
+        assert keyword != null : "Find command must contain a keyword";
+        assert tasks != null : "Find command requires a task list";
+        assert ui != null : "Find command requires a user interface";
+
         ui.showMatchingTasks(keyword, tasks.findMatchingTasks(keyword));
     }
 }

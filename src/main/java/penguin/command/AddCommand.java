@@ -23,6 +23,11 @@ public class AddCommand extends Command {
     /** Adds the task, persists the updated list, and reports the result. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
+        assert task != null : "Add command must contain a task";
+        assert tasks != null : "Add command requires a task list";
+        assert ui != null : "Add command requires a ui";
+        assert storage != null : "Add command requires a storage";
+
         tasks.addTask(task);
         storage.saveTaskLines(tasks.toStorageLines());
         ui.showMessage("I have added '" + task + "' to your list of tasks."

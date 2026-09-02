@@ -129,6 +129,19 @@ Review:
 - Avoidance of duplicated validation logic.
 - Java coding-standard compliance.
 
+Also review assertions:
+
+- Identify methods with important internal assumptions that should always hold.
+- Add or recommend `assert` statements for relevant non-user-facing assumptions,
+  such as required non-null collaborators, valid internal object state, and
+  collection invariants.
+- Keep assertions grouped together at the start of a method, followed by a
+  blank line before executable logic.
+- Do not use assertions to validate user input, malformed saved data, or other
+  expected runtime errors; use the project's normal exception handling instead.
+- Verify that assertions are enabled during the relevant development and test
+  runs.
+
 5. Check OOP design
 
 Review:

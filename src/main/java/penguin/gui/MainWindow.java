@@ -55,6 +55,8 @@ public class MainWindow extends AnchorPane {
      * @param penguinInstance chatbot instance used to process commands
      */
     public void setPenguin(Penguin penguinInstance) {
+        assert penguinInstance != null : "Penguin instance must not be null";
+
         penguin = penguinInstance;
     }
 
@@ -64,6 +66,8 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     private void handleUserInput() {
+        assert penguin != null : "Penguin must be injected before handling input";
+
         String input = userInput.getText();
 
         String response = penguin.getResponse(input);
