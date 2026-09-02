@@ -20,7 +20,14 @@ public class DeleteCommand extends Command {
         this.index = taskIndex;
     }
 
-    /** Deletes the selected task, persists the updated list, and reports the result. */
+    /**
+     * Deletes the selected task, persists the updated list, and reports the result.
+     *
+     * @param tasks task list to modify
+     * @param ui interface used for output
+     * @param storage storage used to persist the change
+     * @throws PenguinException if the index is invalid or persistence fails
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         assert tasks != null : "Delete command requires a task list";

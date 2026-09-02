@@ -29,4 +29,19 @@ public enum TaskType {
     public String getSymbol() {
         return symbol;
     }
+
+    /**
+     * Finds the task type represented by a persistent storage symbol.
+     *
+     * @param symbol persistent storage symbol
+     * @return matching task type, or {@code null} when the symbol is unknown
+     */
+    public static TaskType fromSymbol(String symbol) {
+        for (TaskType taskType : values()) {
+            if (taskType.symbol.equals(symbol)) {
+                return taskType;
+            }
+        }
+        return null;
+    }
 }

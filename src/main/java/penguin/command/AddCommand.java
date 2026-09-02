@@ -20,7 +20,14 @@ public class AddCommand extends Command {
         this.task = newTask;
     }
 
-    /** Adds the task, persists the updated list, and reports the result. */
+    /**
+     * Adds the task, persists the updated list, and reports the result.
+     *
+     * @param tasks task list to modify
+     * @param ui interface used for output
+     * @param storage storage used to persist the change
+     * @throws PenguinException if persistence fails
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         assert task != null : "Add command must contain a task";

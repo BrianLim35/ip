@@ -1,31 +1,25 @@
 package penguin.parser;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Locale;
 
-import penguin.command.Command;
 import penguin.command.AddCommand;
+import penguin.command.Command;
 import penguin.command.DeleteCommand;
 import penguin.command.ExitCommand;
+import penguin.command.FindCommand;
 import penguin.command.ListCommand;
 import penguin.command.MarkCommand;
+import penguin.command.OnCommand;
 import penguin.command.UnmarkCommand;
 import penguin.command.UndoCommand;
-import penguin.command.OnCommand;
-import penguin.command.FindCommand;
+import penguin.enums.CommandType;
 import penguin.exception.PenguinException;
-import penguin.task.Deadline;
-import penguin.task.Event;
 import penguin.task.Task;
-import penguin.task.ToDo;
 import penguin.util.DateTimeUtil;
 
-
-/**
- * Converts saved task data into Task objects.
- */
+/** Parses user commands and saved task records into application objects. */
 public class Parser {
-
     /** Prevents instantiation of this utility class. */
     private Parser() {
     }
@@ -38,36 +32,46 @@ public class Parser {
      * @throws PenguinException if the command is invalid
      */
     public static Command parseCommand(String input) throws PenguinException {
+        if (input == null) {
+            throw new PenguinException("Please input a task.");
+        }
         String trimmedInput = input.trim();
-        String firstWord = trimmedInput.split("\\s+", 2)[0].toLowerCase();
+        if (trimmedInput.isEmpty()) {
+            throw new PenguinException("Please input a task.");
+        }
+        String firstWord = trimmedInput.split("\\s+", 2)[0].toLowerCase(Locale.ROOT);
 
-        if (firstWord.equals("bye")
-                && !trimmedInput.equalsIgnoreCase("bye")) {
+        CommandType commandType = CommandType.fromKeyword(firstWord);
+        if (commandType == CommandType.BYE
+                && !trimmedInput.equalsIgnoreCase(commandType.name())) {
             throw new PenguinException("The bye command does not take arguments.");
         }
 
-        return switch (firstWord) {
-            case "todo", "deadline", "event" ->
+        if (commandType == null) {
+            throw new PenguinException("I don't understand that command.");
+        }
+
+        return switch (commandType) {
+            case TODO, DEADLINE, EVENT ->
                     new AddCommand(parseTaskCommand(trimmedInput));
-            case "list" -> {
-                if (!trimmedInput.equalsIgnoreCase("list")) {
+            case LIST -> {
+                if (!trimmedInput.equalsIgnoreCase(commandType.name())) {
                     throw new PenguinException("The list command does not take arguments.");
                 }
                 yield new ListCommand();
             }
-            case "mark" -> new MarkCommand(parseTaskIndex(trimmedInput));
-            case "unmark" -> new UnmarkCommand(parseTaskIndex(trimmedInput));
-            case "delete" -> new DeleteCommand(parseTaskIndex(trimmedInput));
-            case "on" -> new OnCommand(parseDate(trimmedInput));
-            case "find" -> new FindCommand(parseKeyword(trimmedInput));
-            case "undo" -> {
-                if (!trimmedInput.equalsIgnoreCase("undo")) {
+            case MARK -> new MarkCommand(parseTaskIndex(trimmedInput));
+            case UNMARK -> new UnmarkCommand(parseTaskIndex(trimmedInput));
+            case DELETE -> new DeleteCommand(parseTaskIndex(trimmedInput));
+            case ON -> new OnCommand(parseDate(trimmedInput));
+            case FIND -> new FindCommand(parseKeyword(trimmedInput));
+            case UNDO -> {
+                if (!trimmedInput.equalsIgnoreCase(commandType.name())) {
                     throw new PenguinException("The undo command does not take arguments.");
                 }
                 yield new UndoCommand();
             }
-            case "bye" -> new ExitCommand();
-            default -> throw new PenguinException("I don't understand that command.");
+            case BYE -> new ExitCommand();
         };
     }
 
@@ -135,137 +139,7 @@ public class Parser {
      * @throws PenguinException if the command is invalid
      */
     private static Task parseTaskCommand(String command) throws PenguinException {
-        String lowerCaseCommand = command.toLowerCase();
-
-        if (lowerCaseCommand.equals("todo")
-                || lowerCaseCommand.startsWith("todo ")) {
-            return parseTodoCommand(command);
-        }
-
-        if (lowerCaseCommand.equals("deadline")
-                || lowerCaseCommand.startsWith("deadline ")) {
-            return parseDeadlineCommand(command);
-        }
-
-        if (lowerCaseCommand.equals("event")
-                || lowerCaseCommand.startsWith("event ")) {
-            return parseEventCommand(command);
-        }
-
-        throw new PenguinException("I don't understand that command.");
-    }
-
-    /**
-     * Parses a to-do creation command and creates a task.
-     *
-     * @param command complete to-do command
-     * @return newly created to-do task
-     * @throws PenguinException if the description is invalid
-     */
-    private static Task parseTodoCommand(String command) throws PenguinException {
-        String description = command.length() <= 4 ? "" : command.substring(4).trim();
-        if (description.isEmpty()) {
-            throw new PenguinException("The description of a todo cannot be empty.");
-        }
-        validateDescription(description);
-        return new ToDo(description);
-    }
-
-    /**
-     * Parses a deadline creation command and validates its date/time.
-     *
-     * @param command complete deadline command
-     * @return newly created deadline task
-     * @throws PenguinException if the format or date/time is invalid
-     */
-    private static Task parseDeadlineCommand(String command) throws PenguinException {
-        String content = command.length() <= 9 ? "" : command.substring(9);
-        String separator = " /by";
-        String lowerCaseContent = content.toLowerCase();
-
-        if (content.trim().isEmpty() || lowerCaseContent.trim().equals("/by")
-                || lowerCaseContent.trim().startsWith("/by ")) {
-            throw new PenguinException("The description of a deadline cannot be empty.");
-        }
-        if (!lowerCaseContent.contains(separator)) {
-            throw new PenguinException("A deadline must contain /by followed by a date or time.");
-        }
-        if (lowerCaseContent.indexOf(separator) != lowerCaseContent.lastIndexOf(separator)) {
-            throw new PenguinException("A deadline must contain only one /by separator.");
-        }
-
-        int separatorIndex = lowerCaseContent.indexOf(separator);
-        String description = content.substring(0, separatorIndex).trim();
-        String dateTimeInput = content.substring(separatorIndex + separator.length()).trim();
-        if (description.isEmpty()) {
-            throw new PenguinException("A deadline must have a description before /by.");
-        }
-        validateDescription(description);
-        if (dateTimeInput.isEmpty()) {
-            throw new PenguinException("A deadline must have a date or time after /by.");
-        }
-
-        LocalDateTime dateTime = DateTimeUtil.parseDateTime(dateTimeInput);
-        DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
-        return new Deadline(description, dateTime);
-    }
-
-    /**
-     * Parses an event creation command and validates its time range.
-     *
-     * @param command complete event command
-     * @return newly created event task
-     * @throws PenguinException if the format, date/time, or ordering is invalid
-     */
-    private static Task parseEventCommand(String command) throws PenguinException {
-        String content = command.length() <= 6 ? "" : command.substring(6);
-        String fromSeparator = " /from";
-        String toSeparator = " /to";
-        String lowerCaseContent = content.toLowerCase();
-
-        if (lowerCaseContent.startsWith("/from ") || lowerCaseContent.startsWith("/to ")) {
-            throw new PenguinException("The description of an event cannot be empty.");
-        }
-
-        int fromIndex = lowerCaseContent.indexOf(fromSeparator);
-        int toIndex = lowerCaseContent.indexOf(toSeparator);
-        if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex
-                || fromIndex != lowerCaseContent.lastIndexOf(fromSeparator)
-                || toIndex != lowerCaseContent.lastIndexOf(toSeparator)) {
-            throw new PenguinException("An event must contain one /from and one /to separator.");
-        }
-
-        String description = content.substring(0, fromIndex).trim();
-        String fromInput = content.substring(fromIndex + fromSeparator.length(), toIndex).trim();
-        String toInput = content.substring(toIndex + toSeparator.length()).trim();
-        if (description.isEmpty()) {
-            throw new PenguinException("The description of an event cannot be empty.");
-        }
-        validateDescription(description);
-        if (fromInput.isEmpty() || toInput.isEmpty()) {
-            throw new PenguinException("An event must have both a start and an end time.");
-        }
-
-        LocalDateTime from = DateTimeUtil.parseDateTime(fromInput);
-        LocalDateTime to = DateTimeUtil.parseDateTime(toInput);
-        DateTimeUtil.validateNotBeforeToday(to, "event end");
-        if (to.isBefore(from)) {
-            throw new PenguinException("The start time must be before the end time.");
-        }
-        return new Event(description, from, to);
-    }
-
-    /**
-     * Rejects the persistence delimiter in a user description.
-     *
-     * @param description task description
-     * @throws PenguinException if the delimiter is present
-     */
-    private static void validateDescription(String description) throws PenguinException {
-        if (description.contains("|")) {
-            throw new PenguinException(
-                    "Task descriptions cannot contain the | character.");
-        }
+        return TaskCommandParser.parse(command);
     }
 
     /**
@@ -276,106 +150,6 @@ public class Parser {
      * @throws PenguinException if the line is malformed
      */
     public static Task parseSavedTask(String line) throws PenguinException {
-        String[] parts = line.split(" \\| ");
-
-        if (parts.length < 3 || parts[2].isBlank()) {
-            throw new PenguinException("Invalid task data. File may be corrupted.");
-        }
-
-        String type = parts[0];
-        String status = parts[1].trim();
-        if (!status.equals("0") && !status.equals("1")) {
-            throw new PenguinException("Invalid task status. File may be corrupted.");
-        }
-        boolean isDone = status.equals("1");
-        String description = parts[2];
-
-        if (description.contains("|")) {
-            throw new PenguinException("Invalid task data! "
-                    + "Descriptions cannot contain the | character.");
-        }
-
-        Task task = createSavedTask(type, parts, description);
-
-        if (isDone) {
-            task.markDone();
-        }
-
-        return task;
-    }
-
-    /**
-     * Creates a task from validated fields in a saved record.
-     *
-     * @param type saved task type symbol
-     * @param parts fields from the saved record
-     * @param description saved task description
-     * @return reconstructed task
-     * @throws PenguinException if the task type or fields are invalid
-     */
-    private static Task createSavedTask(String type, String[] parts, String description)
-            throws PenguinException {
-        return switch (type) {
-            case "T" -> parseSavedTodo(parts, description);
-            case "D" -> parseSavedDeadline(parts, description);
-            case "E" -> parseSavedEvent(parts, description);
-            default -> throw new PenguinException("Unknown task type.");
-        };
-    }
-
-    /**
-     * Parses a saved to-do record.
-     *
-     * @param parts fields from the saved record
-     * @param description saved task description
-     * @return reconstructed to-do task
-     * @throws PenguinException if the record has an invalid number of fields
-     */
-    private static Task parseSavedTodo(String[] parts, String description)
-            throws PenguinException {
-        if (parts.length != 3) {
-            throw new PenguinException("Invalid todo data.");
-        }
-        return new ToDo(description);
-    }
-
-    /**
-     * Parses a saved deadline record and validates its date/time.
-     *
-     * @param parts fields from the saved record
-     * @param description saved task description
-     * @return reconstructed deadline task
-     * @throws PenguinException if the record or date/time is invalid
-     */
-    private static Task parseSavedDeadline(String[] parts, String description)
-            throws PenguinException {
-        if (parts.length != 4 || parts[3].isBlank()) {
-            throw new PenguinException("Invalid deadline data.");
-        }
-        LocalDateTime dateTime = DateTimeUtil.parseDateTime(parts[3]);
-        DateTimeUtil.validateNotBeforeToday(dateTime, "deadline");
-        return new Deadline(description, dateTime);
-    }
-
-    /**
-     * Parses a saved event record and validates its time range.
-     *
-     * @param parts fields from the saved record
-     * @param description saved task description
-     * @return reconstructed event task
-     * @throws PenguinException if the record, date/time, or ordering is invalid
-     */
-    private static Task parseSavedEvent(String[] parts, String description)
-            throws PenguinException {
-        if (parts.length != 5 || parts[3].isBlank() || parts[4].isBlank()) {
-            throw new PenguinException("Invalid event data.");
-        }
-        LocalDateTime from = DateTimeUtil.parseDateTime(parts[3]);
-        LocalDateTime to = DateTimeUtil.parseDateTime(parts[4]);
-        DateTimeUtil.validateNotBeforeToday(to, "event end");
-        if (to.isBefore(from)) {
-            throw new PenguinException("Invalid event data. End is before start.");
-        }
-        return new Event(description, from, to);
+        return SavedTaskParser.parse(line);
     }
 }

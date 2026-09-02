@@ -10,7 +10,13 @@ public class ExitCommand extends Command {
     public ExitCommand() {
     }
 
-    /** Displays the farewell message. */
+    /**
+     * Displays the farewell message.
+     *
+     * @param tasks unused task list
+     * @param ui interface used for output
+     * @param storage unused storage
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         assert ui != null : "Exit command requires a ui";

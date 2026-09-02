@@ -1,13 +1,17 @@
 package penguin.task;
 
-import penguin.enums.TaskType;
-
 import java.time.LocalDate;
+import java.util.Objects;
+
+import penguin.enums.TaskType;
 
 /**
  * Represents a task that can be marked as completed or incomplete.
  */
 public class Task {
+    /** Delimiter reserved by the persistent storage format. */
+    public static final String STORAGE_DELIMITER = "|";
+
     /** The description of this task. */
     private final String description;
 
@@ -24,9 +28,12 @@ public class Task {
      * @param taskType the type of the task
      */
     public Task(String taskDescription, TaskType taskType) {
-        this.description = taskDescription;
+        this.description = Objects.requireNonNull(taskDescription, "Description must not be null");
+        if (taskDescription.isBlank()) {
+            throw new IllegalArgumentException("Description must not be blank");
+        }
         this.isDone = false;
-        this.type = taskType;
+        this.type = Objects.requireNonNull(taskType, "Task type must not be null");
     }
 
     /**
@@ -61,7 +68,11 @@ public class Task {
         return copy;
     }
 
-    /** Returns this task's description for subclass copy operations. */
+    /**
+     * Returns this task's description for subclass copy operations.
+     *
+     * @return this task's description
+     */
     protected String getDescription() {
         return description;
     }

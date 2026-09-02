@@ -20,7 +20,14 @@ public class MarkCommand extends Command {
         this.index = taskIndex;
     }
 
-    /** Marks the selected task as completed and persists the updated list. */
+    /**
+     * Marks the selected task as completed and persists the updated list.
+     *
+     * @param tasks task list to modify
+     * @param ui interface used for output
+     * @param storage storage used to persist the change
+     * @throws PenguinException if the index is invalid or persistence fails
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
         assert tasks != null : "Mark command requires a task list";

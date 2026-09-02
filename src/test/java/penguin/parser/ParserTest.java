@@ -43,6 +43,11 @@ class ParserTest {
     }
 
     @Test
+    void parseCommand_nullInput_throwsPenguinException() {
+        assertThrows(PenguinException.class, () -> Parser.parseCommand(null));
+    }
+
+    @Test
     void parseDeadline_validCommand_returnsAddCommand() throws PenguinException {
         assertInstanceOf(AddCommand.class,
                 Parser.parseCommand("deadline submit report /by 2099-12-31 1800"));
@@ -179,6 +184,12 @@ class ParserTest {
     void parseSavedTask_extraFields_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("T | 0 | read book | unexpected"));
+    }
+
+    @Test
+    void parseSavedTask_flexibleDelimiterSpacing_returnsTask() throws PenguinException {
+        assertEquals("[T][ ] read book",
+                Parser.parseSavedTask("T|0|read book").toString());
     }
 
     @Test

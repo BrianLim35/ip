@@ -1,12 +1,14 @@
 package penguin.storage;
 
-import penguin.exception.PenguinException;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.nio.file.StandardCopyOption;
+
+import penguin.exception.PenguinException;
 
 /** Handles saving Penguin data to a file. */
 public class Storage {
@@ -36,9 +38,31 @@ public class Storage {
                 Files.createDirectories(parent);
             }
 
-            Files.write(filePath, taskLines, StandardCharsets.UTF_8);
+            Path temporaryPath = Files.createTempFile(parent == null ? Path.of(".") : parent,
+                    "penguin-storage-", ".tmp");
+            try {
+                Files.write(temporaryPath, taskLines, StandardCharsets.UTF_8);
+                replaceStorageFile(temporaryPath);
+            } finally {
+                Files.deleteIfExists(temporaryPath);
+            }
         } catch (IOException e) {
             throw new PenguinException("Unable to save tasks: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Replaces the storage file atomically when the filesystem supports it.
+     *
+     * @param temporaryPath temporary file containing the new task data
+     * @throws IOException if the replacement cannot be completed
+     */
+    private void replaceStorageFile(Path temporaryPath) throws IOException {
+        try {
+            Files.move(temporaryPath, filePath, StandardCopyOption.REPLACE_EXISTING,
+                    StandardCopyOption.ATOMIC_MOVE);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(temporaryPath, filePath, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 

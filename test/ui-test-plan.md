@@ -987,3 +987,45 @@ bye
 
 Expected output: The sixth `undo` reports that there is nothing to undo, and
 the list contains only `task 1`.
+
+## Test 58: Null and flexible saved-data parsing
+
+Aim: Verify that invalid direct parser input is rejected and valid saved data
+with flexible delimiter spacing remains readable.
+
+JUnit coverage:
+
+```text
+Parser.parseCommand(null) -> PenguinException
+Parser.parseSavedTask("T|0|read book") -> [T][ ] read book
+```
+
+Expected output: Null input produces a controlled `PenguinException`, while
+the saved record is parsed as a normal to-do task.
+
+## Test 59: Past deadlines survive restart
+
+Aim: Verify that a valid deadline remains available after its due date has
+passed and can still be loaded from storage.
+
+Input: Create a deadline with a future date, restart the application after the
+date has passed, and run `list`.
+
+Expected output: The deadline is still displayed. Reload validation checks the
+record format and date validity without rejecting an expired task.
+
+## Test 60: Flexible typed-task separator whitespace
+
+Aim: Verify that repeated whitespace around typed-task separators is accepted.
+
+Input:
+
+```text
+deadline submit report  /by 2099-12-26 1800
+event project meeting   /from 2099-12-26 1400   /to 2099-12-26 1600
+list
+bye
+```
+
+Expected output: Both tasks are created with their correct type markers and
+date/time values.

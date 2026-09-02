@@ -1,10 +1,10 @@
 package penguin.task;
 
-import penguin.enums.TaskType;
-import penguin.util.DateTimeUtil;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import penguin.enums.TaskType;
+import penguin.util.DateTimeUtil;
 
 /** Represents a task that must be completed by a specified date or time. */
 public class Deadline extends Task {

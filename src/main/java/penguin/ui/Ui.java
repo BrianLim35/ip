@@ -55,11 +55,11 @@ public class Ui {
 
     /** Displays the welcome message. */
     public void showWelcome() {
-        System.out.println(LINE);
-        System.out.println(BANNER);
-        System.out.println(LINE);
-        System.out.println(GREETING_MESSAGE);
-        System.out.println(LINE);
+        System.out.printf("%s%n", LINE);
+        System.out.printf("%s%n", BANNER);
+        System.out.printf("%s%n", LINE);
+        System.out.printf("%s%n", GREETING_MESSAGE);
+        System.out.printf("%s%n", LINE);
     }
 
     /**
@@ -68,13 +68,13 @@ public class Ui {
      * @return trimmed user command, or {@code null} at end of input
      */
     public String readCommand() {
-        System.out.print("You: ");
+        System.out.printf("%s", "You: ");
         return scanner.hasNextLine() ? scanner.nextLine().trim() : null;
     }
 
     /** Displays the message divider. */
     public void showDivider() {
-        System.out.println(LINE);
+        System.out.printf("%s%n", LINE);
     }
 
     /**
@@ -108,7 +108,7 @@ public class Ui {
     private void record(String message) {
         response.append(message).append(System.lineSeparator());
         if (consoleOutputEnabled) {
-            System.out.println(message);
+            System.out.printf("%s%n", message);
         }
     }
 

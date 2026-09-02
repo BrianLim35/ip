@@ -20,7 +20,13 @@ public class OnCommand extends Command {
         this.date = searchDate;
     }
 
-    /** Displays tasks occurring on the configured date. */
+    /**
+     * Displays tasks occurring on the configured date.
+     *
+     * @param tasks task list to search
+     * @param ui interface used for output
+     * @param storage unused storage
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         assert date != null : "On command must contain a date";

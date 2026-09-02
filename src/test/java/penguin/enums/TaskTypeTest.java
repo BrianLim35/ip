@@ -3,6 +3,7 @@ package penguin.enums;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class TaskTypeTest {
@@ -19,5 +20,15 @@ class TaskTypeTest {
         assertSame(TaskType.TODO, TaskType.valueOf("TODO"));
         assertSame(TaskType.DEADLINE, TaskType.valueOf("DEADLINE"));
         assertSame(TaskType.EVENT, TaskType.valueOf("EVENT"));
+    }
+
+    @Test
+    void taskType_fromSymbol_validSymbol_returnsMatchingType() {
+        assertEquals(TaskType.DEADLINE, TaskType.fromSymbol("D"));
+    }
+
+    @Test
+    void taskType_fromSymbol_unknownSymbol_returnsNull() {
+        assertNull(TaskType.fromSymbol("X"));
     }
 }
