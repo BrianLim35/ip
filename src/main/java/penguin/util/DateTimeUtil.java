@@ -13,15 +13,17 @@ import java.util.Locale;
 public class DateTimeUtil {
     /** Formatter for parsing and storing full date/time values. */
     private static final DateTimeFormatter INPUT_FORMAT =
-            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm")
-                    .withResolverStyle(ResolverStyle.STRICT);
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(
+                    ResolverStyle.STRICT);
+
     /** Formatter for displaying date/time values to the user. */
     private static final DateTimeFormatter OUTPUT_FORMAT =
             DateTimeFormatter.ofPattern("d MMM yyyy, h:mma", Locale.ENGLISH);
+
     /** Formatter for parsing dates used by date-based searches. */
     private static final DateTimeFormatter DATE_FORMAT =
-            DateTimeFormatter.ofPattern("uuuu-MM-dd")
-                    .withResolverStyle(ResolverStyle.STRICT);
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(
+                    ResolverStyle.STRICT);
 
     /** Prevents instantiation of this utility class. */
     private DateTimeUtil() {

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class Event extends Task {
     /** Start date or time of the event. */
     private final LocalDateTime from;
+
     /** End date or time of the event. */
     private final LocalDateTime to;
 
@@ -56,8 +57,8 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return super.toString() + " (from: " +
-                DateTimeUtil.formatForDisplay(from) + " to: " +
-                DateTimeUtil.formatForDisplay(to) + ")";
+        return super.toString() + " (from: "
+                + DateTimeUtil.formatForDisplay(from) + " to: "
+                + DateTimeUtil.formatForDisplay(to) + ")";
     }
 }

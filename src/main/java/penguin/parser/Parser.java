@@ -284,8 +284,8 @@ public class Parser {
         String description = parts[2];
 
         if (description.contains("|")) {
-            throw new PenguinException("Invalid task data! " +
-                    "Descriptions cannot contain the | character.");
+            throw new PenguinException("Invalid task data! "
+                    + "Descriptions cannot contain the | character.");
         }
 
         Task task = createSavedTask(type, parts, description);
