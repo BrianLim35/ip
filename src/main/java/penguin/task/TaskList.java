@@ -2,6 +2,7 @@ package penguin.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Stores the tasks entered by the user.
@@ -94,13 +95,9 @@ public class TaskList {
      * @return task data formatted as storage lines
      */
     public ArrayList<String> toStorageLines() {
-        ArrayList<String> lines = new ArrayList<>();
-
-        for (Task task : tasks) {
-            lines.add(task.toStorageFormat());
-        }
-
-        return lines;
+        return tasks.stream()
+                .map(Task::toStorageFormat)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -110,14 +107,9 @@ public class TaskList {
      * @return tasks occurring on the specified date
      */
     public ArrayList<Task> findTasksOnDate(LocalDate date) {
-        ArrayList<Task> tasksOn = new ArrayList<>();
-
-        for (Task task : tasks) {
-            if (task.occursOn(date)) {
-                tasksOn.add(task);
-            }
-        }
-        return tasksOn;
+        return tasks.stream()
+                .filter(task -> task.occursOn(date))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -127,13 +119,8 @@ public class TaskList {
      * @return matching tasks in their original order
      */
     public ArrayList<Task> findMatchingTasks(String keyword) {
-        ArrayList<Task> tasksMatch = new ArrayList<>();
-
-        for (Task task : tasks) {
-            if (task.containsKeyword(keyword)) {
-                tasksMatch.add(task);
-            }
-        }
-        return tasksMatch;
+        return tasks.stream()
+                .filter(task -> task.containsKeyword(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
