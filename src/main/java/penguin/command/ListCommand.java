@@ -13,6 +13,9 @@ public class ListCommand extends Command {
     /** Displays all tasks in the task list. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
+        assert tasks != null : "List command requires a task list";
+        assert ui != null : "List command requires a user interface";
+
         ui.showTasks(tasks);
     }
 }

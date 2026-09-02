@@ -23,6 +23,10 @@ public class OnCommand extends Command {
     /** Displays tasks occurring on the configured date. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
+        assert date != null : "On command must contain a date";
+        assert tasks != null : "On command requires a task list";
+        assert ui != null : "On command requires a user interface";
+
         ui.showTasksOnDate(date, tasks.findTasksOnDate(date));
     }
 }

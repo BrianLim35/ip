@@ -23,6 +23,10 @@ public class DeleteCommand extends Command {
     /** Deletes the selected task, persists the updated list, and reports the result. */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
+        assert tasks != null : "Delete command requires a task list";
+        assert ui != null : "Delete command requires a ui";
+        assert storage != null : "Delete command requires a storage";
+
         try {
             Task task = tasks.deleteTask(index);
             storage.saveTaskLines(tasks.toStorageLines());
