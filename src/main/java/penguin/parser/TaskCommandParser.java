@@ -74,10 +74,13 @@ public final class TaskCommandParser {
         String keyword = CommandType.TODO.getKeyword();
         String description = command.length() <= keyword.length()
                 ? "" : command.substring(keyword.length()).trim();
+
         if (description.isEmpty()) {
             throw new PenguinException("The description of a todo cannot be empty.");
         }
+
         validateDescription(description);
+
         return new ToDo(description);
     }
 
@@ -90,23 +93,27 @@ public final class TaskCommandParser {
      */
     private static Task parseDeadline(String command) throws PenguinException {
         String keyword = CommandType.DEADLINE.getKeyword();
-        String content = command.length() <= keyword.length()
-                ? "" : command.substring(keyword.length()).replaceAll("\\s+", " ");
+        String content = extractTaskContent(command, keyword);
         String lowerCaseContent = content.toLowerCase(Locale.ROOT);
+
         validateDeadlineContent(content, lowerCaseContent);
+
         int separatorIndex = lowerCaseContent.indexOf(BY_SEPARATOR);
         String description = content.substring(0, separatorIndex).trim();
-        String dateTimeInput = content.substring(separatorIndex + BY_SEPARATOR.length()).trim();
+        String dateTimeInput = content.substring(
+                separatorIndex + BY_SEPARATOR.length()).trim();
+
         if (description.isEmpty()) {
             throw new PenguinException("A deadline must have a description before " + BY_KEYWORD + ".");
         }
+
         validateDescription(description);
+
         if (dateTimeInput.isEmpty()) {
             throw new PenguinException("A deadline must have a date or time after " + BY_KEYWORD + ".");
         }
-        LocalDateTime dateTime = DateTimeUtil.parseDateTime(dateTimeInput);
-        DateTimeUtil.validateNotBeforeToday(dateTime, keyword);
-        return new Deadline(description, dateTime);
+
+        return new Deadline(description, parseFutureDateTime(dateTimeInput, keyword));
     }
 
     /**
@@ -118,33 +125,59 @@ public final class TaskCommandParser {
      */
     private static Task parseEvent(String command) throws PenguinException {
         String keyword = CommandType.EVENT.getKeyword();
-        String content = command.length() <= keyword.length()
-                ? "" : command.substring(keyword.length()).replaceAll("\\s+", " ");
+        String content = extractTaskContent(command, keyword);
         String lowerCaseContent = content.toLowerCase(Locale.ROOT);
+
         validateEventDescriptionStart(lowerCaseContent);
+
         int fromIndex = lowerCaseContent.indexOf(FROM_SEPARATOR);
         int toIndex = lowerCaseContent.indexOf(TO_SEPARATOR);
-        boolean duplicate = fromIndex != lowerCaseContent.lastIndexOf(FROM_SEPARATOR)
-                || toIndex != lowerCaseContent.lastIndexOf(TO_SEPARATOR);
-        if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex || duplicate) {
-            throw new PenguinException("An event must contain one " + FROM_KEYWORD
-                    + " and one " + TO_KEYWORD + " separator.");
-        }
+        validateEventSeparators(lowerCaseContent, fromIndex, toIndex);
+
         String description = content.substring(0, fromIndex).trim();
         String fromInput = content.substring(fromIndex + FROM_SEPARATOR.length(), toIndex).trim();
         String toInput = content.substring(toIndex + TO_SEPARATOR.length()).trim();
+
         validateEventDescription(description);
         validateDescription(description);
+
         if (fromInput.isEmpty() || toInput.isEmpty()) {
             throw new PenguinException("An event must have both a start and an end time.");
         }
+
         LocalDateTime from = DateTimeUtil.parseDateTime(fromInput);
-        LocalDateTime to = DateTimeUtil.parseDateTime(toInput);
-        DateTimeUtil.validateNotBeforeToday(to, "event end");
+        LocalDateTime to = parseFutureDateTime(toInput, "event end");
+
         if (to.isBefore(from)) {
             throw new PenguinException("The start time must be before the end time.");
         }
+
         return new Event(description, from, to);
+    }
+
+    /** Extracts and normalizes content after a task keyword. */
+    private static String extractTaskContent(String command, String keyword) {
+        return command.length() <= keyword.length()
+                ? "" : command.substring(keyword.length()).replaceAll("\\s+", " ");
+    }
+
+    /** Validates that an event has exactly one ordered pair of separators. */
+    private static void validateEventSeparators(
+            String content, int fromIndex, int toIndex) throws PenguinException {
+        boolean hasDuplicateSeparator = fromIndex != content.lastIndexOf(FROM_SEPARATOR)
+                || toIndex != content.lastIndexOf(TO_SEPARATOR);
+        if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex || hasDuplicateSeparator) {
+            throw new PenguinException("An event must contain one " + FROM_KEYWORD
+                    + " and one " + TO_KEYWORD + " separator.");
+        }
+    }
+
+    /** Parses a date/time and rejects dates before today. */
+    private static LocalDateTime parseFutureDateTime(
+            String input, String itemName) throws PenguinException {
+        LocalDateTime dateTime = DateTimeUtil.parseDateTime(input);
+        DateTimeUtil.validateNotBeforeToday(dateTime, itemName);
+        return dateTime;
     }
 
     /**
