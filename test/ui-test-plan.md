@@ -761,8 +761,8 @@ list
 bye
 ```
 
-Expected output: Penguin reports an invalid saved task and the list does not
-contain the malformed record.
+Expected output: Penguin reports a loading error for the malformed record,
+does not display it as a valid task, and exits normally after `bye`.
 
 ## Test 44: Date search on an event boundary
 

@@ -2,6 +2,7 @@ package penguin.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -22,9 +23,7 @@ public class TaskList {
      * @param task the task to add
      */
     public void addTask(Task task) {
-        assert task != null : "Task must not be null";
-
-        tasks.add(task);
+        tasks.add(Objects.requireNonNull(task, "Task must not be null"));
     }
 
     /**
@@ -97,8 +96,7 @@ public class TaskList {
      * @return task data formatted as storage lines
      */
     public ArrayList<String> toStorageLines() {
-        return tasks.stream()
-                .map(Task::toStorageFormat)
+        return tasks.stream().map(Task::toStorageFormat)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -109,8 +107,7 @@ public class TaskList {
      * @return tasks occurring on the specified date
      */
     public ArrayList<Task> findTasksOnDate(LocalDate date) {
-        return tasks.stream()
-                .filter(task -> task.occursOn(date))
+        return tasks.stream().filter(task -> task.occursOn(date))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -121,8 +118,7 @@ public class TaskList {
      * @return matching tasks in their original order
      */
     public ArrayList<Task> findMatchingTasks(String keyword) {
-        return tasks.stream()
-                .filter(task -> task.containsKeyword(keyword))
+        return tasks.stream().filter(task -> task.containsKeyword(keyword))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }

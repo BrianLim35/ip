@@ -66,7 +66,8 @@ If the changes contain multiple independent purposes, provide one commit message
 for each proposed group. For each group, list the included files and explain
 why they belong together.
 
-If all changes serve one purpose, provide one commit message.
+If all changes serve one purpose, provide one commit message. Commit message must
+align with https://se-education.org/guides/conventions/git.html.
 
 Do not commit or push unless explicitly requested. Do not create unnecessary
 commits by separating files that are required for the same change.

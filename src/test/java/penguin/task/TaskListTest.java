@@ -10,6 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TaskListTest {
     @Test
+    void addTask_nullTask_throwsNullPointerException() {
+        TaskList tasks = new TaskList();
+
+        assertThrows(NullPointerException.class, () -> tasks.addTask(null));
+    }
+
+    @Test
     void addAndDelete_validTask_updatesTaskList() {
         TaskList tasks = new TaskList();
         tasks.addTask(new ToDo("read book"));
