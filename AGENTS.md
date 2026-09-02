@@ -389,6 +389,26 @@ inconsistent abstraction levels, poor organization, and cross-file naming
 inconsistencies. Do not call something a violation unless the guideline clearly
 supports that conclusion, and balance extraction recommendations against KISS.
 
+### Review findings and approved changes
+
+During a code review, inspect and report all findings before editing. Do not
+silently skip minor issues or make changes before the findings are reported.
+
+The review report must include every relevant finding from all review criteria,
+including `Definite violation`, `Likely issue`, and `Possible improvement`.
+For each finding, include the file, line number, applicable guideline,
+explanation, practical impact, recommended change, and confidence level.
+
+If the user subsequently says `make the necessary changes`, apply the
+recommended changes from the review. Make only changes related to the reported
+findings, preserve existing behavior, and update affected tests or
+documentation where permitted.
+
+Before editing, summarize the complete list of changes, affected files,
+behavioral impact, and tests or documentation to be updated. After editing,
+recheck the same review criteria and report what was fixed, what remains, tests
+run and their results, and any blocked checks.
+
 The final response must include a checklist marking every step as `PASS`,
 `FAIL`, or `BLOCKED`. If a required skill is unavailable, mark that step as
 `BLOCKED` and do not claim that it was completed.
