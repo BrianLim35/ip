@@ -155,13 +155,26 @@ public final class TaskCommandParser {
         return new Event(description, from, to);
     }
 
-    /** Extracts and normalizes content after a task keyword. */
+    /**
+     * Extracts and normalizes the content after a task keyword.
+     *
+     * @param command complete task command
+     * @param keyword task command keyword
+     * @return normalized task content
+     */
     private static String extractTaskContent(String command, String keyword) {
         return command.length() <= keyword.length()
                 ? "" : command.substring(keyword.length()).replaceAll("\\s+", " ");
     }
 
-    /** Validates that an event has exactly one ordered pair of separators. */
+    /**
+     * Validates that an event has exactly one ordered pair of separators.
+     *
+     * @param content lowercase event content
+     * @param fromIndex position of the from separator
+     * @param toIndex position of the to separator
+     * @throws PenguinException if the separators are missing, duplicated, or out of order
+     */
     private static void validateEventSeparators(
             String content, int fromIndex, int toIndex) throws PenguinException {
         boolean hasDuplicateSeparator = fromIndex != content.lastIndexOf(FROM_SEPARATOR)
@@ -172,7 +185,14 @@ public final class TaskCommandParser {
         }
     }
 
-    /** Parses a date/time and rejects dates before today. */
+    /**
+     * Parses a date/time and rejects dates before today.
+     *
+     * @param input date/time text
+     * @param itemName name used in validation errors
+     * @return validated date/time
+     * @throws PenguinException if the date/time is invalid or in the past
+     */
     private static LocalDateTime parseFutureDateTime(
             String input, String itemName) throws PenguinException {
         LocalDateTime dateTime = DateTimeUtil.parseDateTime(input);
