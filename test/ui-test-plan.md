@@ -909,3 +909,81 @@ bye
 
 Expected output: The task is added, displayed, and the application exits
 normally without an assertion error.
+
+## Test 54: Undo the most recent task change
+
+Aim: Verify that `undo` restores the previous task-list state.
+
+Input:
+
+```text
+todo read book
+mark 1
+undo
+list
+bye
+```
+
+Expected output: The task is restored to incomplete status and remains in the
+list as `1. [T][ ] read book`.
+
+## Test 55: Undo without a previous change
+
+Aim: Verify that `undo` reports an error when there is no history.
+
+Input:
+
+```text
+undo
+bye
+```
+
+Expected output: Penguin reports that there is nothing to undo and exits
+normally.
+
+## Test 56: Undo creation, deletion, and unmarking
+
+Aim: Verify that undo restores task creation, deletion, and completion state.
+
+Input:
+
+```text
+todo read book
+todo buy milk
+delete 1
+undo
+mark 1
+unmark 1
+undo
+list
+bye
+```
+
+Expected output: Both tasks are restored, and `read book` is displayed as
+completed after undoing the unmark operation.
+
+## Test 57: Undo history is limited to five changes
+
+Aim: Verify that only the five most recent changes can be undone.
+
+Input:
+
+```text
+todo task 1
+todo task 2
+todo task 3
+todo task 4
+todo task 5
+todo task 6
+undo
+undo
+undo
+undo
+undo
+undo
+list
+bye
+```
+
+Expected output: The sixth `undo` reports that there is nothing to undo, and
+the list contains only `task 1`.

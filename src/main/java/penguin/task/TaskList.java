@@ -1,7 +1,9 @@
 package penguin.task;
 
 import java.time.LocalDate;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -9,8 +11,9 @@ import java.util.stream.Collectors;
  * Stores the tasks entered by the user.
  */
 public class TaskList {
-    /** The tasks currently stored in the list. */
     private final ArrayList<Task> tasks;
+    private static final int MAX_UNDO_STEPS = 5;
+    private final Deque<ArrayList<Task>> history = new ArrayDeque<>();
 
     /** Creates an empty task list. */
     public TaskList() {
@@ -23,6 +26,16 @@ public class TaskList {
      * @param task the task to add
      */
     public void addTask(Task task) {
+        Task validTask = Objects.requireNonNull(task, "Task must not be null");
+        saveState();
+        tasks.add(validTask);
+    }
+
+    /** Adds a task loaded from storage without creating an undo history entry.
+     *
+     * @param task task restored from persistent storage
+     */
+    public void addLoadedTask(Task task) {
         tasks.add(Objects.requireNonNull(task, "Task must not be null"));
     }
 
@@ -34,7 +47,10 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if the index is invalid
      */
     public Task deleteTask(int index) {
-        return tasks.remove(index);
+        Task task = tasks.get(index);
+        saveState();
+        tasks.remove(index);
+        return task;
     }
 
     /**
@@ -46,6 +62,7 @@ public class TaskList {
      */
     public Task markTask(int index) {
         Task task = tasks.get(index);
+        saveState();
         task.markDone();
         return task;
     }
@@ -59,6 +76,7 @@ public class TaskList {
      */
     public Task unmarkTask(int index) {
         Task task = tasks.get(index);
+        saveState();
         task.markUndone();
         return task;
     }
@@ -88,6 +106,33 @@ public class TaskList {
      */
     public boolean isEmpty() {
         return tasks.isEmpty();
+    }
+
+    /**
+     * Restores the most recent task-list state.
+     *
+     * @throws IllegalStateException if there is no previous task-list state
+     */
+    public void undo() {
+        if (history.isEmpty()) {
+            throw new IllegalStateException("There is nothing to undo.");
+        }
+        tasks.clear();
+        tasks.addAll(history.pop());
+    }
+
+    /** Saves an independent state snapshot and keeps only MAX_UNDO_STEPS snapshots. */
+    private void saveState() {
+        history.push(copyOfTasks());
+        if (history.size() > MAX_UNDO_STEPS) {
+            history.removeLast();
+        }
+    }
+
+    /** Creates independent copies of all tasks in their current order. */
+    private ArrayList<Task> copyOfTasks() {
+        return tasks.stream().map(Task::copy)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**

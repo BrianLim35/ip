@@ -57,7 +57,7 @@ public class Penguin {
 
             for (String line : storageContent) {
                 try {
-                    taskList.addTask(Parser.parseSavedTask(line));
+                    taskList.addLoadedTask(Parser.parseSavedTask(line));
                 } catch (PenguinException e) {
                     ui.showError("Skipping invalid saved task! "
                             + e.getMessage());

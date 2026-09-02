@@ -27,6 +27,16 @@ public class Event extends Task {
         this.to = endDateTime;
     }
 
+    /** Creates an independent copy of this event. */
+    @Override
+    public Task copy() {
+        Event copy = new Event(getDescription(), from, to);
+        if ("X".equals(getStatus())) {
+            copy.markDone();
+        }
+        return copy;
+    }
+
     /**
      * Returns the event in persistent storage format.
      *

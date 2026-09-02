@@ -22,6 +22,16 @@ public class Deadline extends Task {
         this.dateTime = deadlineDateTime;
     }
 
+    /** Creates an independent copy of this deadline. */
+    @Override
+    public Task copy() {
+        Deadline copy = new Deadline(getDescription(), dateTime);
+        if ("X".equals(getStatus())) {
+            copy.markDone();
+        }
+        return copy;
+    }
+
     /**
      * Returns the deadline in persistent storage format.
      *

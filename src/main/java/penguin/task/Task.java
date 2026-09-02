@@ -49,6 +49,24 @@ public class Task {
     }
 
     /**
+     * Creates an independent copy of this task.
+     *
+     * @return copy with the same completion status
+     */
+    public Task copy() {
+        Task copy = new Task(description, type);
+        if (isDone) {
+            copy.markDone();
+        }
+        return copy;
+    }
+
+    /** Returns this task's description for subclass copy operations. */
+    protected String getDescription() {
+        return description;
+    }
+
+    /**
      * Returns this task in the format used for persistent storage.
      *
      * @return task type, completion status, and description separated by pipes
