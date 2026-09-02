@@ -152,8 +152,8 @@ class PenguinTest {
         Penguin penguin = new Penguin(
                 tempDir.resolve("data/penguin.txt").toString());
 
-        assertTrue(penguin.getResponse("bye")
-                .contains("Bye. Hope to see you again soon!"));
+        assertTrue(penguin.getResponse("bye").contains(
+                "Bye. Hope to see you again soon!"));
         assertTrue(penguin.isExitRequested());
     }
 
@@ -163,8 +163,8 @@ class PenguinTest {
         Penguin penguin = new Penguin(
                 tempDir.resolve("data/penguin.txt").toString());
 
-        assertTrue(penguin.getResponse("unknown command")
-                .contains("I don't understand that command."));
+        assertTrue(penguin.getResponse("unknown command").contains(
+                "I don't understand that command."));
         assertFalse(penguin.isExitRequested());
     }
 
