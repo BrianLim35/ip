@@ -15,7 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 /**
- * Represents a dialog box consisting of an ImageView to represent the speaker's face
+ * Represents a dialog box consisting of an ImageView to represent the speaker's face.
  * and a label containing text from the speaker.
  */
 public class DialogBox extends HBox {
@@ -28,9 +28,9 @@ public class DialogBox extends HBox {
     /**
      * Creates a dialog box from the FXML layout and supplied content.
      *
-     * @param text text displayed in the dialog
-     * @param img image displayed beside the text
-     * @throws IllegalStateException if the FXML layout cannot be loaded
+     * @param text text displayed in the dialog.
+     * @param img image displayed beside the text.
+     * @throws IllegalStateException if the FXML layout cannot be loaded.
      */
     private DialogBox(String text, Image img) {
         try {
@@ -60,9 +60,9 @@ public class DialogBox extends HBox {
     /**
      * Creates a right-aligned dialog box for the user.
      *
-     * @param text text to display
-     * @param img image representing the user
-     * @return user dialog box
+     * @param text text to display.
+     * @param img image representing the user.
+     * @return user dialog box.
      */
     public static DialogBox getUserDialog(String text, Image img) {
         DialogBox dialogBox = new DialogBox(text, img);
@@ -73,9 +73,9 @@ public class DialogBox extends HBox {
     /**
      * Creates a left-aligned dialog box for Penguin.
      *
-     * @param text text to display
-     * @param img image representing Penguin
-     * @return Penguin dialog box
+     * @param text text to display.
+     * @param img image representing Penguin.
+     * @return Penguin dialog box.
      */
     public static DialogBox getPenguinDialog(String text, Image img) {
         var db = new DialogBox(text, img);

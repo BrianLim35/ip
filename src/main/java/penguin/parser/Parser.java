@@ -19,7 +19,7 @@ import penguin.task.Task;
 import penguin.util.DateTimeUtil;
 
 /** Parses user commands and saved task records into application objects. */
-public class Parser {
+public final class Parser {
     /** Prevents instantiation of this utility class. */
     private Parser() {
     }
@@ -27,11 +27,24 @@ public class Parser {
     /**
      * Converts a user command into an executable command.
      *
-     * @param input complete user command
-     * @return executable command
-     * @throws PenguinException if the command is invalid
+     * @param input complete user command.
+     * @return executable command.
+     * @throws PenguinException if the command is invalid.
      */
     public static Command parseCommand(String input) throws PenguinException {
+        String normalizedInput = normalizeInput(input);
+        CommandType commandType = parseCommandType(normalizedInput);
+        return createCommand(commandType, normalizedInput);
+    }
+
+    /**
+     * Trims a command and rejects missing input.
+     *
+     * @param input command entered by the user.
+     * @return trimmed command input.
+     * @throws PenguinException if the input is null or blank.
+     */
+    private static String normalizeInput(String input) throws PenguinException {
         if (input == null) {
             throw new PenguinException("Please input a task.");
         }
@@ -39,48 +52,80 @@ public class Parser {
         if (trimmedInput.isEmpty()) {
             throw new PenguinException("Please input a task.");
         }
-        String firstWord = trimmedInput.split("\\s+", 2)[0].toLowerCase(Locale.ROOT);
+        return trimmedInput;
+    }
 
+    /**
+     * Identifies the command type from normalized input.
+     *
+     * @param command normalized command input.
+     * @return matching command type.
+     * @throws PenguinException if the command keyword is unknown.
+     */
+    private static CommandType parseCommandType(String command) throws PenguinException {
+        String firstWord = command.split("\\s+", 2)[0].toLowerCase(Locale.ROOT);
         CommandType commandType = CommandType.fromKeyword(firstWord);
-        if (commandType == CommandType.BYE
-                && !trimmedInput.equalsIgnoreCase(commandType.name())) {
-            throw new PenguinException("The bye command does not take arguments.");
-        }
 
         if (commandType == null) {
             throw new PenguinException("I don't understand that command.");
         }
+        return commandType;
+    }
 
+    /**
+     * Creates the executable command represented by normalized input.
+     *
+     * @param commandType type of command to create.
+     * @param command normalized command input.
+     * @return executable command.
+     * @throws PenguinException if the command arguments are invalid.
+     */
+    private static Command createCommand(CommandType commandType, String command)
+            throws PenguinException {
         return switch (commandType) {
             case TODO, DEADLINE, EVENT ->
-                    new AddCommand(parseTaskCommand(trimmedInput));
+                    new AddCommand(TaskCommandParser.parse(command));
             case LIST -> {
-                if (!trimmedInput.equalsIgnoreCase(commandType.name())) {
-                    throw new PenguinException("The list command does not take arguments.");
-                }
+                validateNoArguments(command, commandType);
                 yield new ListCommand();
             }
-            case MARK -> new MarkCommand(parseTaskIndex(trimmedInput));
-            case UNMARK -> new UnmarkCommand(parseTaskIndex(trimmedInput));
-            case DELETE -> new DeleteCommand(parseTaskIndex(trimmedInput));
-            case ON -> new OnCommand(parseDate(trimmedInput));
-            case FIND -> new FindCommand(parseKeyword(trimmedInput));
+            case MARK -> new MarkCommand(parseTaskIndex(command));
+            case UNMARK -> new UnmarkCommand(parseTaskIndex(command));
+            case DELETE -> new DeleteCommand(parseTaskIndex(command));
+            case ON -> new OnCommand(parseDate(command));
+            case FIND -> new FindCommand(parseKeyword(command));
             case UNDO -> {
-                if (!trimmedInput.equalsIgnoreCase(commandType.name())) {
-                    throw new PenguinException("The undo command does not take arguments.");
-                }
+                validateNoArguments(command, commandType);
                 yield new UndoCommand();
             }
-            case BYE -> new ExitCommand();
+            case BYE -> {
+                validateNoArguments(command, commandType);
+                yield new ExitCommand();
+            }
         };
+    }
+
+    /**
+     * Rejects arguments supplied to a command that accepts none.
+     *
+     * @param command normalized command input.
+     * @param commandType command type that accepts no arguments.
+     * @throws PenguinException if the command contains arguments.
+     */
+    private static void validateNoArguments(String command, CommandType commandType)
+            throws PenguinException {
+        if (!command.equalsIgnoreCase(commandType.getKeyword())) {
+            throw new PenguinException("The " + commandType.getKeyword()
+                    + " command does not take arguments.");
+        }
     }
 
     /**
      * Parses the task index from a command.
      *
-     * @param command command containing a task number
-     * @return zero-based task index
-     * @throws PenguinException if the task number is invalid
+     * @param command command containing a task number.
+     * @return zero-based task index.
+     * @throws PenguinException if the task number is invalid.
      */
     private static int parseTaskIndex(String command) throws PenguinException {
         String[] parts = command.split("\\s+");
@@ -99,9 +144,9 @@ public class Parser {
     /**
      * Parses the keyword or phrase from a find command.
      *
-     * @param command command containing a keyword or phrase
-     * @return trimmed keyword or phrase
-     * @throws PenguinException if no keyword is provided
+     * @param command command containing a keyword or phrase.
+     * @return trimmed keyword or phrase.
+     * @throws PenguinException if no keyword is provided.
      */
     private static String parseKeyword(String command) throws PenguinException {
         String[] parts = command.split("\\s+", 2);
@@ -116,9 +161,9 @@ public class Parser {
     /**
      * Parses the date from an on command.
      *
-     * @param command command containing one date
-     * @return parsed date
-     * @throws PenguinException if the date is invalid
+     * @param command command containing one date.
+     * @return parsed date.
+     * @throws PenguinException if the date is invalid.
      */
     private static LocalDate parseDate(String command) throws PenguinException {
         String[] parts = command.split("\\s+");
@@ -132,22 +177,11 @@ public class Parser {
     }
 
     /**
-     * Converts a task-creation command into a task.
-     *
-     * @param command complete task-creation command
-     * @return created task
-     * @throws PenguinException if the command is invalid
-     */
-    private static Task parseTaskCommand(String command) throws PenguinException {
-        return TaskCommandParser.parse(command);
-    }
-
-    /**
      * Converts one saved line into a task.
      *
-     * @param line saved task data
-     * @return task represented by the line
-     * @throws PenguinException if the line is malformed
+     * @param line saved task data.
+     * @return task represented by the line.
+     * @throws PenguinException if the line is malformed.
      */
     public static Task parseSavedTask(String line) throws PenguinException {
         return SavedTaskParser.parse(line);

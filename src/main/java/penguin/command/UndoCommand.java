@@ -10,10 +10,10 @@ public class UndoCommand extends Command {
     /**
      * Restores the previous task-list state, persists it, and reports the result.
      *
-     * @param tasks task list to restore
-     * @param ui interface used for output
-     * @param storage storage used to persist the restored state
-     * @throws PenguinException if there is no history or persistence fails
+     * @param tasks task list to restore.
+     * @param ui interface used for output.
+     * @param storage storage used to persist the restored state.
+     * @throws PenguinException if there is no history or persistence fails.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {

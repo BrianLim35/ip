@@ -5,8 +5,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 import penguin.exception.PenguinException;
 
@@ -18,7 +19,7 @@ public class Storage {
     /**
      * Creates storage using the given file path.
      *
-     * @param taskFilePath path of the task data file
+     * @param taskFilePath path of the task data file.
      */
     public Storage(String taskFilePath) {
         this.filePath = Path.of(taskFilePath);
@@ -27,10 +28,10 @@ public class Storage {
     /**
      * Writes task data to the storage file, creating its parent directory if necessary.
      *
-     * @param taskLines lines to write to the storage file
-     * @throws PenguinException if the file cannot be written
+     * @param taskLines lines to write to the storage file.
+     * @throws PenguinException if the file cannot be written.
      */
-    public void saveTaskLines(ArrayList<String> taskLines) throws PenguinException {
+    public void saveTaskLines(List<String> taskLines) throws PenguinException {
         try {
             Path parent = filePath.getParent();
 
@@ -54,8 +55,8 @@ public class Storage {
     /**
      * Replaces the storage file atomically when the filesystem supports it.
      *
-     * @param temporaryPath temporary file containing the new task data
-     * @throws IOException if the replacement cannot be completed
+     * @param temporaryPath temporary file containing the new task data.
+     * @throws IOException if the replacement cannot be completed.
      */
     private void replaceStorageFile(Path temporaryPath) throws IOException {
         try {
@@ -69,10 +70,10 @@ public class Storage {
     /**
      * Reads all saved task lines from the storage file.
      *
-     * @return saved task lines, or an empty list if the file does not exist
-     * @throws PenguinException if the file cannot be read
+     * @return saved task lines, or an empty list if the file does not exist.
+     * @throws PenguinException if the file cannot be read.
      */
-    public ArrayList<String> loadTaskLines() throws PenguinException {
+    public List<String> loadTaskLines() throws PenguinException {
         try {
             if (Files.notExists(filePath)) {
                 return new ArrayList<>();

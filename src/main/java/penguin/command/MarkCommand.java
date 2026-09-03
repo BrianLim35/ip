@@ -14,7 +14,7 @@ public class MarkCommand extends Command {
     /**
      * Creates a mark command.
      *
-     * @param taskIndex zero-based task index
+     * @param taskIndex zero-based task index.
      */
     public MarkCommand(int taskIndex) {
         this.index = taskIndex;
@@ -23,10 +23,10 @@ public class MarkCommand extends Command {
     /**
      * Marks the selected task as completed and persists the updated list.
      *
-     * @param tasks task list to modify
-     * @param ui interface used for output
-     * @param storage storage used to persist the change
-     * @throws PenguinException if the index is invalid or persistence fails
+     * @param tasks task list to modify.
+     * @param ui interface used for output.
+     * @param storage storage used to persist the change.
+     * @throws PenguinException if the index is invalid or persistence fails.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {

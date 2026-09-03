@@ -1,21 +1,22 @@
 package penguin.command;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import penguin.storage.Storage;
-import penguin.parser.Parser;
-import penguin.task.TaskList;
-import penguin.task.ToDo;
-import penguin.ui.Ui;
-import penguin.exception.PenguinException;
-
-import java.nio.file.Path;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import penguin.exception.PenguinException;
+import penguin.parser.Parser;
+import penguin.storage.Storage;
+import penguin.task.TaskList;
+import penguin.task.Todo;
+import penguin.ui.Ui;
 
 class CommandTest {
     @Test
@@ -40,7 +41,7 @@ class CommandTest {
         TaskList tasks = new TaskList();
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
-        AddCommand command = new AddCommand(new ToDo("read book"));
+        AddCommand command = new AddCommand(new Todo("read book"));
 
         command.execute(tasks, new Ui(), storage);
 
@@ -57,7 +58,7 @@ class CommandTest {
     void undoCommand_markedTask_restoresAndPersistsPreviousState(
             @TempDir Path tempDir) throws Exception {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
         new MarkCommand(0).execute(tasks, new Ui(), storage);
@@ -71,7 +72,7 @@ class CommandTest {
     void deleteCommand_validIndex_removesAndPersistsChange(
             @TempDir Path tempDir) throws Exception {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
 
@@ -85,7 +86,7 @@ class CommandTest {
     void deleteCommand_invalidIndex_throwsAndPreservesState(
             @TempDir Path tempDir) throws Exception {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
         storage.saveTaskLines(tasks.toStorageLines());
@@ -101,7 +102,7 @@ class CommandTest {
     void markAndUnmarkCommands_validIndex_updateAndPersistState(
             @TempDir Path tempDir) throws Exception {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
 
@@ -116,7 +117,7 @@ class CommandTest {
     void markAndUnmarkCommands_invalidIndex_throwAndPreserveState(
             @TempDir Path tempDir) throws Exception {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
         storage.saveTaskLines(tasks.toStorageLines());
@@ -129,4 +130,5 @@ class CommandTest {
         assertEquals("T | 0 | read book", storage.loadTaskLines().get(0));
         assertEquals(" ", tasks.getTasks().get(0).getStatus());
     }
+
 }

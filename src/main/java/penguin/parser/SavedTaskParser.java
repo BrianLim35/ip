@@ -8,7 +8,7 @@ import penguin.exception.PenguinException;
 import penguin.task.Deadline;
 import penguin.task.Event;
 import penguin.task.Task;
-import penguin.task.ToDo;
+import penguin.task.Todo;
 import penguin.util.DateTimeUtil;
 
 /** Converts persisted task records into validated task objects. */
@@ -19,9 +19,9 @@ public final class SavedTaskParser {
     /**
      * Converts one saved line into a task.
      *
-     * @param line saved task data
-     * @return task represented by the line
-     * @throws PenguinException if the line is malformed
+     * @param line saved task data.
+     * @return task represented by the line.
+     * @throws PenguinException if the line is malformed.
      */
     public static Task parse(String line) throws PenguinException {
         if (line == null || line.isBlank()) {
@@ -46,10 +46,10 @@ public final class SavedTaskParser {
     /**
      * Creates a task according to its persisted type and fields.
      *
-     * @param type persisted task type symbol
-     * @param parts fields from the persisted record
-     * @return reconstructed task
-     * @throws PenguinException if the type or fields are invalid
+     * @param type persisted task type symbol.
+     * @param parts fields from the persisted record.
+     * @return reconstructed task.
+     * @throws PenguinException if the type or fields are invalid.
      */
     private static Task createTask(String type, String[] parts) throws PenguinException {
         TaskType taskType = TaskType.fromSymbol(type);
@@ -72,25 +72,25 @@ public final class SavedTaskParser {
     /**
      * Parses a persisted to-do record.
      *
-     * @param parts fields from the persisted record
-     * @param description persisted task description
-     * @return reconstructed to-do task
-     * @throws PenguinException if the record has an invalid number of fields
+     * @param parts fields from the persisted record.
+     * @param description persisted task description.
+     * @return reconstructed to-do task.
+     * @throws PenguinException if the record has an invalid number of fields.
      */
     private static Task parseTodo(String[] parts, String description) throws PenguinException {
         if (parts.length != 3) {
             throw new PenguinException("Invalid todo data.");
         }
-        return new ToDo(description);
+        return new Todo(description);
     }
 
     /**
      * Parses a persisted deadline record.
      *
-     * @param parts fields from the persisted record
-     * @param description persisted task description
-     * @return reconstructed deadline task
-     * @throws PenguinException if the record or date/time is invalid
+     * @param parts fields from the persisted record.
+     * @param description persisted task description.
+     * @return reconstructed deadline task.
+     * @throws PenguinException if the record or date/time is invalid.
      */
     private static Task parseDeadline(String[] parts, String description)
             throws PenguinException {
@@ -104,10 +104,10 @@ public final class SavedTaskParser {
     /**
      * Parses a persisted event record.
      *
-     * @param parts fields from the persisted record
-     * @param description persisted task description
-     * @return reconstructed event task
-     * @throws PenguinException if the record, date/time, or ordering is invalid
+     * @param parts fields from the persisted record.
+     * @param description persisted task description.
+     * @return reconstructed event task.
+     * @throws PenguinException if the record, date/time, or ordering is invalid.
      */
     private static Task parseEvent(String[] parts, String description)
             throws PenguinException {
@@ -116,7 +116,6 @@ public final class SavedTaskParser {
         }
         LocalDateTime from = DateTimeUtil.parseDateTime(parts[3]);
         LocalDateTime to = DateTimeUtil.parseDateTime(parts[4]);
-        DateTimeUtil.validateNotBeforeToday(to, "event end");
         if (to.isBefore(from)) {
             throw new PenguinException("Invalid event data. End is before start.");
         }

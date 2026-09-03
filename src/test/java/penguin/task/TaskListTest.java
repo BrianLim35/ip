@@ -1,19 +1,19 @@
 package penguin.task;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 class TaskListTest {
     @Test
     void undo_markedTask_restoresPreviousStatus() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         tasks.markTask(0);
 
         tasks.undo();
@@ -31,7 +31,7 @@ class TaskListTest {
     @Test
     void addLoadedTask_doesNotCreateUndoHistory() {
         TaskList tasks = new TaskList();
-        tasks.addLoadedTask(new ToDo("saved task"));
+        tasks.addLoadedTask(new Todo("saved task"));
 
         assertThrows(IllegalStateException.class, tasks::undo);
         assertEquals(1, tasks.size());
@@ -40,7 +40,7 @@ class TaskListTest {
     @Test
     void undo_addedTask_restoresEmptyTaskList() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
 
         tasks.undo();
 
@@ -50,8 +50,8 @@ class TaskListTest {
     @Test
     void undo_deletedTask_restoresTaskAndPosition() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
-        tasks.addTask(new ToDo("buy milk"));
+        tasks.addTask(new Todo("read book"));
+        tasks.addTask(new Todo("buy milk"));
         tasks.deleteTask(0);
 
         tasks.undo();
@@ -63,7 +63,7 @@ class TaskListTest {
     @Test
     void undo_unmarkedTask_restoresCompletedStatus() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         tasks.markTask(0);
         tasks.unmarkTask(0);
 
@@ -76,7 +76,7 @@ class TaskListTest {
     void undo_sixthChange_keepsOnlyFiveUndoStates() {
         TaskList tasks = new TaskList();
         for (int i = 1; i <= 6; i++) {
-            tasks.addTask(new ToDo("task " + i));
+            tasks.addTask(new Todo("task " + i));
         }
 
         for (int i = 0; i < 5; i++) {
@@ -98,7 +98,7 @@ class TaskListTest {
     @Test
     void addAndDelete_validTask_updatesTaskList() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] read book", tasks.deleteTask(0).toString());
@@ -108,7 +108,7 @@ class TaskListTest {
     @Test
     void markTask_validIndex_updatesCompletionStatus() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
 
         tasks.markTask(0);
 
@@ -118,7 +118,7 @@ class TaskListTest {
     @Test
     void findTasksOnDate_matchingDate_returnsOnlyDatedTasks() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         tasks.addTask(new Deadline("submit report",
                 LocalDateTime.of(2099, 12, 31, 18, 0)));
 
@@ -145,7 +145,7 @@ class TaskListTest {
     @Test
     void unmarkTask_completedTask_restoresIncompleteStatus() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
         tasks.markTask(0);
 
         tasks.unmarkTask(0);
@@ -186,9 +186,9 @@ class TaskListTest {
     @Test
     void deleteTask_validIndex_preservesRemainingOrder() {
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("first task"));
-        tasks.addTask(new ToDo("second task"));
-        tasks.addTask(new ToDo("third task"));
+        tasks.addTask(new Todo("first task"));
+        tasks.addTask(new Todo("second task"));
+        tasks.addTask(new Todo("third task"));
 
         tasks.deleteTask(1);
 

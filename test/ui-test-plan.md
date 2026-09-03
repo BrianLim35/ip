@@ -1029,3 +1029,14 @@ bye
 
 Expected output: Both tasks are created with their correct type markers and
 date/time values.
+
+## Test 61: Past events survive restart
+
+Aim: Verify that a valid event remains available after its end date has passed
+and can still be loaded from storage.
+
+Input: Create an event with future start and end dates, restart the application
+after its end date has passed, and run `list`.
+
+Expected output: The event is still displayed. Reload validation checks its
+record format and chronological ordering without rejecting an expired event.

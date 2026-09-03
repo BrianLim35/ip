@@ -8,7 +8,7 @@ import penguin.exception.PenguinException;
 import penguin.task.Deadline;
 import penguin.task.Event;
 import penguin.task.Task;
-import penguin.task.ToDo;
+import penguin.task.Todo;
 import penguin.util.DateTimeUtil;
 
 /** Parses task-creation commands into validated task objects. */
@@ -31,9 +31,9 @@ public final class TaskCommandParser {
     /**
      * Parses a task-creation command.
      *
-     * @param command complete task-creation command
-     * @return validated task
-     * @throws PenguinException if the command is invalid
+     * @param command complete task-creation command.
+     * @return validated task.
+     * @throws PenguinException if the command is invalid.
      */
     public static Task parse(String command) throws PenguinException {
         String lowerCaseCommand = command.toLowerCase(Locale.ROOT);
@@ -52,10 +52,10 @@ public final class TaskCommandParser {
     /**
      * Checks whether input is a command or starts with the command and a space.
      *
-     * @param input normalized command input
-     * @param commandType command type whose keyword should be checked
+     * @param input normalized command input.
+     * @param commandType command type whose keyword should be checked.
      * @return true if the input equals the command keyword or starts with it
-     *         followed by a space
+     *         followed by a space.
      */
     private static boolean isCommand(String input, CommandType commandType) {
         String keyword = commandType.getKeyword();
@@ -65,10 +65,10 @@ public final class TaskCommandParser {
     /**
      * Parses a to-do command.
      *
-     * @param command complete to-do command
-     * @return newly created to-do task
+     * @param command complete to-do command.
+     * @return newly created to-do task.
      * @throws PenguinException if the description is empty or contains a
-     *                          forbidden character
+     *                          forbidden character.
      */
     private static Task parseTodo(String command) throws PenguinException {
         String keyword = CommandType.TODO.getKeyword();
@@ -81,15 +81,15 @@ public final class TaskCommandParser {
 
         validateDescription(description);
 
-        return new ToDo(description);
+        return new Todo(description);
     }
 
     /**
      * Parses a deadline command.
      *
-     * @param command complete deadline command
-     * @return newly created deadline task
-     * @throws PenguinException if the format, description, or date/time is invalid
+     * @param command complete deadline command.
+     * @return newly created deadline task.
+     * @throws PenguinException if the format, description, or date/time is invalid.
      */
     private static Task parseDeadline(String command) throws PenguinException {
         String keyword = CommandType.DEADLINE.getKeyword();
@@ -119,9 +119,9 @@ public final class TaskCommandParser {
     /**
      * Parses an event command.
      *
-     * @param command complete event command
-     * @return newly created event task
-     * @throws PenguinException if the format, description, date/time, or ordering is invalid
+     * @param command complete event command.
+     * @return newly created event task.
+     * @throws PenguinException if the format, description, date/time, or ordering is invalid.
      */
     private static Task parseEvent(String command) throws PenguinException {
         String keyword = CommandType.EVENT.getKeyword();
@@ -158,9 +158,9 @@ public final class TaskCommandParser {
     /**
      * Extracts and normalizes the content after a task keyword.
      *
-     * @param command complete task command
-     * @param keyword task command keyword
-     * @return normalized task content
+     * @param command complete task command.
+     * @param keyword task command keyword.
+     * @return normalized task content.
      */
     private static String extractTaskContent(String command, String keyword) {
         return command.length() <= keyword.length()
@@ -170,10 +170,10 @@ public final class TaskCommandParser {
     /**
      * Validates that an event has exactly one ordered pair of separators.
      *
-     * @param content lowercase event content
-     * @param fromIndex position of the from separator
-     * @param toIndex position of the to separator
-     * @throws PenguinException if the separators are missing, duplicated, or out of order
+     * @param content lowercase event content.
+     * @param fromIndex position of the from separator.
+     * @param toIndex position of the to separator.
+     * @throws PenguinException if the separators are missing, duplicated, or out of order.
      */
     private static void validateEventSeparators(
             String content, int fromIndex, int toIndex) throws PenguinException {
@@ -188,10 +188,10 @@ public final class TaskCommandParser {
     /**
      * Parses a date/time and rejects dates before today.
      *
-     * @param input date/time text
-     * @param itemName name used in validation errors
-     * @return validated date/time
-     * @throws PenguinException if the date/time is invalid or in the past
+     * @param input date/time text.
+     * @param itemName name used in validation errors.
+     * @return validated date/time.
+     * @throws PenguinException if the date/time is invalid or in the past.
      */
     private static LocalDateTime parseFutureDateTime(
             String input, String itemName) throws PenguinException {
@@ -203,9 +203,9 @@ public final class TaskCommandParser {
     /**
      * Validates deadline content and separator rules.
      *
-     * @param content deadline command content after the command keyword
-     * @param lowerCaseContent lowercase version of the command content
-     * @throws PenguinException if the description or separator rules are invalid
+     * @param content deadline command content after the command keyword.
+     * @param lowerCaseContent lowercase version of the command content.
+     * @throws PenguinException if the description or separator rules are invalid.
      */
     private static void validateDeadlineContent(String content, String lowerCaseContent)
             throws PenguinException {
@@ -227,8 +227,8 @@ public final class TaskCommandParser {
     /**
      * Validates that an event does not begin with a separator.
      *
-     * @param content lowercase event command content
-     * @throws PenguinException if the event description is empty
+     * @param content lowercase event command content.
+     * @throws PenguinException if the event description is empty.
      */
     private static void validateEventDescriptionStart(String content) throws PenguinException {
         if (content.startsWith(FROM_KEYWORD + " ") || content.startsWith(TO_KEYWORD + " ")) {
@@ -239,8 +239,8 @@ public final class TaskCommandParser {
     /**
      * Validates that an event description is not empty.
      *
-     * @param description event description
-     * @throws PenguinException if the description is empty
+     * @param description event description.
+     * @throws PenguinException if the description is empty.
      */
     private static void validateEventDescription(String description) throws PenguinException {
         if (description.isEmpty()) {
@@ -251,8 +251,8 @@ public final class TaskCommandParser {
     /**
      * Rejects the persistence delimiter in a description.
      *
-     * @param description task description
-     * @throws PenguinException if the persistence delimiter is present
+     * @param description task description.
+     * @throws PenguinException if the persistence delimiter is present.
      */
     private static void validateDescription(String description) throws PenguinException {
         if (description.contains(Task.STORAGE_DELIMITER)) {

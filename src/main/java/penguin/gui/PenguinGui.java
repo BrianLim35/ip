@@ -13,7 +13,7 @@ import penguin.Penguin;
 /**
  * A GUI for Penguin using FXML.
  */
-public class PenguinGUI extends Application {
+public class PenguinGui extends Application {
 
     /** Chatbot instance used by the GUI. */
     private final Penguin penguin = new Penguin("./data/penguin.txt", false);
@@ -21,17 +21,17 @@ public class PenguinGUI extends Application {
     /**
      * Loads and displays the main Penguin window.
      *
-     * @param stage primary JavaFX stage
-     * @throws IllegalStateException if the FXML or stylesheet cannot be loaded
+     * @param stage primary JavaFX stage.
+     * @throws IllegalStateException if the FXML or stylesheet cannot be loaded.
      */
     @Override
     public void start(Stage stage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(
-                    PenguinGUI.class.getResource("/view/MainWindow.fxml"));
+                    PenguinGui.class.getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
-            String stylesheet = PenguinGUI.class.getResource(
+            String stylesheet = PenguinGui.class.getResource(
                     "/view/style.css").toExternalForm();
             scene.getStylesheets().add(stylesheet);
             stage.setScene(scene);

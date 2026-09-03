@@ -1,6 +1,6 @@
 package penguin;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import penguin.command.Command;
 import penguin.exception.PenguinException;
@@ -31,7 +31,7 @@ public class Penguin {
     /**
      * Creates Penguin using the specified storage path.
      *
-     * @param filePath path of the task storage file
+     * @param filePath path of the task storage file.
      */
     public Penguin(String filePath) {
         this(filePath, true);
@@ -40,11 +40,11 @@ public class Penguin {
     /**
      * Creates Penguin with configurable console output.
      *
-     * @param filePath path of the task storage file
-     * @param consoleOutputEnabled whether responses should be printed
+     * @param filePath path of the task storage file.
+     * @param isConsoleOutputEnabled whether responses should be printed.
      */
-    public Penguin(String filePath, boolean consoleOutputEnabled) {
-        ui = new Ui(consoleOutputEnabled);
+    public Penguin(String filePath, boolean isConsoleOutputEnabled) {
+        ui = new Ui(isConsoleOutputEnabled);
         storage = new Storage(filePath);
         taskList = new TaskList();
         loadTasks();
@@ -53,7 +53,7 @@ public class Penguin {
     /** Loads valid saved tasks and reports invalid records individually. */
     private void loadTasks() {
         try {
-            ArrayList<String> storageContent = storage.loadTaskLines();
+            List<String> storageContent = storage.loadTaskLines();
 
             for (String line : storageContent) {
                 try {
@@ -71,8 +71,8 @@ public class Penguin {
     /**
      * Processes one command entered through the GUI.
      *
-     * @param input command entered by the user
-     * @return complete chatbot response
+     * @param input command entered by the user.
+     * @return complete chatbot response.
      */
     public String getResponse(String input) {
         ui.clearResponse();
@@ -83,9 +83,7 @@ public class Penguin {
                 throw new PenguinException("Please input a task.");
             }
 
-            Command command = Parser.parseCommand(input);
-            command.execute(taskList, ui, storage);
-            isExitRequested = command.isExit();
+            isExitRequested = executeCommand(input);
         } catch (PenguinException e) {
             ui.showError(e.getMessage());
         }
@@ -96,7 +94,7 @@ public class Penguin {
     /**
      * Checks whether the most recently processed command requested application exit.
      *
-     * @return true if the application should exit
+     * @return true if the application should exit.
      */
     public boolean isExitRequested() {
         return isExitRequested;
@@ -125,9 +123,7 @@ public class Penguin {
                 throw new PenguinException("Please input a task.");
             }
 
-            Command command = Parser.parseCommand(fullCommand);
-            command.execute(taskList, ui, storage);
-            return command.isExit();
+            return executeCommand(fullCommand);
         } catch (PenguinException e) {
             ui.showError(e.getMessage());
             return false;
@@ -137,9 +133,22 @@ public class Penguin {
     }
 
     /**
+     * Parses and executes one validated command.
+     *
+     * @param input complete command entered by the user.
+     * @return true if the command requests application exit.
+     * @throws PenguinException if parsing or command execution fails.
+     */
+    private boolean executeCommand(String input) throws PenguinException {
+        Command command = Parser.parseCommand(input);
+        command.execute(taskList, ui, storage);
+        return command.isExit();
+    }
+
+    /**
      * Starts Penguin with its default storage path.
      *
-     * @param args command-line arguments, which are not used
+     * @param args command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         new Penguin().run();

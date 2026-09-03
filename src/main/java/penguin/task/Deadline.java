@@ -14,8 +14,8 @@ public class Deadline extends Task {
     /**
      * Creates a deadline with a description and due date/time.
      *
-     * @param description description of the task
-     * @param deadlineDateTime date or time by which the task should be completed
+     * @param description description of the task.
+     * @param deadlineDateTime date or time by which the task should be completed.
      */
     public Deadline(String description, LocalDateTime deadlineDateTime) {
         super(description, TaskType.DEADLINE);
@@ -35,7 +35,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline in persistent storage format.
      *
-     * @return serialized deadline data
+     * @return serialized deadline data.
      */
     @Override
     public String toStorageFormat() {
@@ -46,8 +46,8 @@ public class Deadline extends Task {
     /**
      * Checks whether the deadline occurs on a specified date.
      *
-     * @param date date to check
-     * @return true if the deadline is on the specified date
+     * @param date date to check.
+     * @return true if the deadline is on the specified date.
      */
     @Override
     public boolean occursOn(LocalDate date) {
@@ -57,7 +57,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline formatted for display.
      *
-     * @return formatted deadline description and due date/time
+     * @return formatted deadline description and due date/time.
      */
     @Override
     public String toString() {

@@ -1,7 +1,5 @@
 package penguin.util;
 
-import penguin.exception.PenguinException;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,8 +7,10 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
 
+import penguin.exception.PenguinException;
+
 /** Provides parsing and formatting utilities for dates and times. */
-public class DateTimeUtil {
+public final class DateTimeUtil {
     /** Formatter for parsing and storing full date/time values. */
     private static final DateTimeFormatter INPUT_FORMAT =
             DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(
@@ -32,9 +32,9 @@ public class DateTimeUtil {
     /**
      * Parses a date/time string entered by the user.
      *
-     * @param dateTime date/time in yyyy-MM-dd HHmm format
-     * @return parsed date/time
-     * @throws PenguinException if the input is invalid
+     * @param dateTime date/time in yyyy-MM-dd HHmm format.
+     * @return parsed date/time.
+     * @throws PenguinException if the input is invalid.
      */
     public static LocalDateTime parseDateTime(String dateTime) throws PenguinException {
         String trimmedInput = dateTime.trim();
@@ -55,9 +55,9 @@ public class DateTimeUtil {
     /**
      * Parses a date string entered by the user.
      *
-     * @param date date in yyyy-MM-dd format
-     * @return parsed date
-     * @throws PenguinException if the format or date range is invalid
+     * @param date date in yyyy-MM-dd format.
+     * @return parsed date.
+     * @throws PenguinException if the format or date range is invalid.
      */
     public static LocalDate parseDate(String date) throws PenguinException {
         String trimmedDate = date.trim();
@@ -77,9 +77,9 @@ public class DateTimeUtil {
     /**
      * Ensures that a date/time is today or later.
      *
-     * @param dateTime date/time to validate
-     * @param itemName name of the item being validated
-     * @throws PenguinException if the date is before today
+     * @param dateTime date/time to validate.
+     * @param itemName name of the item being validated.
+     * @throws PenguinException if the date is before today.
      */
     public static void validateNotBeforeToday(
             LocalDateTime dateTime, String itemName) throws PenguinException {
@@ -92,8 +92,8 @@ public class DateTimeUtil {
     /**
      * Formats a date/time for display.
      *
-     * @param dateTime date/time to format
-     * @return formatted date/time
+     * @param dateTime date/time to format.
+     * @return formatted date/time.
      */
     public static String formatForDisplay(LocalDateTime dateTime) {
         return dateTime.format(OUTPUT_FORMAT);
@@ -102,8 +102,8 @@ public class DateTimeUtil {
     /**
      * Formats a date/time for persistent storage.
      *
-     * @param dateTime date/time to format
-     * @return date/time in yyyy-MM-dd HHmm format
+     * @param dateTime date/time to format.
+     * @return date/time in yyyy-MM-dd HHmm format.
      */
     public static String formatForStorage(LocalDateTime dateTime) {
         return dateTime.format(INPUT_FORMAT);

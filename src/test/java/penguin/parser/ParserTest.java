@@ -1,16 +1,17 @@
 package penguin.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
+
 import penguin.command.AddCommand;
 import penguin.command.Command;
 import penguin.command.FindCommand;
 import penguin.command.OnCommand;
 import penguin.command.UndoCommand;
 import penguin.exception.PenguinException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParserTest {
     @Test
@@ -203,5 +204,12 @@ class ParserTest {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("E | 0 | meeting | 2099-12-31 1800"
                         + " | 2099-12-31 1400"));
+    }
+
+    @Test
+    void parseSavedTask_pastEvent_returnsEvent() throws PenguinException {
+        assertEquals("[E][ ] meeting (from: 1 Jan 2000, 2:00PM to: 1 Jan 2000, 4:00PM)",
+                Parser.parseSavedTask("E | 0 | meeting | 2000-01-01 1400"
+                        + " | 2000-01-01 1600").toString());
     }
 }

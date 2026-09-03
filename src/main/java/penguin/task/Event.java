@@ -17,9 +17,9 @@ public class Event extends Task {
     /**
      * Creates an event with a description, start time, and end time.
      *
-     * @param description description of the event
-     * @param startDateTime date or time when the event starts
-     * @param endDateTime date or time when the event ends
+     * @param description description of the event.
+     * @param startDateTime date or time when the event starts.
+     * @param endDateTime date or time when the event ends.
      */
     public Event(String description, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         super(description, TaskType.EVENT);
@@ -40,7 +40,7 @@ public class Event extends Task {
     /**
      * Returns the event in persistent storage format.
      *
-     * @return serialized event data
+     * @return serialized event data.
      */
     @Override
     public String toStorageFormat() {
@@ -52,8 +52,8 @@ public class Event extends Task {
     /**
      * Checks whether the event spans the specified date.
      *
-     * @param date date to check
-     * @return true if the event occurs on the specified date
+     * @param date date to check.
+     * @return true if the event occurs on the specified date.
      */
     @Override
     public boolean occursOn(LocalDate date) {
@@ -63,7 +63,7 @@ public class Event extends Task {
     /**
      * Returns the event formatted for display.
      *
-     * @return formatted event description and date/time range
+     * @return formatted event description and date/time range.
      */
     @Override
     public String toString() {

@@ -1,16 +1,17 @@
 package penguin.ui;
 
-import org.junit.jupiter.api.Test;
-import penguin.task.TaskList;
-import penguin.task.ToDo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import penguin.task.TaskList;
+import penguin.task.Todo;
 
 class UiTest {
     @Test
@@ -65,7 +66,7 @@ class UiTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintStream originalOutput = System.out;
         TaskList tasks = new TaskList();
-        tasks.addTask(new ToDo("read book"));
+        tasks.addTask(new Todo("read book"));
 
         try {
             System.setOut(new PrintStream(output));

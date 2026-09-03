@@ -24,8 +24,8 @@ public class Task {
     /**
      * Creates an incomplete task of the specified type.
      *
-     * @param taskDescription the description of the task
-     * @param taskType the type of the task
+     * @param taskDescription the description of the task.
+     * @param taskType the type of the task.
      */
     public Task(String taskDescription, TaskType taskType) {
         this.description = Objects.requireNonNull(taskDescription, "Description must not be null");
@@ -39,7 +39,7 @@ public class Task {
     /**
      * Returns the display marker for this task's completion status.
      *
-     * @return {@code "X"} if the task is done, or a space otherwise
+     * @return {@code "X"} if the task is done, or a space otherwise.
      */
     public String getStatus() {
         return isDone ? "X" : " ";
@@ -58,7 +58,7 @@ public class Task {
     /**
      * Creates an independent copy of this task.
      *
-     * @return copy with the same completion status
+     * @return copy with the same completion status.
      */
     public Task copy() {
         Task copy = new Task(description, type);
@@ -71,7 +71,7 @@ public class Task {
     /**
      * Returns this task's description for subclass copy operations.
      *
-     * @return this task's description
+     * @return this task's description.
      */
     protected String getDescription() {
         return description;
@@ -80,7 +80,7 @@ public class Task {
     /**
      * Returns this task in the format used for persistent storage.
      *
-     * @return task type, completion status, and description separated by pipes
+     * @return task type, completion status, and description separated by pipes.
      */
     public String toStorageFormat() {
         String status = isDone ? "1" : "0";
@@ -90,8 +90,8 @@ public class Task {
     /**
      * Checks whether this task occurs on the specified date.
      *
-     * @param date date to check
-     * @return false because a normal to-do has no date
+     * @param date date to check.
+     * @return false because a normal to-do has no date.
      */
     public boolean occursOn(LocalDate date) {
         return false;
@@ -100,8 +100,8 @@ public class Task {
     /**
      * Checks whether this task description contains the specified keyword.
      *
-     * @param keyword keyword or phrase to search for
-     * @return true if the description contains the keyword
+     * @param keyword keyword or phrase to search for.
+     * @return true if the description contains the keyword.
      */
     public boolean containsKeyword(String keyword) {
         return description.contains(keyword);
@@ -110,7 +110,7 @@ public class Task {
     /**
      * Returns the task status, type, and description formatted for display.
      *
-     * @return the task status, type, and description formatted for display
+     * @return the task status, type, and description formatted for display.
      */
     @Override
     public String toString() {

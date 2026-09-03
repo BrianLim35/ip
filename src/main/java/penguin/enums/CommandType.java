@@ -34,7 +34,7 @@ public enum CommandType {
     /**
      * Returns the user-facing keyword for this command.
      *
-     * @return command keyword
+     * @return command keyword.
      */
     public String getKeyword() {
         return keyword;
@@ -43,8 +43,8 @@ public enum CommandType {
     /**
      * Finds the command represented by a user-facing keyword.
      *
-     * @param keyword lowercase command keyword
-     * @return matching command type, or {@code null} if the keyword is unknown
+     * @param keyword lowercase command keyword.
+     * @return matching command type, or {@code null} if the keyword is unknown.
      */
     public static CommandType fromKeyword(String keyword) {
         for (CommandType commandType : values()) {

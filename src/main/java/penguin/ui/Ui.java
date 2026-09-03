@@ -1,13 +1,13 @@
 package penguin.ui;
 
-import penguin.task.Task;
-import penguin.task.TaskList;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+
+import penguin.task.Task;
+import penguin.task.TaskList;
 
 /** Handles console interaction for Penguin. */
 public class Ui {
@@ -36,7 +36,7 @@ public class Ui {
     private final StringBuilder response = new StringBuilder();
 
     /** Whether responses should also be printed to standard output. */
-    private final boolean consoleOutputEnabled;
+    private final boolean shouldPrintToConsole;
 
     /** Creates a user interface using standard input. */
     public Ui() {
@@ -46,11 +46,11 @@ public class Ui {
     /**
      * Creates a user interface with configurable console output.
      *
-     * @param enableConsoleOutput whether responses should be printed
+     * @param isConsoleOutputEnabled whether responses should be printed.
      */
-    public Ui(boolean enableConsoleOutput) {
+    public Ui(boolean isConsoleOutputEnabled) {
         scanner = new Scanner(System.in);
-        this.consoleOutputEnabled = enableConsoleOutput;
+        shouldPrintToConsole = isConsoleOutputEnabled;
     }
 
     /** Displays the welcome message. */
@@ -65,7 +65,7 @@ public class Ui {
     /**
      * Reads one command from the user.
      *
-     * @return trimmed user command, or {@code null} at end of input
+     * @return trimmed user command, or {@code null} at end of input.
      */
     public String readCommand() {
         System.out.printf("%s", "You: ");
@@ -80,7 +80,7 @@ public class Ui {
     /**
      * Displays a normal chatbot message.
      *
-     * @param message message to display
+     * @param message message to display.
      */
     public void showMessage(String message) {
         record("Penguin: " + message);
@@ -89,7 +89,7 @@ public class Ui {
     /**
      * Displays an error message.
      *
-     * @param message error message to display
+     * @param message error message to display.
      */
     public void showError(String message) {
         showMessage(message);
@@ -103,11 +103,11 @@ public class Ui {
     /**
      * Stores a response and optionally prints it to the console.
      *
-     * @param message response to store and display
+     * @param message response to store and display.
      */
     private void record(String message) {
         response.append(message).append(System.lineSeparator());
-        if (consoleOutputEnabled) {
+        if (shouldPrintToConsole) {
             System.out.printf("%s%n", message);
         }
     }
@@ -120,7 +120,7 @@ public class Ui {
     /**
      * Gets the latest buffered response.
      *
-     * @return latest response without trailing whitespace
+     * @return latest response without trailing whitespace.
      */
     public String getResponse() {
         return response.toString().trim();
@@ -129,7 +129,7 @@ public class Ui {
     /**
      * Displays all tasks or the empty-list message.
      *
-     * @param taskList task list to display
+     * @param taskList task list to display.
      */
     public void showTasks(TaskList taskList) {
         if (taskList.isEmpty()) {
@@ -144,10 +144,10 @@ public class Ui {
     /**
      * Displays tasks occurring on a date.
      *
-     * @param date date being displayed
-     * @param tasks matching tasks
+     * @param date date being displayed.
+     * @param tasks matching tasks.
      */
-    public void showTasksOnDate(LocalDate date, ArrayList<Task> tasks) {
+    public void showTasksOnDate(LocalDate date, List<Task> tasks) {
         if (tasks.isEmpty()) {
             showMessage(String.format("No deadlines or events occur on %s.",
                     formatDate(date)));
@@ -166,10 +166,10 @@ public class Ui {
     /**
      * Displays tasks matching a keyword or a no-match message.
      *
-     * @param keyword keyword or phrase used for the search
-     * @param tasks matching tasks to display
+     * @param keyword keyword or phrase used for the search.
+     * @param tasks matching tasks to display.
      */
-    public void showMatchingTasks(String keyword, ArrayList<Task> tasks) {
+    public void showMatchingTasks(String keyword, List<Task> tasks) {
         if (tasks.isEmpty()) {
             showMessage(String.format("No tasks found when searching for %s.",
                     keyword));
@@ -184,9 +184,9 @@ public class Ui {
     /**
      * Displays numbered task lines.
      *
-     * @param tasks tasks to display
+     * @param tasks tasks to display.
      */
-    private void showTaskLines(ArrayList<Task> tasks) {
+    private void showTaskLines(List<Task> tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             record((i + 1) + ". " + tasks.get(i));
         }

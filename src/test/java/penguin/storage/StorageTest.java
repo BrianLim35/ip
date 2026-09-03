@@ -1,22 +1,24 @@
 package penguin.storage;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import penguin.exception.PenguinException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import penguin.exception.PenguinException;
 
 class StorageTest {
     @Test
     void saveAndLoadTaskLines_validContent_roundTrips(@TempDir Path tempDir) throws PenguinException {
         Storage storage = new Storage(
                 tempDir.resolve("data/tasks.txt").toString());
-        ArrayList<String> content = new ArrayList<>();
+        List<String> content = new ArrayList<>();
         content.add("T | 0 | read book");
 
         storage.saveTaskLines(content);

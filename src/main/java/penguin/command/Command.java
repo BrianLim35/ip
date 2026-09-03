@@ -14,10 +14,10 @@ public abstract class Command {
     /**
      * Executes the command.
      *
-     * @param tasks task list to modify or query
-     * @param ui interface used for output
-     * @param storage storage used to persist changes
-     * @throws PenguinException if execution fails
+     * @param tasks task list to modify or query.
+     * @param ui interface used for output.
+     * @param storage storage used to persist changes.
+     * @throws PenguinException if execution fails.
      */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage)
             throws PenguinException;
@@ -25,9 +25,10 @@ public abstract class Command {
     /**
      * Checks whether this command exits the application.
      *
-     * @return true if this command exits Penguin
+     * @return true if this command exits Penguin.
      */
     public boolean isExit() {
         return false;
     }
+
 }

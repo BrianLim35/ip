@@ -12,7 +12,7 @@ public class FindCommand extends Command {
     /**
      * Creates a keyword-search command.
      *
-     * @param searchKeyword keyword or phrase to search for
+     * @param searchKeyword keyword or phrase to search for.
      */
     public FindCommand(String searchKeyword) {
         this.keyword = searchKeyword;
@@ -21,9 +21,9 @@ public class FindCommand extends Command {
     /**
      * Displays tasks whose descriptions contain the search keyword.
      *
-     * @param tasks task list to search
-     * @param ui interface used for output
-     * @param storage storage used by the command framework
+     * @param tasks task list to search.
+     * @param ui interface used for output.
+     * @param storage storage used by the command framework.
      */
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         assert keyword != null : "Find command must contain a keyword";

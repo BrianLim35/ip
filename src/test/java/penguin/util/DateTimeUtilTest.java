@@ -1,13 +1,14 @@
 package penguin.util;
 
-import org.junit.jupiter.api.Test;
-import penguin.exception.PenguinException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+
+import penguin.exception.PenguinException;
 
 class DateTimeUtilTest {
     @Test

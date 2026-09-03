@@ -15,7 +15,7 @@ public enum TaskType {
     /**
      * Creates a task type with its display symbol.
      *
-     * @param displaySymbol symbol used when displaying the task type
+     * @param displaySymbol symbol used when displaying the task type.
      */
     TaskType(String displaySymbol) {
         this.symbol = displaySymbol;
@@ -24,7 +24,7 @@ public enum TaskType {
     /**
      * Returns the display symbol for this task type.
      *
-     * @return the task type symbol
+     * @return the task type symbol.
      */
     public String getSymbol() {
         return symbol;
@@ -33,8 +33,8 @@ public enum TaskType {
     /**
      * Finds the task type represented by a persistent storage symbol.
      *
-     * @param symbol persistent storage symbol
-     * @return matching task type, or {@code null} when the symbol is unknown
+     * @param symbol persistent storage symbol.
+     * @return matching task type, or {@code null} when the symbol is unknown.
      */
     public static TaskType fromSymbol(String symbol) {
         for (TaskType taskType : values()) {

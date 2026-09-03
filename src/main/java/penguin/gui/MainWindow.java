@@ -4,13 +4,13 @@ import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.Node;
 import javafx.util.Duration;
 
 import penguin.Penguin;
@@ -52,7 +52,7 @@ public class MainWindow extends AnchorPane {
     /**
      * Injects the Penguin chatbot instance.
      *
-     * @param penguinInstance chatbot instance used to process commands
+     * @param penguinInstance chatbot instance used to process commands.
      */
     public void setPenguin(Penguin penguinInstance) {
         assert penguinInstance != null : "Penguin instance must not be null";
@@ -61,7 +61,7 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Creates dialog boxes for the input and response, then appends them to
+     * Creates dialog boxes for the input and response, then appends them to.
      * the dialog container. Clears the user input after processing.
      */
     @FXML
@@ -91,9 +91,9 @@ public class MainWindow extends AnchorPane {
     /**
      * Loads a required GUI image.
      *
-     * @param resourcePath classpath path of the image
-     * @return loaded image
-     * @throws IllegalStateException if the image cannot be found
+     * @param resourcePath classpath path of the image.
+     * @return loaded image.
+     * @throws IllegalStateException if the image cannot be found.
      */
     private Image loadImage(String resourcePath) {
         var imageStream = getClass().getResourceAsStream(resourcePath);
@@ -106,7 +106,7 @@ public class MainWindow extends AnchorPane {
     /**
      * Adds a dialog with a short fade-and-slide entrance animation.
      *
-     * @param dialog dialog node to add
+     * @param dialog dialog node to add.
      */
     private void addAnimatedDialog(Node dialog) {
         dialogContainer.getChildren().add(dialog);

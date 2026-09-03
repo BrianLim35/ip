@@ -1,10 +1,10 @@
 package penguin.command;
 
+import java.time.LocalDate;
+
 import penguin.storage.Storage;
 import penguin.task.TaskList;
 import penguin.ui.Ui;
-
-import java.time.LocalDate;
 
 /** Represents a command that finds dated tasks. */
 public class OnCommand extends Command {
@@ -14,7 +14,7 @@ public class OnCommand extends Command {
     /**
      * Creates a date-search command.
      *
-     * @param searchDate date to search for
+     * @param searchDate date to search for.
      */
     public OnCommand(LocalDate searchDate) {
         this.date = searchDate;
@@ -23,9 +23,9 @@ public class OnCommand extends Command {
     /**
      * Displays tasks occurring on the configured date.
      *
-     * @param tasks task list to search
-     * @param ui interface used for output
-     * @param storage unused storage
+     * @param tasks task list to search.
+     * @param ui interface used for output.
+     * @param storage unused storage.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {

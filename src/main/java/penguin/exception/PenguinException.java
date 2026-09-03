@@ -5,7 +5,7 @@ public class PenguinException extends Exception {
     /**
      * Creates an exception with a message suitable for displaying to the user.
      *
-     * @param message explanation of how the input is invalid
+     * @param message explanation of how the input is invalid.
      */
     public PenguinException(String message) {
         super(message);
