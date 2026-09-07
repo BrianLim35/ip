@@ -13,6 +13,7 @@ import penguin.command.OnCommand;
 import penguin.command.UndoCommand;
 import penguin.exception.PenguinException;
 
+/** Tests command and saved-task parsing behavior. */
 class ParserTest {
     @Test
     void parseUndo_validCommand_returnsUndoCommand() throws PenguinException {

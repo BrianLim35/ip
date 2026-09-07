@@ -25,6 +25,7 @@ public enum CommandType {
     /** Exits the application. */
     BYE("bye");
 
+    /** User-facing keyword that selects this command. */
     private final String keyword;
 
     CommandType(String commandKeyword) {

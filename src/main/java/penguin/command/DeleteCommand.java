@@ -4,6 +4,7 @@ import penguin.exception.PenguinException;
 import penguin.storage.Storage;
 import penguin.task.Task;
 import penguin.task.TaskList;
+import penguin.task.TaskListSnapshot;
 import penguin.ui.Ui;
 
 /** Represents a command that deletes a task. */
@@ -35,11 +36,12 @@ public class DeleteCommand extends Command {
         assert storage != null : "Delete command requires a storage";
 
         try {
+            TaskListSnapshot previousState = tasks.createSnapshot();
             Task task = tasks.deleteTask(index);
-            storage.saveTaskLines(tasks.toStorageLines());
+            persistOrRestore(tasks, storage, previousState);
             ui.showMessage("I have removed '" + task
                     + "' from your list of tasks. Now you have "
-                    + tasks.size() + " task(s) in the list.");
+                    + formatTaskCount(tasks.size()) + " in the list.");
         } catch (IndexOutOfBoundsException e) {
             throw new PenguinException("Invalid task index!");
         }

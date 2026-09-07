@@ -1,5 +1,7 @@
 package penguin.command;
 
+import java.util.Objects;
+
 import penguin.storage.Storage;
 import penguin.task.TaskList;
 import penguin.ui.Ui;
@@ -15,7 +17,8 @@ public class FindCommand extends Command {
      * @param searchKeyword keyword or phrase to search for.
      */
     public FindCommand(String searchKeyword) {
-        this.keyword = searchKeyword;
+        this.keyword = Objects.requireNonNull(
+                searchKeyword, "Search keyword must not be null");
     }
 
     /**
@@ -25,6 +28,7 @@ public class FindCommand extends Command {
      * @param ui interface used for output.
      * @param storage storage used by the command framework.
      */
+    @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         assert keyword != null : "Find command must contain a keyword";
         assert tasks != null : "Find command requires a task list";

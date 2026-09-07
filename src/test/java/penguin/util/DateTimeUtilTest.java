@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import penguin.exception.PenguinException;
 
+/** Tests strict date/time parsing and display formatting. */
 class DateTimeUtilTest {
     @Test
     void parseDate_validDate_returnsExpectedLocalDate()

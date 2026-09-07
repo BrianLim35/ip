@@ -53,9 +53,9 @@ public class Penguin {
     /** Loads valid saved tasks and reports invalid records individually. */
     private void loadTasks() {
         try {
-            List<String> storageContent = storage.loadTaskLines();
+            List<String> storageLines = storage.loadTaskLines();
 
-            for (String line : storageContent) {
+            for (String line : storageLines) {
                 try {
                     taskList.addLoadedTask(Parser.parseSavedTask(line));
                 } catch (PenguinException e) {
@@ -64,8 +64,17 @@ public class Penguin {
                 }
             }
         } catch (PenguinException e) {
-            ui.showError("Unable to load tasks: " + e.getMessage());
+            ui.showError(e.getMessage());
         }
+    }
+
+    /**
+     * Returns warnings generated while loading saved tasks during startup.
+     *
+     * @return startup response, or an empty string when all tasks loaded successfully.
+     */
+    public String getStartupResponse() {
+        return ui.getResponse();
     }
 
     /**

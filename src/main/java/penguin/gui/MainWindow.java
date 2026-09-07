@@ -1,15 +1,19 @@
 package penguin.gui;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -18,7 +22,13 @@ import penguin.Penguin;
 /**
  * Controller for the main GUI.
  */
-public class MainWindow extends AnchorPane {
+public class MainWindow {
+    /** Duration used for dialog entrance animations. */
+    private static final double ANIMATION_DURATION_MILLIS = 260;
+
+    /** Initial vertical offset used for dialog entrance animations. */
+    private static final double SLIDE_DISTANCE = 12;
+
     @FXML
     private ScrollPane scrollPane;
 
@@ -40,13 +50,19 @@ public class MainWindow extends AnchorPane {
     /** Image displayed beside Penguin messages. */
     private final Image penguinImage = loadImage("/images/chatbot.png");
 
+    /** Creates the FXML controller for the main window. */
+    public MainWindow() {
+    }
+
     /** Binds the dialog container to the scroll pane. */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         dialogContainer.getChildren().add(
                 DialogBox.getPenguinDialog(
-                        "Hello! I am Penguin. How can I help you?", penguinImage));
+                        "Hi there! I am Penguin.\n"
+                                + "Your friendly task assistant is ready to help!",
+                        penguinImage));
     }
 
     /**
@@ -58,11 +74,17 @@ public class MainWindow extends AnchorPane {
         assert penguinInstance != null : "Penguin instance must not be null";
 
         penguin = penguinInstance;
+
+        String startupResponse = penguin.getStartupResponse();
+        if (!startupResponse.isBlank()) {
+            addAnimatedDialog(DialogBox.getPenguinDialog(
+                    startupResponse, penguinImage)).play();
+        }
     }
 
     /**
-     * Creates dialog boxes for the input and response, then appends them to.
-     * the dialog container. Clears the user input after processing.
+     * Creates dialog boxes for the input and response, appends them to the dialog
+     * container, and clears the input after processing.
      */
     @FXML
     private void handleUserInput() {
@@ -72,19 +94,48 @@ public class MainWindow extends AnchorPane {
 
         String response = penguin.getResponse(input);
 
+        ParallelTransition responseAnimation;
         if (input.isBlank()) {
-            addAnimatedDialog(DialogBox.getPenguinDialog(response, penguinImage));
+            responseAnimation = addAnimatedDialog(
+                    DialogBox.getPenguinDialog(response, penguinImage));
         } else {
             Node userDialog = DialogBox.getUserDialog(input, userImage);
             Node penguinDialog = DialogBox.getPenguinDialog(response, penguinImage);
-            addAnimatedDialog(userDialog);
-            addAnimatedDialog(penguinDialog);
+            addAnimatedDialog(userDialog).play();
+            responseAnimation = addAnimatedDialog(penguinDialog);
         }
 
         userInput.clear();
 
         if (penguin.isExitRequested()) {
-            Platform.exit();
+            userInput.setDisable(true);
+            sendButton.setDisable(true);
+            responseAnimation.setOnFinished(event -> Platform.exit());
+        }
+        responseAnimation.play();
+    }
+
+    /**
+     * Applies a task-oriented suggestion to the message composer.
+     * The list suggestion is submitted immediately because it needs no further input.
+     *
+     * @param event click event from a suggestion button.
+     */
+    @FXML
+    private void handleSuggestion(ActionEvent event) {
+        assert event.getSource() instanceof Button : "Suggestion source must be a button";
+
+        Button suggestion = (Button) event.getSource();
+        assert suggestion.getUserData() instanceof String
+                : "Suggestion command template must be a string";
+
+        String commandTemplate = (String) suggestion.getUserData();
+        userInput.setText(commandTemplate);
+        userInput.positionCaret(commandTemplate.length());
+        userInput.requestFocus();
+
+        if ("list".equals(commandTemplate)) {
+            handleUserInput();
         }
     }
 
@@ -96,31 +147,35 @@ public class MainWindow extends AnchorPane {
      * @throws IllegalStateException if the image cannot be found.
      */
     private Image loadImage(String resourcePath) {
-        var imageStream = getClass().getResourceAsStream(resourcePath);
-        if (imageStream == null) {
-            throw new IllegalStateException("Unable to load image: " + resourcePath);
+        try (InputStream imageStream = getClass().getResourceAsStream(resourcePath)) {
+            if (imageStream == null) {
+                throw new IllegalStateException("Unable to load image: " + resourcePath);
+            }
+            return new Image(imageStream);
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to read image: " + resourcePath, e);
         }
-        return new Image(imageStream);
     }
 
     /**
      * Adds a dialog with a short fade-and-slide entrance animation.
      *
      * @param dialog dialog node to add.
+     * @return prepared animation for the added dialog.
      */
-    private void addAnimatedDialog(Node dialog) {
+    private ParallelTransition addAnimatedDialog(Node dialog) {
         dialogContainer.getChildren().add(dialog);
 
-        FadeTransition fade = new FadeTransition(Duration.millis(260), dialog);
+        Duration duration = Duration.millis(ANIMATION_DURATION_MILLIS);
+        FadeTransition fade = new FadeTransition(duration, dialog);
         fade.setFromValue(0);
         fade.setToValue(1);
 
-        TranslateTransition slide = new TranslateTransition(
-                Duration.millis(260), dialog);
-        slide.setFromY(12);
+        TranslateTransition slide = new TranslateTransition(duration, dialog);
+        slide.setFromY(SLIDE_DISTANCE);
         slide.setToY(0);
 
-        fade.play();
-        slide.play();
+        ParallelTransition animation = new ParallelTransition(fade, slide);
+        return animation;
     }
 }

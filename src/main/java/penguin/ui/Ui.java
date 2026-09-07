@@ -12,7 +12,7 @@ import penguin.task.TaskList;
 /** Handles console interaction for Penguin. */
 public class Ui {
     /** Separator printed between chatbot messages. */
-    private static final String LINE = "----------------------------------------------------------";
+    private static final String DIVIDER = "----------------------------------------------------------";
 
     /** ASCII-art banner displayed when the chatbot starts. */
     private static final String BANNER = " ____  _____ _   _  ____ _   _ ___ _   _ \n"
@@ -55,11 +55,11 @@ public class Ui {
 
     /** Displays the welcome message. */
     public void showWelcome() {
-        System.out.printf("%s%n", LINE);
+        System.out.printf("%s%n", DIVIDER);
         System.out.printf("%s%n", BANNER);
-        System.out.printf("%s%n", LINE);
+        System.out.printf("%s%n", DIVIDER);
         System.out.printf("%s%n", GREETING_MESSAGE);
-        System.out.printf("%s%n", LINE);
+        System.out.printf("%s%n", DIVIDER);
     }
 
     /**
@@ -74,7 +74,7 @@ public class Ui {
 
     /** Displays the message divider. */
     public void showDivider() {
-        System.out.printf("%s%n", LINE);
+        System.out.printf("%s%n", DIVIDER);
     }
 
     /**
@@ -158,7 +158,12 @@ public class Ui {
         showTaskLines(tasks);
     }
 
-    /** Formats a date using the display format shown to users. */
+    /**
+     * Formats a date using the display format shown to users.
+     *
+     * @param date date to format.
+     * @return date formatted for display.
+     */
     private String formatDate(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
     }

@@ -13,12 +13,18 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 
 /**
- * Represents a dialog box consisting of an ImageView to represent the speaker's face.
- * and a label containing text from the speaker.
+ * Represents a dialog box containing the speaker's image and message.
  */
 public class DialogBox extends HBox {
+    /** Diameter of the circular avatar image. */
+    private static final double AVATAR_DIAMETER = 52;
+
+    /** Radius of the circular avatar image. */
+    private static final double AVATAR_RADIUS = AVATAR_DIAMETER / 2;
+
     @FXML
     private Label dialog;
 
@@ -29,10 +35,10 @@ public class DialogBox extends HBox {
      * Creates a dialog box from the FXML layout and supplied content.
      *
      * @param text text displayed in the dialog.
-     * @param img image displayed beside the text.
+     * @param image image displayed beside the text.
      * @throws IllegalStateException if the FXML layout cannot be loaded.
      */
-    private DialogBox(String text, Image img) {
+    private DialogBox(String text, Image image) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(
                     MainWindow.class.getResource("/view/DialogBox.fxml"));
@@ -44,16 +50,19 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
-        displayPicture.setImage(img);
+        displayPicture.setImage(image);
+        displayPicture.setClip(new Circle(
+                AVATAR_RADIUS, AVATAR_RADIUS, AVATAR_RADIUS));
     }
 
     /**
      * Flips the dialog box such that the ImageView is on the left and text on the right.
      */
     private void flip() {
-        ObservableList<Node> tmp = FXCollections.observableArrayList(this.getChildren());
-        Collections.reverse(tmp);
-        getChildren().setAll(tmp);
+        ObservableList<Node> reorderedChildren =
+                FXCollections.observableArrayList(getChildren());
+        Collections.reverse(reorderedChildren);
+        getChildren().setAll(reorderedChildren);
         setAlignment(Pos.TOP_LEFT);
     }
 
@@ -61,11 +70,11 @@ public class DialogBox extends HBox {
      * Creates a right-aligned dialog box for the user.
      *
      * @param text text to display.
-     * @param img image representing the user.
+     * @param image image representing the user.
      * @return user dialog box.
      */
-    public static DialogBox getUserDialog(String text, Image img) {
-        DialogBox dialogBox = new DialogBox(text, img);
+    public static DialogBox getUserDialog(String text, Image image) {
+        DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.getStyleClass().add("user-dialog");
         return dialogBox;
     }
@@ -74,13 +83,13 @@ public class DialogBox extends HBox {
      * Creates a left-aligned dialog box for Penguin.
      *
      * @param text text to display.
-     * @param img image representing Penguin.
+     * @param image image representing Penguin.
      * @return Penguin dialog box.
      */
-    public static DialogBox getPenguinDialog(String text, Image img) {
-        var db = new DialogBox(text, img);
-        db.flip();
-        db.getStyleClass().add("penguin-dialog");
-        return db;
+    public static DialogBox getPenguinDialog(String text, Image image) {
+        DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.flip();
+        dialogBox.getStyleClass().add("penguin-dialog");
+        return dialogBox;
     }
 }

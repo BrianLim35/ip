@@ -13,6 +13,7 @@ import penguin.util.DateTimeUtil;
 
 /** Converts persisted task records into validated task objects. */
 public final class SavedTaskParser {
+    /** Prevents instantiation of this parser utility class. */
     private SavedTaskParser() {
     }
 

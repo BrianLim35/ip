@@ -4,6 +4,7 @@ import penguin.exception.PenguinException;
 import penguin.storage.Storage;
 import penguin.task.Task;
 import penguin.task.TaskList;
+import penguin.task.TaskListSnapshot;
 import penguin.ui.Ui;
 
 /** Represents a command that marks a task as completed. */
@@ -34,8 +35,9 @@ public class MarkCommand extends Command {
         assert ui != null : "Mark command requires a user interface";
         assert storage != null : "Mark command requires storage";
         try {
+            TaskListSnapshot previousState = tasks.createSnapshot();
             Task task = tasks.markTask(index);
-            storage.saveTaskLines(tasks.toStorageLines());
+            persistOrRestore(tasks, storage, previousState);
             ui.showMessage("The following task has been marked.\n" + task);
         } catch (IndexOutOfBoundsException e) {
             throw new PenguinException("Invalid task index!");

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
+/** Tests task-list operations, searches, and undo history. */
 class TaskListTest {
     @Test
     void undo_markedTask_restoresPreviousStatus() {
@@ -93,6 +94,47 @@ class TaskListTest {
         TaskList tasks = new TaskList();
 
         assertThrows(NullPointerException.class, () -> tasks.addTask(null));
+    }
+
+    @Test
+    void deadline_nullDateTime_throwsNullPointerException() {
+        assertThrows(NullPointerException.class,
+                () -> new Deadline("submit report", null));
+    }
+
+    @Test
+    void event_nullDateTime_throwsNullPointerException() {
+        LocalDateTime dateTime = LocalDateTime.of(2099, 12, 31, 18, 0);
+
+        assertThrows(NullPointerException.class,
+                () -> new Event("meeting", null, dateTime));
+        assertThrows(NullPointerException.class,
+                () -> new Event("meeting", dateTime, null));
+    }
+
+    @Test
+    void event_endBeforeStart_throwsIllegalArgumentException() {
+        LocalDateTime start = LocalDateTime.of(2099, 12, 31, 18, 0);
+        LocalDateTime end = LocalDateTime.of(2099, 12, 31, 17, 0);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> new Event("meeting", start, end));
+    }
+
+    @Test
+    void restoreSnapshot_afterChanges_restoresTasksAndUndoHistory() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new Todo("read book"));
+        TaskListSnapshot snapshot = tasks.createSnapshot();
+        tasks.markTask(0);
+        tasks.addTask(new Todo("buy milk"));
+
+        tasks.restoreSnapshot(snapshot);
+
+        assertEquals(1, tasks.size());
+        assertEquals("[T][ ] read book", tasks.getTasks().get(0).toString());
+        tasks.undo();
+        assertTrue(tasks.isEmpty());
     }
 
     @Test

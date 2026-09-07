@@ -2,6 +2,17 @@
 
 These tests exercise the chatbot through its console input and output.
 
+The JavaFX interface should also be checked manually after visual changes:
+
+- The header displays the Penguin title, subtitle, mountain illustration, and tagline.
+- Penguin messages appear as pale left-aligned bubbles with a circular avatar.
+- User messages appear as blue right-aligned bubbles with a circular avatar.
+- `Show my tasks` submits `list`, while the other suggestion chips place an
+  editable command template in the composer.
+- Enter and the Send button both submit commands, clear the composer, and keep
+  the newest response visible.
+- The layout remains usable at the minimum 680 x 650 window size.
+
 For the packaged project, compile all Java files under `src/main/java` and
 run the application using the fully qualified main class `penguin.Penguin`.
 
@@ -315,7 +326,7 @@ Input:
 
 ```text
 TODO buy groceries
-DEADLINE pay bills /BY Friday
+DEADLINE pay bills /BY 2099-12-26 1800
 EVENT dentist /FROM 2099-12-26 1400 /TO 2099-12-26 1600
 list
 bye
@@ -457,6 +468,7 @@ Input:
 
 ```text
 todo read | book
+todo read|book
 list
 bye
 ```
@@ -1008,8 +1020,18 @@ the saved record is parsed as a normal to-do task.
 Aim: Verify that a valid deadline remains available after its due date has
 passed and can still be loaded from storage.
 
-Input: Create a deadline with a future date, restart the application after the
-date has passed, and run `list`.
+Setup: Place this valid historical record in `data/penguin.txt`:
+
+```text
+D | 0 | historical deadline | 2000-01-01 1800
+```
+
+Input:
+
+```text
+list
+bye
+```
 
 Expected output: The deadline is still displayed. Reload validation checks the
 record format and date validity without rejecting an expired task.
@@ -1035,8 +1057,54 @@ date/time values.
 Aim: Verify that a valid event remains available after its end date has passed
 and can still be loaded from storage.
 
-Input: Create an event with future start and end dates, restart the application
-after its end date has passed, and run `list`.
+Setup: Place this valid historical record in `data/penguin.txt`:
+
+```text
+E | 0 | historical event | 2000-01-01 1400 | 2000-01-01 1600
+```
+
+Input:
+
+```text
+list
+bye
+```
 
 Expected output: The event is still displayed. Reload validation checks its
 record format and chronological ordering without rejecting an expired event.
+
+## Test 62: GUI reports startup storage warnings
+
+Aim: Verify that the GUI does not hide malformed-record warnings produced while
+loading saved tasks.
+
+Setup: Place these records in `data/penguin.txt`:
+
+```text
+T | 2 | invalid task
+T | 0 | valid task
+```
+
+Input: Start the GUI and select the `Show my tasks` suggestion.
+
+Expected output: A Penguin dialog reports that the invalid saved task was
+skipped. The later list response still contains `valid task`.
+
+## Test 63: Failed persistence leaves task state unchanged
+
+Aim: Verify that an in-memory change is rolled back when its updated task list
+cannot be saved.
+
+Setup: Replace `data/penguin.txt` with a directory of the same name so writes to
+that path fail. Start with an empty task list.
+
+Input:
+
+```text
+todo read book
+list
+bye
+```
+
+Expected output: Penguin reports the save failure. The subsequent list is still
+empty because the failed addition and its undo-history entry were rolled back.

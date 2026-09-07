@@ -60,12 +60,14 @@ class PenguinTest {
 
     @Test
     void run_dateSearch_displaysMatchingDatedTasksOnly(@TempDir Path tempDir) {
-        String output = runDirectorySession(tempDir,
-                "todo read book\n"
-                        + "deadline submit report /by 2099-12-26 1800\n"
-                        + "event project meeting /from 2099-12-26 1400 "
-                        + "/to 2099-12-26 1600\n"
-                        + "on 2099-12-26\nbye\n");
+        Penguin penguin = new Penguin(
+                tempDir.resolve("data/penguin.txt").toString(), false);
+        penguin.getResponse("todo read book");
+        penguin.getResponse("deadline submit report /by 2099-12-26 1800");
+        penguin.getResponse("event project meeting /from 2099-12-26 1400 "
+                + "/to 2099-12-26 1600");
+
+        String output = penguin.getResponse("on 2099-12-26");
 
         assertTrue(output.contains("submit report"));
         assertTrue(output.contains("project meeting"));
@@ -74,11 +76,13 @@ class PenguinTest {
 
     @Test
     void run_findCommand_displaysMatchingTasksOnly(@TempDir Path tempDir) {
-        String output = runDirectorySession(tempDir,
-                "todo read book\n"
-                        + "todo return laptop\n"
-                        + "deadline submit report /by 2099-12-26 1800\n"
-                        + "find read book\nlist\nbye\n");
+        Penguin penguin = new Penguin(
+                tempDir.resolve("data/penguin.txt").toString(), false);
+        penguin.getResponse("todo read book");
+        penguin.getResponse("todo return laptop");
+        penguin.getResponse("deadline submit report /by 2099-12-26 1800");
+
+        String output = penguin.getResponse("find read book");
 
         assertTrue(output.contains("1. [T][ ] read book"));
         assertFalse(output.contains("1. [T][ ] return laptop"));
@@ -129,6 +133,30 @@ class PenguinTest {
     }
 
     @Test
+    void getStartupResponse_corruptedRecord_returnsWarning(
+            @TempDir Path tempDir) throws Exception {
+        Path storagePath = tempDir.resolve("data/penguin.txt");
+        Files.createDirectories(storagePath.getParent());
+        Files.writeString(storagePath, "T | 2 | invalid\n");
+
+        Penguin penguin = new Penguin(storagePath.toString(), false);
+
+        assertTrue(penguin.getStartupResponse().contains(
+                "Skipping invalid saved task!"));
+    }
+
+    @Test
+    void getStartupResponse_unreadablePath_hasSingleLoadErrorPrefix(
+            @TempDir Path tempDir) {
+        Penguin penguin = new Penguin(tempDir.toString(), false);
+
+        String response = penguin.getStartupResponse();
+        assertTrue(response.contains("Unable to load tasks:"));
+        assertFalse(response.contains(
+                "Unable to load tasks: Unable to load tasks:"));
+    }
+
+    @Test
     void run_eventBeforeTodayWithFutureEnd_acceptsEvent(@TempDir Path tempDir) {
         String output = runDirectorySession(tempDir,
                 "event ongoing project /from 2026-08-19 1400 "
@@ -168,17 +196,35 @@ class PenguinTest {
         assertFalse(penguin.isExitRequested());
     }
 
-    /** Runs one isolated console session and returns its output. */
+    /**
+     * Runs one isolated console session using a storage file below a directory.
+     *
+     * @param directory temporary directory that contains the session data.
+     * @param input commands supplied to the console session.
+     * @return console output produced by the session.
+     */
     private String runDirectorySession(Path directory, String input) {
         return runSession(directory.resolve("data/penguin.txt"), input);
     }
 
-    /** Runs one isolated console session and returns its output. */
+    /**
+     * Runs one isolated console session using a storage path.
+     *
+     * @param storagePath path of the session's storage file.
+     * @param input commands supplied to the console session.
+     * @return console output produced by the session.
+     */
     private String runSession(Path storagePath, String input) {
         return runSession(storagePath.toString(), input);
     }
 
-    /** Runs one isolated console session and returns its output. */
+    /**
+     * Runs one isolated console session while restoring global streams afterward.
+     *
+     * @param storagePath path of the session's storage file.
+     * @param input commands supplied to the console session.
+     * @return console output produced by the session.
+     */
     private String runSession(String storagePath, String input) {
         InputStream originalInput = System.in;
         PrintStream originalOutput = System.out;

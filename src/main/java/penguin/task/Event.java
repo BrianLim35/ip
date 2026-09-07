@@ -2,6 +2,7 @@ package penguin.task;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import penguin.enums.TaskType;
 import penguin.util.DateTimeUtil;
@@ -9,28 +10,35 @@ import penguin.util.DateTimeUtil;
 /** Represents a task that starts and ends at specified date or time values. */
 public class Event extends Task {
     /** Start date or time of the event. */
-    private final LocalDateTime from;
+    private final LocalDateTime startDateTime;
 
     /** End date or time of the event. */
-    private final LocalDateTime to;
+    private final LocalDateTime endDateTime;
 
     /**
      * Creates an event with a description, start time, and end time.
      *
      * @param description description of the event.
-     * @param startDateTime date or time when the event starts.
-     * @param endDateTime date or time when the event ends.
+     * @param eventStartDateTime date or time when the event starts.
+     * @param eventEndDateTime date or time when the event ends.
      */
-    public Event(String description, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public Event(String description, LocalDateTime eventStartDateTime,
+            LocalDateTime eventEndDateTime) {
         super(description, TaskType.EVENT);
-        this.from = startDateTime;
-        this.to = endDateTime;
+        this.startDateTime = Objects.requireNonNull(
+                eventStartDateTime, "Event start date/time must not be null");
+        this.endDateTime = Objects.requireNonNull(
+                eventEndDateTime, "Event end date/time must not be null");
+        if (eventEndDateTime.isBefore(eventStartDateTime)) {
+            throw new IllegalArgumentException(
+                    "Event end date/time must not be before its start date/time");
+        }
     }
 
     /** Creates an independent copy of this event. */
     @Override
     public Task copy() {
-        Event copy = new Event(getDescription(), from, to);
+        Event copy = new Event(getDescription(), startDateTime, endDateTime);
         if ("X".equals(getStatus())) {
             copy.markDone();
         }
@@ -45,8 +53,8 @@ public class Event extends Task {
     @Override
     public String toStorageFormat() {
         return String.format("%s | %s | %s", super.toStorageFormat(),
-                DateTimeUtil.formatForStorage(from),
-                DateTimeUtil.formatForStorage(to));
+                DateTimeUtil.formatForStorage(startDateTime),
+                DateTimeUtil.formatForStorage(endDateTime));
     }
 
     /**
@@ -57,7 +65,8 @@ public class Event extends Task {
      */
     @Override
     public boolean occursOn(LocalDate date) {
-        return !date.isBefore(from.toLocalDate()) && !date.isAfter(to.toLocalDate());
+        return !date.isBefore(startDateTime.toLocalDate())
+                && !date.isAfter(endDateTime.toLocalDate());
     }
 
     /**
@@ -68,7 +77,7 @@ public class Event extends Task {
     @Override
     public String toString() {
         return super.toString() + " (from: "
-                + DateTimeUtil.formatForDisplay(from) + " to: "
-                + DateTimeUtil.formatForDisplay(to) + ")";
+                + DateTimeUtil.formatForDisplay(startDateTime) + " to: "
+                + DateTimeUtil.formatForDisplay(endDateTime) + ")";
     }
 }

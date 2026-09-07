@@ -13,18 +13,25 @@ import penguin.util.DateTimeUtil;
 
 /** Parses task-creation commands into validated task objects. */
 public final class TaskCommandParser {
+    /** Keyword that separates a deadline description from its due date/time. */
     private static final String BY_KEYWORD = "/by";
 
+    /** Keyword that separates an event description from its start date/time. */
     private static final String FROM_KEYWORD = "/from";
 
+    /** Keyword that separates an event start from its end date/time. */
     private static final String TO_KEYWORD = "/to";
 
+    /** Deadline separator including its required leading space. */
     private static final String BY_SEPARATOR = " " + BY_KEYWORD;
 
+    /** Event-start separator including its required leading space. */
     private static final String FROM_SEPARATOR = " " + FROM_KEYWORD;
 
+    /** Event-end separator including its required leading space. */
     private static final String TO_SEPARATOR = " " + TO_KEYWORD;
 
+    /** Prevents instantiation of this parser utility class. */
     private TaskCommandParser() {
     }
 

@@ -1,9 +1,12 @@
 package penguin.command;
 
+import java.util.Objects;
+
 import penguin.exception.PenguinException;
 import penguin.storage.Storage;
 import penguin.task.Task;
 import penguin.task.TaskList;
+import penguin.task.TaskListSnapshot;
 import penguin.ui.Ui;
 
 /** Represents a command that adds a task. */
@@ -17,7 +20,7 @@ public class AddCommand extends Command {
      * @param newTask task to add.
      */
     public AddCommand(Task newTask) {
-        this.task = newTask;
+        this.task = Objects.requireNonNull(newTask, "Task to add must not be null");
     }
 
     /**
@@ -35,9 +38,10 @@ public class AddCommand extends Command {
         assert ui != null : "Add command requires a ui";
         assert storage != null : "Add command requires a storage";
 
+        TaskListSnapshot previousState = tasks.createSnapshot();
         tasks.addTask(task);
-        storage.saveTaskLines(tasks.toStorageLines());
+        persistOrRestore(tasks, storage, previousState);
         ui.showMessage("I have added '" + task + "' to your list of tasks."
-                + " Now you have " + tasks.size() + " task(s) in the list.");
+                + " Now you have " + formatTaskCount(tasks.size()) + " in the list.");
     }
 }

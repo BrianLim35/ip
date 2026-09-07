@@ -3,10 +3,15 @@ package penguin.command;
 import penguin.exception.PenguinException;
 import penguin.storage.Storage;
 import penguin.task.TaskList;
+import penguin.task.TaskListSnapshot;
 import penguin.ui.Ui;
 
 /** Represents a command that reverses the most recent task-list change. */
 public class UndoCommand extends Command {
+    /** Creates an undo command. */
+    public UndoCommand() {
+    }
+
     /**
      * Restores the previous task-list state, persists it, and reports the result.
      *
@@ -21,8 +26,9 @@ public class UndoCommand extends Command {
         assert ui != null : "Undo command requires a user interface";
         assert storage != null : "Undo command requires storage";
         try {
+            TaskListSnapshot previousState = tasks.createSnapshot();
             tasks.undo();
-            storage.saveTaskLines(tasks.toStorageLines());
+            persistOrRestore(tasks, storage, previousState);
             ui.showMessage("The previous action has been undone.");
         } catch (IllegalStateException e) {
             throw new PenguinException(e.getMessage());

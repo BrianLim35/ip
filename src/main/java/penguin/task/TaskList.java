@@ -12,10 +12,13 @@ import java.util.stream.Collectors;
  * Stores the tasks entered by the user.
  */
 public class TaskList {
+    /** Maximum number of task-list states retained for undo operations. */
     private static final int MAX_UNDO_STEPS = 5;
 
+    /** Tasks in their current display order. */
     private final List<Task> tasks;
 
+    /** Previous task-list states, with the most recent state first. */
     private final Deque<List<Task>> history = new ArrayDeque<>();
 
     /** Creates an empty task list. */
@@ -125,6 +128,29 @@ public class TaskList {
         tasks.addAll(history.pop());
     }
 
+    /**
+     * Captures the current tasks and undo history for transactional recovery.
+     *
+     * @return independent snapshot of the current state.
+     */
+    public TaskListSnapshot createSnapshot() {
+        return new TaskListSnapshot(tasks, history);
+    }
+
+    /**
+     * Restores the tasks and undo history stored in a snapshot.
+     *
+     * @param snapshot state to restore.
+     */
+    public void restoreSnapshot(TaskListSnapshot snapshot) {
+        TaskListSnapshot validSnapshot = Objects.requireNonNull(snapshot,
+                "Task-list snapshot must not be null");
+        tasks.clear();
+        tasks.addAll(validSnapshot.copyTasks());
+        history.clear();
+        history.addAll(validSnapshot.copyHistory());
+    }
+
     /** Saves an independent state snapshot and keeps only MAX_UNDO_STEPS snapshots. */
     private void saveState() {
         history.push(copyTasks());
@@ -139,7 +165,8 @@ public class TaskList {
      * @return independent task copies in their current order.
      */
     private List<Task> copyTasks() {
-        return tasks.stream().map(Task::copy).
+        return tasks.stream().
+                map(Task::copy).
                 collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -149,7 +176,8 @@ public class TaskList {
      * @return task data formatted as storage lines.
      */
     public List<String> toStorageLines() {
-        return tasks.stream().map(Task::toStorageFormat).
+        return tasks.stream().
+                map(Task::toStorageFormat).
                 collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -160,7 +188,9 @@ public class TaskList {
      * @return tasks occurring on the specified date.
      */
     public List<Task> findTasksOnDate(LocalDate date) {
-        return tasks.stream().filter(task -> task.occursOn(date)).map(Task::copy).
+        return tasks.stream().
+                filter(task -> task.occursOn(date)).
+                map(Task::copy).
                 collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -171,7 +201,9 @@ public class TaskList {
      * @return matching tasks in their original order.
      */
     public List<Task> findMatchingTasks(String keyword) {
-        return tasks.stream().filter(task -> task.containsKeyword(keyword)).map(Task::copy).
+        return tasks.stream().
+                filter(task -> task.containsKeyword(keyword)).
+                map(Task::copy).
                 collect(Collectors.toCollection(ArrayList::new));
     }
 }

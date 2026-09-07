@@ -2,6 +2,7 @@ package penguin.task;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import penguin.enums.TaskType;
 import penguin.util.DateTimeUtil;
@@ -19,7 +20,8 @@ public class Deadline extends Task {
      */
     public Deadline(String description, LocalDateTime deadlineDateTime) {
         super(description, TaskType.DEADLINE);
-        this.dateTime = deadlineDateTime;
+        this.dateTime = Objects.requireNonNull(
+                deadlineDateTime, "Deadline date/time must not be null");
     }
 
     /** Creates an independent copy of this deadline. */
