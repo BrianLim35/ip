@@ -27,7 +27,7 @@ class UiTest {
             System.setOut(originalOutput);
         }
 
-        assertTrue(output.toString().contains("Penguin: Test message."));
+        assertTrue(output.toString().contains("Pip: Test message."));
     }
 
     @Test
@@ -91,7 +91,7 @@ class UiTest {
             System.setOut(originalOutput);
         }
 
-        assertTrue(output.toString().contains("Penguin: Invalid command."));
+        assertTrue(output.toString().contains("Pip: Invalid command."));
     }
 
     @Test
@@ -104,7 +104,7 @@ class UiTest {
             Ui ui = new Ui(false);
             ui.showMessage("GUI message.");
 
-            assertEquals("Penguin: GUI message.", ui.getResponse());
+            assertEquals("Pip: GUI message.", ui.getResponse());
         } finally {
             System.setOut(originalOutput);
         }

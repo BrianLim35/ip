@@ -41,7 +41,7 @@ public class AddCommand extends Command {
         TaskListSnapshot previousState = tasks.createSnapshot();
         tasks.addTask(task);
         persistOrRestore(tasks, storage, previousState);
-        ui.showMessage("I have added '" + task + "' to your list of tasks."
+        ui.showMessage("Ice work! I have added '" + task + "' to your list of tasks."
                 + " Now you have " + formatTaskCount(tasks.size()) + " in the list.");
     }
 }

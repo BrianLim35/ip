@@ -38,7 +38,7 @@ public class MarkCommand extends Command {
             TaskListSnapshot previousState = tasks.createSnapshot();
             Task task = tasks.markTask(index);
             persistOrRestore(tasks, storage, previousState);
-            ui.showMessage("The following task has been marked.\n" + task);
+            ui.showMessage("Flipper-five! The following task has been marked.\n" + task);
         } catch (IndexOutOfBoundsException e) {
             throw new PenguinException("Invalid task index!");
         }

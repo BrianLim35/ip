@@ -4,12 +4,12 @@ These tests exercise the chatbot through its console input and output.
 
 The JavaFX interface should also be checked manually after visual changes:
 
-- The header displays the Penguin title, subtitle, mountain illustration, and tagline.
+- The header displays Pip's name, subtitle, mountain illustration, and tagline.
 - Penguin messages appear as pale left-aligned bubbles with a circular avatar.
 - User messages appear as blue right-aligned bubbles with a circular avatar.
-- `Show my tasks` submits `list`, while the other suggestion chips place an
+- `What's on my iceberg?` submits `list`, while the other suggestion chips place an
   editable command template in the composer.
-- Enter and the Send button both submit commands, clear the composer, and keep
+- Enter and the Waddle button both submit commands, clear the composer, and keep
   the newest response visible.
 - The layout remains usable at the minimum 680 x 650 window size.
 
@@ -442,7 +442,7 @@ bye
 Expected output:
 
 ```text
-Penguin: Your task list is empty!
+Pip: Your task list is empty! Your iceberg is clear.
 ```
 
 ## Test 24: Corrupted storage data
@@ -634,7 +634,9 @@ Input:
 bye
 ```
 
-Expected output: The application starts normally, displays `Hello! I'm Penguin.`, and exits with `Bye. Hope to see you again soon!`.
+Expected output: The application starts normally, introduces Pip as a
+productivity penguin, and exits with `Bye. Hope to see you again soon!` followed
+by Pip's stay-cool encouragement.
 
 ## Test 36: Whitespace and duplicate separator validation
 
@@ -889,8 +891,8 @@ Input through the GUI:
 Launch the application
 ```
 
-Expected output: The GUI uses the themed background, rounded input and Send
-button, styled dialog bubbles, and displays Penguin's welcome message.
+Expected output: The GUI uses the themed background, rounded input and Waddle
+button, styled dialog bubbles, and displays Pip's welcome message.
 
 ## Test 52: Responsive chat layout and message animation
 
@@ -1085,7 +1087,7 @@ T | 2 | invalid task
 T | 0 | valid task
 ```
 
-Input: Start the GUI and select the `Show my tasks` suggestion.
+Input: Start the GUI and select the `What's on my iceberg?` suggestion.
 
 Expected output: A Penguin dialog reports that the invalid saved task was
 skipped. The later list response still contains `valid task`.
@@ -1108,3 +1110,22 @@ bye
 
 Expected output: Penguin reports the save failure. The subsequent list is still
 empty because the failed addition and its undo-history entry were rolled back.
+
+## Test 64: Pip personality remains consistent
+
+Aim: Verify that the chatbot uses its distinctive name and penguin-themed
+phrases without obscuring task results.
+
+Input:
+
+```text
+todo read book
+mark 1
+unmark 1
+delete 1
+bye
+```
+
+Expected output: Responses use the `Pip:` prefix and the phrases `Ice work!`,
+`Flipper-five!`, `No worries!`, and `Splash!`. The farewell retains the normal
+goodbye and adds `Stay cool and keep making progress!`.

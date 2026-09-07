@@ -60,8 +60,8 @@ public class MainWindow {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         dialogContainer.getChildren().add(
                 DialogBox.getPenguinDialog(
-                        "Hi there! I am Penguin.\n"
-                                + "Your friendly task assistant is ready to help!",
+                        "Chilly greetings! I am Pip.\n"
+                                + "Let's make today brrr-illiant, one task at a time!",
                         penguinImage));
     }
 

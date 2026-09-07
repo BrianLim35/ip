@@ -43,7 +43,7 @@ public class PenguinGui extends Application {
             stage.setMinHeight(650);
             stage.setWidth(820);
             stage.setHeight(900);
-            stage.setTitle("Penguin — Your Friendly Task Assistant");
+            stage.setTitle("Pip — Your Productivity Penguin");
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setPenguin(penguin);
             stage.show();

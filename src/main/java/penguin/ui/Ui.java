@@ -11,6 +11,9 @@ import penguin.task.TaskList;
 
 /** Handles console interaction for Penguin. */
 public class Ui {
+    /** Name used by the chatbot when addressing the user. */
+    private static final String CHATBOT_NAME = "Pip";
+
     /** Separator printed between chatbot messages. */
     private static final String DIVIDER = "----------------------------------------------------------";
 
@@ -23,11 +26,13 @@ public class Ui {
 
     /** Greeting displayed when the chatbot starts. */
     private static final String GREETING_MESSAGE =
-            "Hello! I'm Penguin.\nWhat can I do for you?";
+            "Chilly greetings! I'm " + CHATBOT_NAME + ", your productivity penguin.\n"
+                    + "Let's tackle today's tasks one small waddle at a time!";
 
     /** Farewell displayed when the chatbot exits. */
     private static final String GOODBYE_MESSAGE =
-            "Bye. Hope to see you again soon!";
+            "Bye. Hope to see you again soon!\n"
+                    + "Stay cool and keep making progress!";
 
     /** Scanner used to read user commands. */
     private final Scanner scanner;
@@ -83,7 +88,7 @@ public class Ui {
      * @param message message to display.
      */
     public void showMessage(String message) {
-        record("Penguin: " + message);
+        record(CHATBOT_NAME + ": " + message);
     }
 
     /**
@@ -133,11 +138,11 @@ public class Ui {
      */
     public void showTasks(TaskList taskList) {
         if (taskList.isEmpty()) {
-            showMessage("Your task list is empty!");
+            showMessage("Your task list is empty! Your iceberg is clear.");
             return;
         }
 
-        showMessage("Here are your tasks!");
+        showMessage("Here are your tasks! Fresh from the iceberg:");
         showTaskLines(taskList.getTasks());
     }
 
@@ -149,12 +154,14 @@ public class Ui {
      */
     public void showTasksOnDate(LocalDate date, List<Task> tasks) {
         if (tasks.isEmpty()) {
-            showMessage(String.format("No deadlines or events occur on %s.",
+            showMessage(String.format(
+                    "No deadlines or events occur on %s. The waters are calm!",
                     formatDate(date)));
             return;
         }
 
-        showMessage(String.format("Here are your tasks on %s!", formatDate(date)));
+        showMessage(String.format("Here are your tasks on %s! Let's dive in.",
+                formatDate(date)));
         showTaskLines(tasks);
     }
 
@@ -176,12 +183,14 @@ public class Ui {
      */
     public void showMatchingTasks(String keyword, List<Task> tasks) {
         if (tasks.isEmpty()) {
-            showMessage(String.format("No tasks found when searching for %s.",
+            showMessage(String.format(
+                    "No tasks found when searching for %s. I checked every snowdrift!",
                     keyword));
             return;
         }
 
-        showMessage(String.format("Here are the matching tasks containing %s in your list:",
+        showMessage(String.format(
+                "Here are the matching tasks containing %s in your list. Ice work!",
                 keyword));
         showTaskLines(tasks);
     }

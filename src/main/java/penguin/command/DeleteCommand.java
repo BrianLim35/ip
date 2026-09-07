@@ -39,7 +39,7 @@ public class DeleteCommand extends Command {
             TaskListSnapshot previousState = tasks.createSnapshot();
             Task task = tasks.deleteTask(index);
             persistOrRestore(tasks, storage, previousState);
-            ui.showMessage("I have removed '" + task
+            ui.showMessage("Splash! I have removed '" + task
                     + "' from your list of tasks. Now you have "
                     + formatTaskCount(tasks.size()) + " in the list.");
         } catch (IndexOutOfBoundsException e) {

@@ -26,9 +26,9 @@
                 <VBox spacing="2.0" AnchorPane.leftAnchor="34.0"
                       AnchorPane.topAnchor="40.0">
                     <children>
-                        <Label styleClass="header-title" text="Chat with Penguin" />
+                        <Label styleClass="header-title" text="Chat with Pip" />
                         <Label styleClass="header-subtitle"
-                               text="Your friendly task assistant" />
+                               text="Your cheerful productivity penguin" />
                     </children>
                 </VBox>
                 <Pane prefHeight="132.0" prefWidth="180.0"
@@ -51,9 +51,9 @@
                       spacing="0.0" AnchorPane.rightAnchor="20.0"
                       AnchorPane.topAnchor="48.0">
                     <children>
-                        <Label styleClass="header-note" text="Plan little tasks," />
-                        <Label styleClass="header-note" text="achieve big days!" />
-                        <Label styleClass="header-heart" text="♥" />
+                        <Label styleClass="header-note" text="Small waddles," />
+                        <Label styleClass="header-note" text="big wins!" />
+                        <Label styleClass="header-icon" text="❄" />
                     </children>
                 </VBox>
             </children>
@@ -82,11 +82,11 @@
               AnchorPane.rightAnchor="28.0">
             <children>
                 <Button onAction="#handleSuggestion" styleClass="suggestion-button"
-                        text="Show my tasks" userData="list" />
+                        text="What's on my iceberg?" userData="list" />
                 <Button onAction="#handleSuggestion" styleClass="suggestion-button"
-                        text="Add a to-do" userData="todo " />
+                        text="Add a tiny task" userData="todo " />
                 <Button onAction="#handleSuggestion" styleClass="suggestion-button"
-                        text="Add a deadline" userData="deadline " />
+                        text="Plan a deadline" userData="deadline " />
                 <Button onAction="#handleSuggestion"
                         styleClass="suggestion-button,suggestion-more"
                         accessibleText="Start a find command"
@@ -101,10 +101,10 @@
             <children>
                 <TextField fx:id="userInput" HBox.hgrow="ALWAYS"
                            onAction="#handleUserInput"
-                           promptText="Type a command here…" />
+                           promptText="Tell Pip what needs doing…" />
                 <Button fx:id="sendButton" mnemonicParsing="false"
                         onAction="#handleUserInput" prefWidth="128.0"
-                        styleClass="send-button" text="➤  Send" />
+                        styleClass="send-button" text="➤  Waddle!" />
             </children>
         </HBox>
     </children>

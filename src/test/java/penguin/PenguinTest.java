@@ -20,8 +20,10 @@ class PenguinTest {
     void run_byeCommand_showsGreetingAndGoodbye(@TempDir Path tempDir) {
         String output = runDirectorySession(tempDir, "bye\n");
 
-        assertTrue(output.contains("Hello! I'm Penguin."));
+        assertTrue(output.contains(
+                "Chilly greetings! I'm Pip, your productivity penguin."));
         assertTrue(output.contains("Bye. Hope to see you again soon!"));
+        assertTrue(output.contains("Stay cool and keep making progress!"));
     }
 
     @Test
@@ -46,6 +48,18 @@ class PenguinTest {
         assertTrue(output.contains("[T][ ] buy groceries"));
         assertTrue(output.contains("[D][ ] pay bills"));
         assertTrue(output.contains("[E][ ] dentist"));
+    }
+
+    @Test
+    void run_taskChanges_usesPenguinPersonalityPhrases(
+            @TempDir Path tempDir) {
+        String output = runDirectorySession(tempDir,
+                "todo read book\nmark 1\nunmark 1\ndelete 1\nbye\n");
+
+        assertTrue(output.contains("Pip: Ice work!"));
+        assertTrue(output.contains("Flipper-five!"));
+        assertTrue(output.contains("No worries!"));
+        assertTrue(output.contains("Splash!"));
     }
 
     @Test

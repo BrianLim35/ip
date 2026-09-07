@@ -29,7 +29,8 @@ public class UndoCommand extends Command {
             TaskListSnapshot previousState = tasks.createSnapshot();
             tasks.undo();
             persistOrRestore(tasks, storage, previousState);
-            ui.showMessage("The previous action has been undone.");
+            ui.showMessage("One careful waddle backward! "
+                    + "The previous action has been undone.");
         } catch (IllegalStateException e) {
             throw new PenguinException(e.getMessage());
         }

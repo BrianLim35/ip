@@ -38,7 +38,7 @@ public class UnmarkCommand extends Command {
             TaskListSnapshot previousState = tasks.createSnapshot();
             Task task = tasks.unmarkTask(index);
             persistOrRestore(tasks, storage, previousState);
-            ui.showMessage("The following task has been unmarked.\n" + task);
+            ui.showMessage("No worries! The following task has been unmarked.\n" + task);
         } catch (IndexOutOfBoundsException e) {
             throw new PenguinException("Invalid task index!");
         }
