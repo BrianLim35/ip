@@ -114,12 +114,13 @@ class PenguinTest {
     }
 
     @Test
-    void run_findCommand_caseSensitiveKeyword_matchesExactCase(
+    void run_findCommand_differentKeywordCase_matchesTask(
             @TempDir Path tempDir) {
         String output = runDirectorySession(tempDir,
                 "todo Read book\nfind read\nbye\n");
 
-        assertTrue(output.contains("No tasks found when searching for read."));
+        assertTrue(output.contains("1. [T][ ] Read book"));
+        assertFalse(output.contains("No tasks found when searching for read."));
     }
 
     @Test

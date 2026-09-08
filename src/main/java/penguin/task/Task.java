@@ -1,6 +1,7 @@
 package penguin.task;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Objects;
 
 import penguin.enums.TaskType;
@@ -104,7 +105,9 @@ public class Task {
      * @return true if the description contains the keyword.
      */
     public boolean containsKeyword(String keyword) {
-        return description.contains(keyword);
+        String lowerKeyword = keyword.toLowerCase(Locale.ROOT);
+        String lowerDescription = description.toLowerCase(Locale.ROOT);
+        return lowerDescription.contains(lowerKeyword);
     }
 
     /**

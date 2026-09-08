@@ -713,14 +713,15 @@ bye
 
 Expected output: The completed to-do, deadline, and event are restored. The date search displays only the deadline and event with their date/time details.
 
-## Test 40: Find tasks by keyword
+## Test 40: Find tasks by keyword regardless of case
 
-Aim: Verify that `find` displays only tasks whose descriptions contain the supplied keyword or phrase.
+Aim: Verify that `find` displays only tasks whose descriptions contain the
+supplied keyword or phrase, regardless of capitalization.
 
 Input:
 
 ```text
-todo read book
+todo Read Book
 todo return laptop
 deadline submit report /by 2099-12-26 1800
 find read book
@@ -728,7 +729,9 @@ list
 bye
 ```
 
-Expected output: The search displays `read book` only. The later list still contains all three tasks.
+Expected output: The search displays `Read Book` despite the different
+capitalization and excludes the other tasks. The later list still contains all
+three tasks.
 
 ## Test 41: Find with whitespace and missing keyword
 
