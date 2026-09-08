@@ -34,6 +34,7 @@ public class MarkCommand extends Command {
         assert tasks != null : "Mark command requires a task list";
         assert ui != null : "Mark command requires a user interface";
         assert storage != null : "Mark command requires storage";
+
         try {
             TaskListSnapshot previousState = tasks.createSnapshot();
             Task task = tasks.markTask(index);

@@ -1,11 +1,11 @@
 package penguin.exception;
 
-/** Represents a user-input error specific to the Penguin chatbot. */
+/** Represents a recoverable validation, command, or persistence error in Penguin. */
 public class PenguinException extends Exception {
     /**
      * Creates an exception with a message suitable for displaying to the user.
      *
-     * @param message explanation of how the input is invalid.
+     * @param message user-facing explanation of the failed operation.
      */
     public PenguinException(String message) {
         super(message);

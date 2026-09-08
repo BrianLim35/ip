@@ -25,9 +25,11 @@ public class DialogBox extends HBox {
     /** Radius of the circular avatar image. */
     private static final double AVATAR_RADIUS = AVATAR_DIAMETER / 2;
 
+    /** Label displaying the dialog message. */
     @FXML
     private Label dialog;
 
+    /** Avatar displayed beside the dialog message. */
     @FXML
     private ImageView displayPicture;
 
@@ -72,6 +74,7 @@ public class DialogBox extends HBox {
      * @param text text to display.
      * @param image image representing the user.
      * @return user dialog box.
+     * @throws IllegalStateException if the dialog layout cannot be loaded.
      */
     public static DialogBox getUserDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
@@ -85,6 +88,7 @@ public class DialogBox extends HBox {
      * @param text text to display.
      * @param image image representing Penguin.
      * @return Penguin dialog box.
+     * @throws IllegalStateException if the dialog layout cannot be loaded.
      */
     public static DialogBox getPenguinDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);

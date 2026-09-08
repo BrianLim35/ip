@@ -28,6 +28,11 @@ public enum CommandType {
     /** User-facing keyword that selects this command. */
     private final String keyword;
 
+    /**
+     * Creates a command type with its user-facing keyword.
+     *
+     * @param commandKeyword keyword that selects the command.
+     */
     CommandType(String commandKeyword) {
         this.keyword = commandKeyword;
     }

@@ -25,6 +25,7 @@ public class UndoCommand extends Command {
         assert tasks != null : "Undo command requires a task list";
         assert ui != null : "Undo command requires a user interface";
         assert storage != null : "Undo command requires storage";
+
         try {
             TaskListSnapshot previousState = tasks.createSnapshot();
             tasks.undo();

@@ -34,6 +34,7 @@ public class UnmarkCommand extends Command {
         assert tasks != null : "Unmark command requires a task list";
         assert ui != null : "Unmark command requires a user interface";
         assert storage != null : "Unmark command requires storage";
+
         try {
             TaskListSnapshot previousState = tasks.createSnapshot();
             Task task = tasks.unmarkTask(index);
