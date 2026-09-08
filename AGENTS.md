@@ -122,6 +122,7 @@ Review:
   statements per line, and values changed before being used.
 - Missing `default` branches, empty catch blocks, dead code, unnecessary scope,
   and duplication.
+- Do not reuse formal parameters as local variables.
 - Whether enums are suitable for small finite sets of values.
 - Whether refactoring genuinely improves clarity rather than adding needless
   abstraction.
