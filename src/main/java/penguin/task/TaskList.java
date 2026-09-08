@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Stores the tasks entered by the user.
@@ -187,12 +188,12 @@ public class TaskList {
      * Finds deadlines and events occurring on a specified date.
      *
      * @param date date to search for.
-     * @return tasks occurring on the specified date.
+     * @return matching tasks with their original one-based task numbers.
      */
-    public List<Task> findTasksOnDate(LocalDate date) {
-        return tasks.stream().
-                filter(task -> task.occursOn(date)).
-                map(Task::copy).
+    public List<TaskSearchResult> findTasksOnDate(LocalDate date) {
+        return IntStream.range(0, tasks.size()).
+                filter(index -> tasks.get(index).occursOn(date)).
+                mapToObj(index -> new TaskSearchResult(index + 1, tasks.get(index))).
                 collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -200,12 +201,13 @@ public class TaskList {
      * Returns tasks whose descriptions contain the specified keyword.
      *
      * @param keyword keyword or phrase to search for.
-     * @return matching tasks in their original order.
+     * @return matching tasks in their original order and with their original
+     *         one-based task numbers.
      */
-    public List<Task> findMatchingTasks(String keyword) {
-        return tasks.stream().
-                filter(task -> task.containsKeyword(keyword)).
-                map(Task::copy).
+    public List<TaskSearchResult> findMatchingTasks(String keyword) {
+        return IntStream.range(0, tasks.size()).
+                filter(index -> tasks.get(index).containsKeyword(keyword)).
+                mapToObj(index -> new TaskSearchResult(index + 1, tasks.get(index))).
                 collect(Collectors.toCollection(ArrayList::new));
     }
 }

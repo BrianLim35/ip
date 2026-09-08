@@ -163,9 +163,8 @@ Examples:
 The match is a case-insensitive substring match. For example, `find report`
 matches both `Submit report` and `Submit Report`.
 
-> **Important:** Numbers displayed in search results identify positions within
-> those results. The `mark`, `unmark`, and `delete` commands always use indexes
-> from the complete list shown by `list`.
+The number beside each result is its index in the complete task list. You can
+use that number directly with `mark`, `unmark`, or `delete`.
 
 ### Finding tasks on a date: `on`
 
@@ -178,8 +177,8 @@ Example: `on 2099-12-02`
 
 The date must be a real calendar date in `yyyy-MM-dd` format.
 
-> **Important:** As with `find`, use `list` to obtain the index for a subsequent
-> `mark`, `unmark`, or `delete` command.
+As with `find`, each result retains its index from the complete task list, so
+the displayed number can be used with an index-based command.
 
 ### Undoing a change: `undo`
 
@@ -239,11 +238,9 @@ beside the JAR on the other computer.
 
 ## Known limitations
 
-1. Search-result numbers cannot be used directly with index-based commands.
-   Run `list` before marking, unmarking, or deleting a search result.
-2. Undo history lasts only for the current session and stores at most five
+1. Undo history lasts only for the current session and stores at most five
    changes.
-3. Two tasks with identical details can currently be added.
+2. Two tasks with identical details can currently be added.
 
 ## Command summary
 

@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import penguin.task.Task;
 import penguin.task.TaskList;
+import penguin.task.TaskSearchResult;
 
 /** Handles console interaction for Penguin. */
 public class Ui {
@@ -150,10 +151,10 @@ public class Ui {
      * Displays tasks occurring on a date.
      *
      * @param date date being displayed.
-     * @param tasks matching tasks.
+     * @param results matching tasks with their original task numbers.
      */
-    public void showTasksOnDate(LocalDate date, List<Task> tasks) {
-        if (tasks.isEmpty()) {
+    public void showTasksOnDate(LocalDate date, List<TaskSearchResult> results) {
+        if (results.isEmpty()) {
             showMessage(String.format(
                     "No deadlines or events occur on %s. The waters are calm!",
                     formatDate(date)));
@@ -162,7 +163,7 @@ public class Ui {
 
         showMessage(String.format("Here are your tasks on %s! Let's dive in.",
                 formatDate(date)));
-        showTaskLines(tasks);
+        showSearchResultLines(results);
     }
 
     /**
@@ -179,10 +180,10 @@ public class Ui {
      * Displays tasks matching a keyword or a no-match message.
      *
      * @param keyword keyword or phrase used for the search.
-     * @param tasks matching tasks to display.
+     * @param results matching tasks with their original task numbers.
      */
-    public void showMatchingTasks(String keyword, List<Task> tasks) {
-        if (tasks.isEmpty()) {
+    public void showMatchingTasks(String keyword, List<TaskSearchResult> results) {
+        if (results.isEmpty()) {
             showMessage(String.format(
                     "No tasks found when searching for %s. I checked every snowdrift!",
                     keyword));
@@ -192,7 +193,7 @@ public class Ui {
         showMessage(String.format(
                 "Here are the matching tasks containing %s in your list. Ice work!",
                 keyword));
-        showTaskLines(tasks);
+        showSearchResultLines(results);
     }
 
     /**
@@ -203,6 +204,17 @@ public class Ui {
     private void showTaskLines(List<Task> tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             record((i + 1) + ". " + tasks.get(i));
+        }
+    }
+
+    /**
+     * Displays matching tasks using their numbers from the complete task list.
+     *
+     * @param results matching tasks and their original task numbers.
+     */
+    private void showSearchResultLines(List<TaskSearchResult> results) {
+        for (TaskSearchResult result : results) {
+            record(result.getTaskNumber() + ". " + result.getTask());
         }
     }
 }

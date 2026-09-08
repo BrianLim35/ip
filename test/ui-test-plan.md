@@ -486,10 +486,14 @@ todo read book
 deadline submit report /by 2099-12-26 1800
 event project meeting /from 2099-12-26 1400 /to 2099-12-26 1600
 on 2099-12-26
+mark 2
+list
 bye
 ```
 
-Expected output: The matching deadline and event are displayed. The to-do is not displayed.
+Expected output: The matching deadline and event are displayed as tasks 2 and
+3. The to-do is not displayed in the date results. `mark 2` marks the deadline,
+and the later complete list retains the original numbering.
 
 ## Test 27: No tasks on requested date
 
@@ -724,17 +728,19 @@ supplied keyword or phrase, regardless of capitalization.
 Input:
 
 ```text
+todo unrelated
 todo Read Book
 todo return laptop
 deadline submit report /by 2099-12-26 1800
 find read book
+mark 2
 list
 bye
 ```
 
-Expected output: The search displays `Read Book` despite the different
-capitalization and excludes the other tasks. The later list still contains all
-three tasks.
+Expected output: The search displays `Read Book` as task 2 despite the
+different capitalization and excludes the other tasks. `mark 2` marks
+`Read Book`, and the later list contains all four tasks with only task 2 marked.
 
 ## Test 41: Find with whitespace and missing keyword
 

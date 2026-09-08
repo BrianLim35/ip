@@ -104,6 +104,24 @@ class PenguinTest {
     }
 
     @Test
+    void run_findCommand_nonFirstMatch_displaysOriginalTaskNumber(
+            @TempDir Path tempDir) {
+        Penguin penguin = new Penguin(
+                tempDir.resolve("data/penguin.txt").toString(), false);
+        penguin.getResponse("todo unrelated");
+        penguin.getResponse("todo target report");
+
+        String searchOutput = penguin.getResponse("find report");
+        String markOutput = penguin.getResponse("mark 2");
+        String listOutput = penguin.getResponse("list");
+
+        assertTrue(searchOutput.contains("2. [T][ ] target report"));
+        assertTrue(markOutput.contains("[T][X] target report"));
+        assertTrue(listOutput.contains("1. [T][ ] unrelated"));
+        assertTrue(listOutput.contains("2. [T][X] target report"));
+    }
+
+    @Test
     void run_findCommand_noMatches_showsNoMatchMessage(
             @TempDir Path tempDir) {
         String output = runDirectorySession(tempDir,

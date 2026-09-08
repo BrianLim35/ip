@@ -178,6 +178,33 @@ class TaskListTest {
     }
 
     @Test
+    void findTasksOnDate_nonFirstMatch_preservesOriginalTaskNumber() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new Todo("read book"));
+        tasks.addTask(new Deadline("submit report",
+                LocalDateTime.of(2099, 12, 31, 18, 0)));
+
+        TaskSearchResult result = tasks.findTasksOnDate(
+                LocalDate.of(2099, 12, 31)).get(0);
+
+        assertEquals(2, result.getTaskNumber());
+        assertEquals("[D][ ] submit report (by: 31 Dec 2099, 6:00PM)",
+                result.getTask().toString());
+    }
+
+    @Test
+    void findMatchingTasks_nonFirstMatch_preservesOriginalTaskNumber() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new Todo("unrelated"));
+        tasks.addTask(new Todo("target report"));
+
+        TaskSearchResult result = tasks.findMatchingTasks("report").get(0);
+
+        assertEquals(2, result.getTaskNumber());
+        assertEquals("[T][ ] target report", result.getTask().toString());
+    }
+
+    @Test
     void deleteTask_invalidIndex_throwsIndexException() {
         TaskList tasks = new TaskList();
 
