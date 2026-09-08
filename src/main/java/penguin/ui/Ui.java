@@ -6,15 +6,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+import penguin.PenguinIdentity;
 import penguin.task.Task;
 import penguin.task.TaskList;
 import penguin.task.TaskSearchResult;
 
 /** Handles console interaction for Penguin. */
 public class Ui {
-    /** Name used by the chatbot when addressing the user. */
-    private static final String CHATBOT_NAME = "Pip";
-
     /** Separator printed between chatbot messages. */
     private static final String DIVIDER = "----------------------------------------------------------";
 
@@ -24,11 +22,6 @@ public class Ui {
             + "| |_) |  _| |  \\| | |  _| | | || ||  \\| |\n"
             + "|  __/| |___| |\\  | |_| | |_| || || |\\  |\n"
             + "|_|   |_____|_| \\_|\\____|\\___/|___|_| \\_|";
-
-    /** Greeting displayed when the chatbot starts. */
-    private static final String GREETING_MESSAGE =
-            "Chilly greetings! I'm " + CHATBOT_NAME + ", your productivity penguin.\n"
-                    + "Let's tackle today's tasks one small waddle at a time!";
 
     /** Farewell displayed when the chatbot exits. */
     private static final String GOODBYE_MESSAGE =
@@ -64,7 +57,7 @@ public class Ui {
         System.out.printf("%s%n", DIVIDER);
         System.out.printf("%s%n", BANNER);
         System.out.printf("%s%n", DIVIDER);
-        System.out.printf("%s%n", GREETING_MESSAGE);
+        System.out.printf("%s%n", PenguinIdentity.GREETING_MESSAGE);
         System.out.printf("%s%n", DIVIDER);
     }
 
@@ -89,7 +82,7 @@ public class Ui {
      * @param message message to display.
      */
     public void showMessage(String message) {
-        record(CHATBOT_NAME + ": " + message);
+        record(PenguinIdentity.CHATBOT_NAME + ": " + message);
     }
 
     /**

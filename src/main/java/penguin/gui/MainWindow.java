@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -18,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import penguin.Penguin;
+import penguin.PenguinIdentity;
 
 /**
  * Controller for the main GUI.
@@ -29,15 +31,27 @@ public class MainWindow {
     /** Initial vertical offset used for dialog entrance animations. */
     private static final double SLIDE_DISTANCE = 12;
 
+    /** Scrollable area containing the conversation. */
     @FXML
     private ScrollPane scrollPane;
 
+    /** Container holding user and chatbot dialog boxes. */
     @FXML
     private VBox dialogContainer;
 
+    /** Header label displaying the chatbot name. */
+    @FXML
+    private Label headerTitle;
+
+    /** Header label displaying the chatbot description. */
+    @FXML
+    private Label headerSubtitle;
+
+    /** Text field used to compose commands. */
     @FXML
     private TextField userInput;
 
+    /** Button used to submit the current command. */
     @FXML
     private Button sendButton;
 
@@ -50,18 +64,28 @@ public class MainWindow {
     /** Image displayed beside Penguin messages. */
     private final Image penguinImage = loadImage("/images/chatbot.png");
 
-    /** Creates the FXML controller for the main window. */
+    /**
+     * Creates the FXML controller for the main window.
+     *
+     * @throws IllegalStateException if a required avatar image cannot be loaded.
+     */
     public MainWindow() {
     }
 
-    /** Binds the dialog container to the scroll pane. */
+    /**
+     * Initializes shared labels, the welcome dialog, and automatic scrolling.
+     *
+     * @throws IllegalStateException if the dialog layout cannot be loaded.
+     */
     @FXML
     public void initialize() {
+        headerTitle.setText("Chat with " + PenguinIdentity.CHATBOT_NAME);
+        headerSubtitle.setText(PenguinIdentity.CHATBOT_DESCRIPTION);
+        userInput.setPromptText(PenguinIdentity.INPUT_PROMPT);
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         dialogContainer.getChildren().add(
                 DialogBox.getPenguinDialog(
-                        "Chilly greetings! I am Pip.\n"
-                                + "Let's make today brrr-illiant, one task at a time!",
+                        PenguinIdentity.GREETING_MESSAGE,
                         penguinImage));
     }
 

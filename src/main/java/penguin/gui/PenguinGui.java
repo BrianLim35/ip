@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import penguin.Penguin;
+import penguin.PenguinIdentity;
 
 /**
  * A GUI for Penguin using FXML.
@@ -43,7 +44,7 @@ public class PenguinGui extends Application {
             stage.setMinHeight(650);
             stage.setWidth(820);
             stage.setHeight(900);
-            stage.setTitle("Pip — Your Productivity Penguin");
+            stage.setTitle(PenguinIdentity.WINDOW_TITLE);
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setPenguin(penguin);
             stage.show();

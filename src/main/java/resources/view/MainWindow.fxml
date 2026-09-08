@@ -26,9 +26,8 @@
                 <VBox spacing="2.0" AnchorPane.leftAnchor="34.0"
                       AnchorPane.topAnchor="40.0">
                     <children>
-                        <Label styleClass="header-title" text="Chat with Pip" />
-                        <Label styleClass="header-subtitle"
-                               text="Your cheerful productivity penguin" />
+                        <Label fx:id="headerTitle" styleClass="header-title" />
+                        <Label fx:id="headerSubtitle" styleClass="header-subtitle" />
                     </children>
                 </VBox>
                 <Pane prefHeight="132.0" prefWidth="180.0"
@@ -100,8 +99,7 @@
               AnchorPane.rightAnchor="28.0">
             <children>
                 <TextField fx:id="userInput" HBox.hgrow="ALWAYS"
-                           onAction="#handleUserInput"
-                           promptText="Tell Pip what needs doing…" />
+                           onAction="#handleUserInput" />
                 <Button fx:id="sendButton" mnemonicParsing="false"
                         onAction="#handleUserInput" prefWidth="128.0"
                         styleClass="send-button" text="➤  Waddle!" />
