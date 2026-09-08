@@ -2,13 +2,12 @@ package penguin.task;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import penguin.enums.TaskType;
 import penguin.util.DateTimeUtil;
 
 /** Represents a task that starts and ends at specified date or time values. */
-public class Event extends Task {
+public final class Event extends Task {
     /** Start date or time of the event. */
     private final LocalDateTime startDateTime;
 
@@ -21,21 +20,12 @@ public class Event extends Task {
      * @param description description of the event.
      * @param eventStartDateTime date or time when the event starts.
      * @param eventEndDateTime date or time when the event ends.
-     * @throws NullPointerException if the description or either date/time is null.
-     * @throws IllegalArgumentException if the description is invalid or the end
-     *                                  is not after the start.
      */
     public Event(String description, LocalDateTime eventStartDateTime,
             LocalDateTime eventEndDateTime) {
         super(description, TaskType.EVENT);
-        this.startDateTime = Objects.requireNonNull(
-                eventStartDateTime, "Event start date/time must not be null");
-        this.endDateTime = Objects.requireNonNull(
-                eventEndDateTime, "Event end date/time must not be null");
-        if (!eventEndDateTime.isAfter(eventStartDateTime)) {
-            throw new IllegalArgumentException(
-                    "Event end date/time must be after its start date/time");
-        }
+        this.startDateTime = eventStartDateTime;
+        this.endDateTime = eventEndDateTime;
     }
 
     /**

@@ -58,10 +58,6 @@ public final class SavedTaskParser {
             throw new PenguinException("Unknown task type.");
         }
         String description = parts[2];
-        if (description.contains(Task.STORAGE_DELIMITER)) {
-            throw new PenguinException("Invalid task data. Descriptions cannot contain the "
-                    + Task.STORAGE_DELIMITER + " character.");
-        }
         return switch (taskType) {
             case TODO -> parseTodo(parts, description);
             case DEADLINE -> parseDeadline(parts, description);
@@ -118,7 +114,7 @@ public final class SavedTaskParser {
         LocalDateTime from = DateTimeUtil.parseDateTime(parts[3]);
         LocalDateTime to = DateTimeUtil.parseDateTime(parts[4]);
         if (!to.isAfter(from)) {
-            throw new PenguinException("Invalid event data. End must be after start.");
+            throw new PenguinException("The start time must be before the end time.");
         }
         return new Event(description, from, to);
     }

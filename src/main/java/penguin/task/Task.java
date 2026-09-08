@@ -2,7 +2,6 @@ package penguin.task;
 
 import java.time.LocalDate;
 import java.util.Locale;
-import java.util.Objects;
 
 import penguin.enums.TaskType;
 
@@ -27,21 +26,11 @@ public class Task {
      *
      * @param taskDescription the description of the task.
      * @param taskType the type of the task.
-     * @throws NullPointerException if the description or task type is null.
-     * @throws IllegalArgumentException if the description is blank or contains
-     *                                  the storage delimiter.
      */
-    public Task(String taskDescription, TaskType taskType) {
-        this.description = Objects.requireNonNull(taskDescription, "Description must not be null");
-        if (taskDescription.isBlank()) {
-            throw new IllegalArgumentException("Description must not be blank");
-        }
-        if (taskDescription.contains(STORAGE_DELIMITER)) {
-            throw new IllegalArgumentException("Description must not contain "
-                    + STORAGE_DELIMITER);
-        }
+    Task(String taskDescription, TaskType taskType) {
+        this.description = taskDescription;
         this.isDone = false;
-        this.type = Objects.requireNonNull(taskType, "Task type must not be null");
+        this.type = taskType;
     }
 
     /**

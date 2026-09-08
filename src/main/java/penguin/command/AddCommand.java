@@ -1,7 +1,5 @@
 package penguin.command;
 
-import java.util.Objects;
-
 import penguin.exception.PenguinException;
 import penguin.storage.Storage;
 import penguin.task.Task;
@@ -20,7 +18,7 @@ public class AddCommand extends Command {
      * @param newTask task to add.
      */
     public AddCommand(Task newTask) {
-        this.task = Objects.requireNonNull(newTask, "Task to add must not be null");
+        this.task = newTask;
     }
 
     /**

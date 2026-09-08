@@ -102,6 +102,8 @@ public final class Parser {
                 validateNoArguments(command, commandType);
                 yield new ExitCommand();
             }
+            default -> throw new IllegalStateException(
+                    "Unexpected command type: " + commandType);
         };
     }
 

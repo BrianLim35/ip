@@ -5,7 +5,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -32,9 +31,10 @@ public class TaskList {
      * @param task the task to add.
      */
     public void addTask(Task task) {
-        Task validTask = Objects.requireNonNull(task, "Task must not be null");
+        assert task != null : "Task must not be null";
+
         saveState();
-        tasks.add(validTask);
+        tasks.add(task);
     }
 
     /**
@@ -43,7 +43,9 @@ public class TaskList {
      * @param task task restored from persistent storage.
      */
     public void addLoadedTask(Task task) {
-        tasks.add(Objects.requireNonNull(task, "Task must not be null"));
+        assert task != null : "Loaded task must not be null";
+
+        tasks.add(task);
     }
 
     /**
@@ -143,12 +145,12 @@ public class TaskList {
      * @param snapshot state to restore.
      */
     public void restoreSnapshot(TaskListSnapshot snapshot) {
-        TaskListSnapshot validSnapshot = Objects.requireNonNull(snapshot,
-                "Task-list snapshot must not be null");
+        assert snapshot != null : "Task-list snapshot must not be null";
+
         tasks.clear();
-        tasks.addAll(validSnapshot.copyTasks());
+        tasks.addAll(snapshot.copyTasks());
         history.clear();
-        history.addAll(validSnapshot.copyHistory());
+        history.addAll(snapshot.copyHistory());
     }
 
     /** Saves an independent state snapshot and keeps only MAX_UNDO_STEPS snapshots. */

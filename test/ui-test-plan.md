@@ -1017,9 +1017,15 @@ JUnit coverage:
 
 ```text
 Parser.parseCommand(null) -> PenguinException
+TaskCommandParser.parse(null) -> PenguinException
 Parser.parseSavedTask("T|0|read book") -> [T][ ] read book
 DateTimeUtil.parseDateTime(null) -> PenguinException
 DateTimeUtil.parseDate(null) -> PenguinException
+TaskList.addTask(null) -> AssertionError
+TaskList.addLoadedTask(null) -> AssertionError
+TaskList.restoreSnapshot(null) -> AssertionError
+TaskCommandParser rejects reserved delimiters and reversed event times
+SavedTaskParser rejects blank descriptions and reversed event times
 ```
 
 Expected output: Null command and date input produce controlled

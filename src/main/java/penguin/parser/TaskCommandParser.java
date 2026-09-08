@@ -40,9 +40,13 @@ public final class TaskCommandParser {
      *
      * @param command complete task-creation command.
      * @return validated task.
-     * @throws PenguinException if the command is invalid.
+     * @throws PenguinException if the command is null or invalid.
      */
     public static Task parse(String command) throws PenguinException {
+        if (command == null) {
+            throw new PenguinException("Please input a task.");
+        }
+
         String lowerCaseCommand = command.toLowerCase(Locale.ROOT);
         if (isCommand(lowerCaseCommand, CommandType.TODO)) {
             return parseTodo(command);
@@ -85,8 +89,7 @@ public final class TaskCommandParser {
         if (description.isEmpty()) {
             throw new PenguinException("The description of a todo cannot be empty.");
         }
-
-        validateDescription(description);
+        validateDescriptionDelimiter(description);
 
         return new Todo(description);
     }
@@ -114,11 +117,10 @@ public final class TaskCommandParser {
             throw new PenguinException("A deadline must have a description before " + BY_KEYWORD + ".");
         }
 
-        validateDescription(description);
-
         if (dateTimeInput.isEmpty()) {
             throw new PenguinException("A deadline must have a date or time after " + BY_KEYWORD + ".");
         }
+        validateDescriptionDelimiter(description);
 
         return new Deadline(description, parseFutureDateTime(dateTimeInput, keyword));
     }
@@ -146,7 +148,7 @@ public final class TaskCommandParser {
         String toInput = content.substring(toIndex + TO_SEPARATOR.length()).trim();
 
         validateEventDescription(description);
-        validateDescription(description);
+        validateDescriptionDelimiter(description);
 
         if (fromInput.isEmpty() || toInput.isEmpty()) {
             throw new PenguinException("An event must have both a start and an end time.");
@@ -154,7 +156,6 @@ public final class TaskCommandParser {
 
         LocalDateTime from = DateTimeUtil.parseDateTime(fromInput);
         LocalDateTime to = parseFutureDateTime(toInput, "event end");
-
         if (!to.isAfter(from)) {
             throw new PenguinException("The start time must be before the end time.");
         }
@@ -256,15 +257,17 @@ public final class TaskCommandParser {
     }
 
     /**
-     * Rejects the persistence delimiter in a description.
+     * Rejects the delimiter reserved for persistent storage.
      *
-     * @param description task description.
-     * @throws PenguinException if the persistence delimiter is present.
+     * @param description task description to validate.
+     * @throws PenguinException if the description contains the storage delimiter.
      */
-    private static void validateDescription(String description) throws PenguinException {
+    private static void validateDescriptionDelimiter(String description)
+            throws PenguinException {
         if (description.contains(Task.STORAGE_DELIMITER)) {
             throw new PenguinException("Task descriptions cannot contain the "
                     + Task.STORAGE_DELIMITER + " character.");
         }
     }
+
 }

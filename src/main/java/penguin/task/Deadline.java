@@ -2,13 +2,12 @@ package penguin.task;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import penguin.enums.TaskType;
 import penguin.util.DateTimeUtil;
 
 /** Represents a task that must be completed by a specified date or time. */
-public class Deadline extends Task {
+public final class Deadline extends Task {
     /** Date or time by which the task should be completed. */
     private final LocalDateTime dateTime;
 
@@ -17,14 +16,10 @@ public class Deadline extends Task {
      *
      * @param description description of the task.
      * @param deadlineDateTime date or time by which the task should be completed.
-     * @throws NullPointerException if the description or deadline date/time is null.
-     * @throws IllegalArgumentException if the description is blank or contains
-     *                                  the storage delimiter.
      */
     public Deadline(String description, LocalDateTime deadlineDateTime) {
         super(description, TaskType.DEADLINE);
-        this.dateTime = Objects.requireNonNull(
-                deadlineDateTime, "Deadline date/time must not be null");
+        this.dateTime = deadlineDateTime;
     }
 
     /**

@@ -1,7 +1,6 @@
 package penguin.command;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 import penguin.storage.Storage;
 import penguin.task.TaskList;
@@ -18,7 +17,7 @@ public class OnCommand extends Command {
      * @param searchDate date to search for.
      */
     public OnCommand(LocalDate searchDate) {
-        this.date = Objects.requireNonNull(searchDate, "Search date must not be null");
+        this.date = searchDate;
     }
 
     /**

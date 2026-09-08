@@ -91,49 +91,24 @@ class TaskListTest {
     }
 
     @Test
-    void addTask_nullTask_throwsNullPointerException() {
+    void addTask_nullTask_throwsAssertionError() {
         TaskList tasks = new TaskList();
 
-        assertThrows(NullPointerException.class, () -> tasks.addTask(null));
+        assertThrows(AssertionError.class, () -> tasks.addTask(null));
     }
 
     @Test
-    void deadline_nullDateTime_throwsNullPointerException() {
-        assertThrows(NullPointerException.class,
-                () -> new Deadline("submit report", null));
+    void addLoadedTask_nullTask_throwsAssertionError() {
+        TaskList tasks = new TaskList();
+
+        assertThrows(AssertionError.class, () -> tasks.addLoadedTask(null));
     }
 
     @Test
-    void event_nullDateTime_throwsNullPointerException() {
-        LocalDateTime dateTime = LocalDateTime.of(2099, 12, 31, 18, 0);
+    void restoreSnapshot_nullSnapshot_throwsAssertionError() {
+        TaskList tasks = new TaskList();
 
-        assertThrows(NullPointerException.class,
-                () -> new Event("meeting", null, dateTime));
-        assertThrows(NullPointerException.class,
-                () -> new Event("meeting", dateTime, null));
-    }
-
-    @Test
-    void event_endBeforeStart_throwsIllegalArgumentException() {
-        LocalDateTime start = LocalDateTime.of(2099, 12, 31, 18, 0);
-        LocalDateTime end = LocalDateTime.of(2099, 12, 31, 17, 0);
-
-        assertThrows(IllegalArgumentException.class,
-                () -> new Event("meeting", start, end));
-    }
-
-    @Test
-    void event_equalStartAndEnd_throwsIllegalArgumentException() {
-        LocalDateTime dateTime = LocalDateTime.of(2099, 12, 31, 18, 0);
-
-        assertThrows(IllegalArgumentException.class,
-                () -> new Event("meeting", dateTime, dateTime));
-    }
-
-    @Test
-    void todo_reservedStorageDelimiter_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Todo("read | book"));
+        assertThrows(AssertionError.class, () -> tasks.restoreSnapshot(null));
     }
 
     @Test

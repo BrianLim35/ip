@@ -1,7 +1,5 @@
 package penguin.command;
 
-import java.util.Objects;
-
 import penguin.storage.Storage;
 import penguin.task.TaskList;
 import penguin.ui.Ui;
@@ -17,8 +15,7 @@ public class FindCommand extends Command {
      * @param searchKeyword keyword or phrase to search for.
      */
     public FindCommand(String searchKeyword) {
-        this.keyword = Objects.requireNonNull(
-                searchKeyword, "Search keyword must not be null");
+        this.keyword = searchKeyword;
     }
 
     /**

@@ -39,6 +39,12 @@ class ParserTest {
     }
 
     @Test
+    void parseTodo_reservedDelimiter_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseCommand("todo read | book"));
+    }
+
+    @Test
     void parseUnknownCommand_invalidInput_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseCommand("unknown command"));
@@ -50,9 +56,24 @@ class ParserTest {
     }
 
     @Test
+    void parseTaskCommand_nullInput_throwsPenguinException() {
+        PenguinException exception = assertThrows(PenguinException.class,
+                () -> TaskCommandParser.parse(null));
+
+        assertEquals("Please input a task.", exception.getMessage());
+    }
+
+    @Test
     void parseDeadline_validCommand_returnsAddCommand() throws PenguinException {
         assertInstanceOf(AddCommand.class,
                 Parser.parseCommand("deadline submit report /by 2099-12-31 1800"));
+    }
+
+    @Test
+    void parseDeadline_reservedDelimiter_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseCommand(
+                        "deadline submit | report /by 2099-12-31 1800"));
     }
 
     @Test
@@ -60,6 +81,13 @@ class ParserTest {
         assertInstanceOf(AddCommand.class,
                 Parser.parseCommand("event meeting /from 2099-12-31 1400"
                         + " /to 2099-12-31 1600"));
+    }
+
+    @Test
+    void parseEvent_reservedDelimiter_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseCommand("event project | meeting"
+                        + " /from 2099-12-31 1400 /to 2099-12-31 1600"));
     }
 
     @Test
