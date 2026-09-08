@@ -27,11 +27,18 @@ public class Task {
      *
      * @param taskDescription the description of the task.
      * @param taskType the type of the task.
+     * @throws NullPointerException if the description or task type is null.
+     * @throws IllegalArgumentException if the description is blank or contains
+     *                                  the storage delimiter.
      */
     public Task(String taskDescription, TaskType taskType) {
         this.description = Objects.requireNonNull(taskDescription, "Description must not be null");
         if (taskDescription.isBlank()) {
             throw new IllegalArgumentException("Description must not be blank");
+        }
+        if (taskDescription.contains(STORAGE_DELIMITER)) {
+            throw new IllegalArgumentException("Description must not contain "
+                    + STORAGE_DELIMITER);
         }
         this.isDone = false;
         this.type = Objects.requireNonNull(taskType, "Task type must not be null");
@@ -63,10 +70,21 @@ public class Task {
      */
     public Task copy() {
         Task copy = new Task(description, type);
+        copyCompletionStatusTo(copy);
+        return copy;
+    }
+
+    /**
+     * Copies this task's completion status to another task.
+     *
+     * @param copy task that should receive this task's completion status.
+     */
+    protected void copyCompletionStatusTo(Task copy) {
+        assert copy != null : "Task copy must not be null";
+
         if (isDone) {
             copy.markDone();
         }
-        return copy;
     }
 
     /**
@@ -99,10 +117,11 @@ public class Task {
     }
 
     /**
-     * Checks whether this task description contains the specified keyword.
+     * Checks whether this task description contains the specified keyword,
+     * ignoring capitalization.
      *
      * @param keyword keyword or phrase to search for.
-     * @return true if the description contains the keyword.
+     * @return true if the description contains the keyword, ignoring capitalization.
      */
     public boolean containsKeyword(String keyword) {
         String lowerKeyword = keyword.toLowerCase(Locale.ROOT);

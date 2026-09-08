@@ -17,6 +17,9 @@ public class Deadline extends Task {
      *
      * @param description description of the task.
      * @param deadlineDateTime date or time by which the task should be completed.
+     * @throws NullPointerException if the description or deadline date/time is null.
+     * @throws IllegalArgumentException if the description is blank or contains
+     *                                  the storage delimiter.
      */
     public Deadline(String description, LocalDateTime deadlineDateTime) {
         super(description, TaskType.DEADLINE);
@@ -24,13 +27,15 @@ public class Deadline extends Task {
                 deadlineDateTime, "Deadline date/time must not be null");
     }
 
-    /** Creates an independent copy of this deadline. */
+    /**
+     * Creates an independent copy of this deadline.
+     *
+     * @return copy with the same description, due time, and completion status.
+     */
     @Override
     public Task copy() {
         Deadline copy = new Deadline(getDescription(), dateTime);
-        if ("X".equals(getStatus())) {
-            copy.markDone();
-        }
+        copyCompletionStatusTo(copy);
         return copy;
     }
 

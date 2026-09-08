@@ -43,6 +43,12 @@ class DateTimeUtilTest {
     }
 
     @Test
+    void parseDate_nullInput_throwsPenguinException() {
+        assertThrows(PenguinException.class,
+                () -> DateTimeUtil.parseDate(null));
+    }
+
+    @Test
     void parseDate_outOfRangeMonth_throwsException() {
         assertThrows(PenguinException.class,
                 () -> DateTimeUtil.parseDate("2027-13-31"));
@@ -77,6 +83,12 @@ class DateTimeUtilTest {
     void parseDateTime_invalidTime_throwsException() {
         assertThrows(PenguinException.class,
                 () -> DateTimeUtil.parseDateTime("2099-12-31 2500"));
+    }
+
+    @Test
+    void parseDateTime_nullInput_throwsPenguinException() {
+        assertThrows(PenguinException.class,
+                () -> DateTimeUtil.parseDateTime(null));
     }
 
     @Test

@@ -117,8 +117,8 @@ public final class SavedTaskParser {
         }
         LocalDateTime from = DateTimeUtil.parseDateTime(parts[3]);
         LocalDateTime to = DateTimeUtil.parseDateTime(parts[4]);
-        if (to.isBefore(from)) {
-            throw new PenguinException("Invalid event data. End is before start.");
+        if (!to.isAfter(from)) {
+            throw new PenguinException("Invalid event data. End must be after start.");
         }
         return new Event(description, from, to);
     }

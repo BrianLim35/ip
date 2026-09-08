@@ -159,6 +159,13 @@ class ParserTest {
     }
 
     @Test
+    void parseEvent_equalStartAndEnd_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseCommand("event meeting /from 2099-12-31 1800"
+                        + " /to 2099-12-31 1800"));
+    }
+
+    @Test
     void parseSavedTask_completedStatus_restoresCompletedState() throws PenguinException {
         assertEquals("[T][X] read book",
                 Parser.parseSavedTask("T | 1 | read book").toString());
@@ -205,6 +212,13 @@ class ParserTest {
         assertThrows(PenguinException.class,
                 () -> Parser.parseSavedTask("E | 0 | meeting | 2099-12-31 1800"
                         + " | 2099-12-31 1400"));
+    }
+
+    @Test
+    void parseSavedTask_eventEqualStartAndEnd_throwsException() {
+        assertThrows(PenguinException.class,
+                () -> Parser.parseSavedTask("E | 0 | meeting | 2099-12-31 1800"
+                        + " | 2099-12-31 1800"));
     }
 
     @Test

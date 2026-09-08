@@ -155,7 +155,7 @@ public final class TaskCommandParser {
         LocalDateTime from = DateTimeUtil.parseDateTime(fromInput);
         LocalDateTime to = parseFutureDateTime(toInput, "event end");
 
-        if (to.isBefore(from)) {
+        if (!to.isAfter(from)) {
             throw new PenguinException("The start time must be before the end time.");
         }
 

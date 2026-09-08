@@ -45,8 +45,8 @@ through menus.
 Some commands to try:
 
 - `todo Read chapter 3`
-- `deadline Submit report /by 2026-12-01 2359`
-- `event Project meeting /from 2026-12-02 1400 /to 2026-12-02 1600`
+- `deadline Submit report /by 2099-12-01 2359`
+- `event Project meeting /from 2099-12-02 1400 /to 2099-12-02 1600`
 - `list`
 
 The suggestion buttons above the message box can also start common commands.
@@ -61,7 +61,7 @@ The following conventions are used throughout this guide:
 
 - Words in `UPPER_CASE` are values that you supply.
 - An `INDEX` is the positive task number displayed by `list`.
-- Dates use `yyyy-MM-dd`, such as `2026-12-01`.
+- Dates use `yyyy-MM-dd`, such as `2099-12-01`.
 - Times use the 24-hour `HHmm` format, such as `0900` or `1730`.
 - Commands and `find` searches are case-insensitive.
 - Leading, trailing, and repeated spaces are accepted and normalized.
@@ -90,7 +90,7 @@ Adds a task that must be completed by a specific date and time.
 
 Format: `deadline DESCRIPTION /by DATE TIME`
 
-Example: `deadline Submit report /by 2026-12-01 2359`
+Example: `deadline Submit report /by 2099-12-01 2359`
 
 - Exactly one `/by` separator is required.
 - Both a description and a date-time value are required.
@@ -104,11 +104,11 @@ Adds a task that occurs over a period of time.
 Format: `event DESCRIPTION /from START_DATE START_TIME /to END_DATE END_TIME`
 
 Example:
-`event Project meeting /from 2026-12-02 1400 /to 2026-12-02 1600`
+`event Project meeting /from 2099-12-02 1400 /to 2099-12-02 1600`
 
 - Exactly one `/from` and one `/to` separator are required, in that order.
 - A description, start date-time, and end date-time are required.
-- The start cannot be later than the end.
+- The start must be before the end.
 - The event's end date cannot be before the current date.
 - An event is displayed with the `[E]` type marker.
 
@@ -174,7 +174,7 @@ To-dos are not included because they have no date.
 
 Format: `on DATE`
 
-Example: `on 2026-12-02`
+Example: `on 2099-12-02`
 
 The date must be a real calendar date in `yyyy-MM-dd` format.
 
@@ -244,20 +244,19 @@ beside the JAR on the other computer.
 2. Undo history lasts only for the current session and stores at most five
    changes.
 3. Two tasks with identical details can currently be added.
-4. An event can currently have identical start and end times.
 
 ## Command summary
 
 | Action | Format | Example |
 |---|---|---|
 | Add a to-do | `todo DESCRIPTION` | `todo Read chapter 3` |
-| Add a deadline | `deadline DESCRIPTION /by DATE TIME` | `deadline Submit report /by 2026-12-01 2359` |
-| Add an event | `event DESCRIPTION /from START_DATE START_TIME /to END_DATE END_TIME` | `event Meeting /from 2026-12-02 1400 /to 2026-12-02 1600` |
+| Add a deadline | `deadline DESCRIPTION /by DATE TIME` | `deadline Submit report /by 2099-12-01 2359` |
+| Add an event | `event DESCRIPTION /from START_DATE START_TIME /to END_DATE END_TIME` | `event Meeting /from 2099-12-02 1400 /to 2099-12-02 1600` |
 | List tasks | `list` | `list` |
 | Mark complete | `mark INDEX` | `mark 2` |
 | Mark incomplete | `unmark INDEX` | `unmark 2` |
 | Delete | `delete INDEX` | `delete 3` |
 | Find by description | `find KEYWORD` | `find report` |
-| Find by date | `on DATE` | `on 2026-12-02` |
+| Find by date | `on DATE` | `on 2099-12-02` |
 | Undo | `undo` | `undo` |
 | Exit | `bye` | `bye` |

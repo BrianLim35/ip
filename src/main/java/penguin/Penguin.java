@@ -119,7 +119,11 @@ public class Penguin {
         }
     }
 
-    /** Reads, parses, and executes one command from the console. */
+    /**
+     * Reads, parses, and executes one command from the console.
+     *
+     * @return true if input ended or the command requests application exit.
+     */
     private boolean processNextCommand() {
         String fullCommand = ui.readCommand();
         if (fullCommand == null) {

@@ -1,6 +1,7 @@
 package penguin.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -119,6 +120,40 @@ class TaskListTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> new Event("meeting", start, end));
+    }
+
+    @Test
+    void event_equalStartAndEnd_throwsIllegalArgumentException() {
+        LocalDateTime dateTime = LocalDateTime.of(2099, 12, 31, 18, 0);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> new Event("meeting", dateTime, dateTime));
+    }
+
+    @Test
+    void todo_reservedStorageDelimiter_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Todo("read | book"));
+    }
+
+    @Test
+    void copy_completedTask_preservesStateForEveryTaskType() {
+        Task[] tasks = {
+            new Todo("read book"),
+            new Deadline("submit report", LocalDateTime.of(2099, 12, 31, 18, 0)),
+            new Event("meeting", LocalDateTime.of(2099, 12, 31, 14, 0),
+                    LocalDateTime.of(2099, 12, 31, 16, 0))
+        };
+
+        for (Task task : tasks) {
+            task.markDone();
+            Task copy = task.copy();
+
+            assertNotSame(task, copy);
+            assertEquals(task.toString(), copy.toString());
+            copy.markUndone();
+            assertEquals("X", task.getStatus());
+        }
     }
 
     @Test

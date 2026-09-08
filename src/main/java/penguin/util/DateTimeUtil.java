@@ -37,6 +37,10 @@ public final class DateTimeUtil {
      * @throws PenguinException if the input is invalid.
      */
     public static LocalDateTime parseDateTime(String dateTime) throws PenguinException {
+        if (dateTime == null) {
+            throw new PenguinException(
+                    "Please enter date and time in yyyy-MM-dd HHmm format.");
+        }
         String trimmedInput = dateTime.trim();
 
         if (!trimmedInput.matches("\\d{4}-\\d{2}-\\d{2} \\d{4}")) {
@@ -60,6 +64,10 @@ public final class DateTimeUtil {
      * @throws PenguinException if the format or date range is invalid.
      */
     public static LocalDate parseDate(String date) throws PenguinException {
+        if (date == null) {
+            throw new PenguinException(
+                    "Please enter a date in yyyy-MM-dd format.");
+        }
         String trimmedDate = date.trim();
 
         if (!trimmedDate.matches("\\d{4}-\\d{2}-\\d{2}")) {

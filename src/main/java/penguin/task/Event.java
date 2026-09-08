@@ -21,6 +21,9 @@ public class Event extends Task {
      * @param description description of the event.
      * @param eventStartDateTime date or time when the event starts.
      * @param eventEndDateTime date or time when the event ends.
+     * @throws NullPointerException if the description or either date/time is null.
+     * @throws IllegalArgumentException if the description is invalid or the end
+     *                                  is not after the start.
      */
     public Event(String description, LocalDateTime eventStartDateTime,
             LocalDateTime eventEndDateTime) {
@@ -29,19 +32,21 @@ public class Event extends Task {
                 eventStartDateTime, "Event start date/time must not be null");
         this.endDateTime = Objects.requireNonNull(
                 eventEndDateTime, "Event end date/time must not be null");
-        if (eventEndDateTime.isBefore(eventStartDateTime)) {
+        if (!eventEndDateTime.isAfter(eventStartDateTime)) {
             throw new IllegalArgumentException(
-                    "Event end date/time must not be before its start date/time");
+                    "Event end date/time must be after its start date/time");
         }
     }
 
-    /** Creates an independent copy of this event. */
+    /**
+     * Creates an independent copy of this event.
+     *
+     * @return copy with the same description, times, and completion status.
+     */
     @Override
     public Task copy() {
         Event copy = new Event(getDescription(), startDateTime, endDateTime);
-        if ("X".equals(getStatus())) {
-            copy.markDone();
-        }
+        copyCompletionStatusTo(copy);
         return copy;
     }
 

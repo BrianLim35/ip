@@ -13,8 +13,8 @@ The JavaFX interface should also be checked manually after visual changes:
   the newest response visible.
 - The layout remains usable at the minimum 680 x 650 window size.
 
-For the packaged project, compile all Java files under `src/main/java` and
-run the application using the fully qualified main class `penguin.Penguin`.
+For the packaged project, build the executable JAR with `./gradlew shadowJar`
+and launch it using Java 25, as described in Test 35.
 
 Before running a session, use an empty `data/penguin.txt` or a separate temporary working directory so saved tasks from another session do not affect the expected state.
 
@@ -108,9 +108,9 @@ Expected output, in order:
 
 - The task is added.
 - A valid-task-number error is displayed for `mark abc`.
-- The list still shows `1. [ ] read book`.
+- The list still shows `1. [T][ ] read book`.
 - An invalid-index error is displayed for `mark 99`.
-- The list still shows `1. [ ] read book`.
+- The list still shows `1. [T][ ] read book`.
 
 ## Test 7: Invalid unmark input preserves completed state
 
@@ -130,7 +130,7 @@ Expected output, in order:
 
 - The task is marked done.
 - A valid-task-number error is displayed for `unmark abc`.
-- The list still shows `1. [X] read book`.
+- The list still shows `1. [T][X] read book`.
 
 ## Test 8: Empty input does not add a task
 
@@ -538,17 +538,20 @@ Expected output: Both commands are rejected with clear past-date errors, and the
 
 ## Test 30: Event start and end ordering
 
-Aim: Verify that events cannot end before they start.
+Aim: Verify that events must end after they start.
 
 Input:
 
 ```text
 event invalid meeting /from 2099-12-26 1800 /to 2099-12-26 1400
 list
+event zero duration /from 2099-12-26 1800 /to 2099-12-26 1800
+list
 bye
 ```
 
-Expected output: The event is rejected and the task list remains empty.
+Expected output: Both events are rejected with a start-before-end error. The
+task list remains empty after each invalid command.
 
 ## Test 31: Date/time persistence and search after restart
 
@@ -624,19 +627,19 @@ Expected output: Each invalid command produces its existing specific error, and 
 
 ## Test 35: Packaged application entry point
 
-Aim: Verify that the packaged source tree can be compiled and launched using the fully qualified main class.
+Aim: Verify that the packaged JAR launches the JavaFX application.
 
-Setup: Compile all Java files under `src/main/java` and run `penguin.Penguin` from an isolated directory.
+Setup: Run `./gradlew shadowJar`, copy `build/libs/penguin.jar` into an empty
+directory, confirm Java 25 is active, and run `java -jar penguin.jar`.
 
 Input:
 
 ```text
-bye
+Launch the packaged JAR
 ```
 
-Expected output: The application starts normally, introduces Pip as a
-productivity penguin, and exits with `Bye. Hope to see you again soon!` followed
-by Pip's stay-cool encouragement.
+Expected output: The JavaFX window opens, displays Pip's header and welcome
+message, and reports no missing resource or JavaFX dependency errors.
 
 ## Test 36: Whitespace and duplicate separator validation
 
@@ -1015,10 +1018,13 @@ JUnit coverage:
 ```text
 Parser.parseCommand(null) -> PenguinException
 Parser.parseSavedTask("T|0|read book") -> [T][ ] read book
+DateTimeUtil.parseDateTime(null) -> PenguinException
+DateTimeUtil.parseDate(null) -> PenguinException
 ```
 
-Expected output: Null input produces a controlled `PenguinException`, while
-the saved record is parsed as a normal to-do task.
+Expected output: Null command and date input produce controlled
+`PenguinException` values, while the saved record is parsed as a normal to-do
+task.
 
 ## Test 59: Past deadlines survive restart
 
