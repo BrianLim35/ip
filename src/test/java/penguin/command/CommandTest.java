@@ -65,7 +65,7 @@ class CommandTest {
     }
 
     @Test
-    void exitCommand_execute_marksCommandAsExit() {
+    void isExit_exitCommand_returnsTrue() {
         assertTrue(new ExitCommand().isExit());
     }
 

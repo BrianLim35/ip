@@ -14,7 +14,7 @@ The JavaFX interface should also be checked manually after visual changes:
 - The layout remains usable at the minimum 680 x 650 window size.
 
 For the packaged project, build the executable JAR with `./gradlew shadowJar`
-and launch it using Java 25, as described in Test 35.
+and launch it using Java 25, as described in Test 34.
 
 Before running a session, use an empty `data/penguin.txt` or a separate temporary working directory so saved tasks from another session do not affect the expected state.
 
@@ -283,23 +283,7 @@ bye
 
 Expected output: Each deletion reports the selected task, and the final list is empty.
 
-## Test 16: Display enum-based task types
-
-Aim: Verify that each task subtype uses the correct `TaskType` enum symbol.
-
-Input:
-
-```text
-todo borrow book
-deadline return book /by 2099-12-26 1800
-event project meeting /from 2099-12-26 1400 /to 2099-12-26 1600
-list
-bye
-```
-
-Expected output: The list displays `[T][ ]`, `[D][ ]`, and `[E][ ]` respectively, with each task's details unchanged.
-
-## Test 17: Enum markers survive state changes
+## Test 16: Enum markers survive state changes
 
 Aim: Verify that marking, unmarking, and deleting tasks do not change their enum-based type markers.
 
@@ -318,7 +302,7 @@ bye
 
 Expected output: The final list contains the deadline with `[D][ ]` and the event with `[E][ ]`. The deleted to-do is absent.
 
-## Test 18: Case-insensitive typed commands retain enum types
+## Test 17: Case-insensitive typed commands retain enum types
 
 Aim: Verify that uppercase command keywords and separators still create the correct enum-based task types.
 
@@ -334,7 +318,7 @@ bye
 
 Expected output: The list displays `[T][ ]`, `[D][ ]`, and `[E][ ]` in that order.
 
-## Test 19: Command dispatch
+## Test 18: Command dispatch
 
 Aim: Verify that supported commands are dispatched correctly.
 
@@ -352,7 +336,7 @@ bye
 
 Expected output: Each command performs its intended action, the deleted task is reported correctly, and the final list is empty.
 
-## Test 20: Commands with invalid arguments
+## Test 19: Commands with invalid arguments
 
 Aim: Verify that recognized commands still validate their arguments.
 
@@ -369,7 +353,7 @@ bye
 
 Expected output: Each invalid command produces a specific error. The chatbot remains running until the final valid `bye`, and the task list remains empty.
 
-## Test 21: Save and reload all task types
+## Test 20: Save and reload all task types
 
 Aim: Verify that tasks are saved after changes and restored when the chatbot starts again.
 
@@ -398,7 +382,7 @@ Expected output after restart:
 3. [E][ ] meeting (from: 26 Dec 2099, 2:00PM to: 26 Dec 2099, 4:00PM)
 ```
 
-## Test 22: Save after deletion and unmarking
+## Test 21: Save after deletion and unmarking
 
 Aim: Verify that deletion and unmarking are persisted across restarts.
 
@@ -426,7 +410,7 @@ Expected output after restart:
 1. [T][ ] read book
 ```
 
-## Test 23: Missing storage file
+## Test 22: Missing storage file
 
 Aim: Verify that the chatbot starts with an empty task list when the storage file does not exist.
 
@@ -445,7 +429,7 @@ Expected output:
 Pip: Your task list is empty! Your iceberg is clear.
 ```
 
-## Test 24: Corrupted storage data
+## Test 23: Corrupted storage data
 
 Aim: Verify that malformed saved data produces an error instead of silently creating incorrect tasks.
 
@@ -460,7 +444,7 @@ X | 0 | unknown task
 
 Expected output: The chatbot reports a specific loading error and does not silently treat malformed data as a valid task.
 
-## Test 25: Reserved delimiter in a description
+## Test 24: Reserved delimiter in a description
 
 Aim: Verify that a description containing the persistence delimiter is rejected or safely handled instead of being truncated or reloaded as a different task.
 
@@ -475,7 +459,7 @@ bye
 
 Expected output: The chatbot rejects the reserved `|` character with a clear error, both when entered with spaces (`read | book`) and without spaces (`read|book`). It must not silently save one description and reload a different one.
 
-## Test 26: Find tasks occurring on a date
+## Test 25: Find tasks occurring on a date
 
 Aim: Verify that `on` displays deadlines and events occurring on the requested date, while excluding to-dos.
 
@@ -495,7 +479,7 @@ Expected output: The matching deadline and event are displayed as tasks 2 and
 3. The to-do is not displayed in the date results. `mark 2` marks the deadline,
 and the later complete list retains the original numbering.
 
-## Test 27: No tasks on requested date
+## Test 26: No tasks on requested date
 
 Aim: Verify that a non-matching date produces a clear message without changing the task list.
 
@@ -510,7 +494,7 @@ bye
 
 Expected output: The chatbot reports that no deadlines or events occur on the requested date, and the original deadline remains unchanged.
 
-## Test 28: Invalid and out-of-range search dates
+## Test 27: Invalid and out-of-range search dates
 
 Aim: Distinguish malformed dates from dates with invalid calendar values.
 
@@ -525,7 +509,7 @@ bye
 
 Expected output: The first and third commands produce format/argument errors. The second produces a date-out-of-range error. No task is added or changed.
 
-## Test 29: Reject past deadlines and events
+## Test 28: Reject past deadlines and events
 
 Aim: Verify that date/time values before today are rejected.
 
@@ -540,7 +524,7 @@ bye
 
 Expected output: Both commands are rejected with clear past-date errors, and the task list remains empty.
 
-## Test 30: Event start and end ordering
+## Test 29: Event start and end ordering
 
 Aim: Verify that events must end after they start.
 
@@ -557,7 +541,7 @@ bye
 Expected output: Both events are rejected with a start-before-end error. The
 task list remains empty after each invalid command.
 
-## Test 31: Date/time persistence and search after restart
+## Test 30: Date/time persistence and search after restart
 
 Aim: Verify that LocalDateTime values survive persistence and remain searchable.
 
@@ -578,7 +562,7 @@ bye
 
 Expected output: The restored deadline and event are displayed by the `on` command with their correct date/time values.
 
-## Test 32: Ongoing event may start before today
+## Test 31: Ongoing event may start before today
 
 Aim: Verify that an event which started before today is accepted when its end is today or later.
 
@@ -592,7 +576,7 @@ bye
 
 Expected output: The event is added successfully. Its start date may be before today because its end date is in the future.
 
-## Test 33: Command-object workflow regression
+## Test 32: Command-object workflow regression
 
 Aim: Verify that command parsing and execution preserve the existing behavior after extracting command classes.
 
@@ -612,7 +596,7 @@ bye
 
 Expected output: Each command executes successfully, the date search displays the deadline and event, deletion removes only the selected to-do, and the final list contains the deadline and event.
 
-## Test 34: Invalid command objects do not change state
+## Test 33: Invalid command objects do not change state
 
 Aim: Verify that validation still occurs before command execution and invalid commands do not mutate the task list.
 
@@ -629,7 +613,7 @@ bye
 
 Expected output: Each invalid command produces its existing specific error, and the final list still contains only the incomplete `read book` to-do.
 
-## Test 35: Packaged application entry point
+## Test 34: Packaged application entry point
 
 Aim: Verify that the packaged JAR launches the JavaFX application.
 
@@ -645,38 +629,25 @@ Launch the packaged JAR
 Expected output: The JavaFX window opens, displays Pip's header and welcome
 message, and reports no missing resource or JavaFX dependency errors.
 
-## Test 36: Whitespace and duplicate separator validation
+## Test 35: Whitespace and duplicate separator validation
 
 Aim: Verify that harmless whitespace is accepted while repeated separators are rejected.
 
 Input:
 
 ```text
-  todo   read book  
+  todo   read    book
 deadline report /by 2099-12-26 1800 /by 2099-12-27 1800
 event meeting /from 2099-12-26 1400 /from 2099-12-26 1500 /to 2099-12-26 1600
 list
 bye
 ```
 
-Expected output: The to-do is added. The deadline and event with duplicate separators are rejected, and the final list contains only `read book`.
+Expected output: The to-do is stored with its repeated internal spaces
+normalized as `read book`. The deadline and event with duplicate separators
+are rejected, and the final list contains only `read book`.
 
-## Test 37: Reserved delimiter variants
-
-Aim: Verify that both spaced and unspaced persistence delimiters are rejected in descriptions.
-
-Input:
-
-```text
-todo read | book
-todo read|book
-list
-bye
-```
-
-Expected output: Both inputs produce a clear delimiter error, and the task list remains empty.
-
-## Test 38: Corrupted record does not prevent valid records from loading
+## Test 36: Corrupted record does not prevent valid records from loading
 
 Aim: Verify that an invalid saved record is skipped while later valid records remain available.
 
@@ -696,7 +667,7 @@ bye
 
 Expected output: A loading error is reported for the invalid record, and `valid task` is still displayed.
 
-## Test 39: Persistence after restart and date search
+## Test 37: Persistence after restart and date search
 
 Aim: Verify that dated tasks and completion state survive a restart and remain searchable.
 
@@ -720,7 +691,7 @@ bye
 
 Expected output: The completed to-do, deadline, and event are restored. The date search displays only the deadline and event with their date/time details.
 
-## Test 40: Find tasks by keyword regardless of case
+## Test 38: Find tasks by keyword regardless of case
 
 Aim: Verify that `find` displays only tasks whose descriptions contain the
 supplied keyword or phrase, regardless of capitalization.
@@ -742,7 +713,7 @@ Expected output: The search displays `Read Book` as task 2 despite the
 different capitalization and excludes the other tasks. `mark 2` marks
 `Read Book`, and the later list contains all four tasks with only task 2 marked.
 
-## Test 41: Find with whitespace and missing keyword
+## Test 39: Find with whitespace and missing keyword
 
 Aim: Verify that repeated whitespace is accepted and a missing keyword is rejected without changing state.
 
@@ -758,7 +729,7 @@ bye
 
 Expected output: The first search finds `read book`. The missing-keyword command shows a keyword-specific error, and the final list still contains exactly one task.
 
-## Test 42: Find with no matching tasks
+## Test 40: Find with no matching tasks
 
 Aim: Verify that a search with no matches displays a clear message and leaves the task list unchanged.
 
@@ -773,7 +744,7 @@ bye
 
 Expected output: Penguin reports that no tasks match `laptop`, and the list still contains `read book`.
 
-## Test 43: Malformed saved records with extra fields
+## Test 41: Malformed saved records with extra fields
 
 Aim: Verify that saved records with unexpected fields are skipped without
 creating an incorrect task.
@@ -790,7 +761,7 @@ bye
 Expected output: Penguin reports a loading error for the malformed record,
 does not display it as a valid task, and exits normally after `bye`.
 
-## Test 44: Date search on an event boundary
+## Test 42: Date search on an event boundary
 
 Aim: Verify that an event is returned when the requested date is exactly its
 start date, and is excluded on a date outside its range.
@@ -807,22 +778,7 @@ bye
 Expected output: The event appears for `2099-12-31`, but no event appears for
 `2100-01-01`.
 
-## Test 45: Display a non-empty task list
-
-Aim: Verify that a non-empty list displays tasks with numbering and type
-markers.
-
-Input:
-
-```text
-todo read book
-list
-bye
-```
-
-Expected output: The list contains `1. [T][ ] read book`.
-
-## Test 46: GUI sends a valid command
+## Test 43: GUI sends a valid command
 
 Aim: Verify that the GUI displays both the user's command and Penguin's
 response when a valid command is submitted.
@@ -836,7 +792,7 @@ todo read book
 Expected output: The GUI displays the submitted command and confirms that
 `read book` was added.
 
-## Test 47: GUI rejects blank input
+## Test 44: GUI rejects blank input
 
 Aim: Verify that blank or whitespace-only input produces an error and does not
 change the task list.
@@ -850,7 +806,7 @@ Input through the GUI:
 Expected output: The GUI displays a Penguin dialog containing
 `Please input a task.` and does not create a task.
 
-## Test 48: GUI handles invalid commands
+## Test 45: GUI handles invalid commands
 
 Aim: Verify that invalid commands display an error and keep the GUI running.
 
@@ -864,7 +820,7 @@ list
 Expected output: The GUI displays an unknown-command error, then successfully
 displays the empty task list when `list` is submitted.
 
-## Test 49: GUI bye command exits
+## Test 46: GUI bye command exits
 
 Aim: Verify that a valid `bye` command displays the farewell and closes the
 GUI.
@@ -878,7 +834,7 @@ bye
 Expected output: The GUI displays `Bye. Hope to see you again soon!` and then
 closes.
 
-## Test 50: GUI does not print responses to the console
+## Test 47: GUI does not print responses to the console
 
 Aim: Verify that GUI responses are shown in dialog boxes without unwanted
 console output.
@@ -892,7 +848,7 @@ todo read book
 Expected output: The response appears in the GUI and no duplicate response is
 printed in the terminal.
 
-## Test 51: Styled GUI displays welcome message
+## Test 48: Styled GUI displays welcome message
 
 Aim: Verify that the GUI applies its visual styling and displays Penguin's
 welcome message when it starts.
@@ -906,7 +862,7 @@ Launch the application
 Expected output: The GUI uses the themed background, rounded input and Waddle
 button, styled dialog bubbles, and displays Pip's welcome message.
 
-## Test 52: Responsive chat layout and message animation
+## Test 49: Responsive chat layout and message animation
 
 Aim: Verify that long messages remain inside the chat area and new messages
 fade and slide into view without overlapping existing messages.
@@ -920,7 +876,7 @@ find a very long keyword that does not exist
 Expected output: The response wraps within the chat window, the input controls
 remain visible, and the new dialog enters with a short fade-and-slide animation.
 
-## Test 53: Assertions preserve normal command behaviour
+## Test 50: Assertions preserve normal command behaviour
 
 Aim: Verify that enabled development assertions do not interfere with valid
 commands.
@@ -936,7 +892,7 @@ bye
 Expected output: The task is added, displayed, and the application exits
 normally without an assertion error.
 
-## Test 54: Undo the most recent task change
+## Test 51: Undo the most recent task change
 
 Aim: Verify that `undo` restores the previous task-list state.
 
@@ -953,7 +909,7 @@ bye
 Expected output: The task is restored to incomplete status and remains in the
 list as `1. [T][ ] read book`.
 
-## Test 55: Undo without a previous change
+## Test 52: Undo without a previous change
 
 Aim: Verify that `undo` reports an error when there is no history.
 
@@ -967,7 +923,7 @@ bye
 Expected output: Penguin reports that there is nothing to undo and exits
 normally.
 
-## Test 56: Undo creation, deletion, and unmarking
+## Test 53: Undo creation, deletion, and unmarking
 
 Aim: Verify that undo restores task creation, deletion, and completion state.
 
@@ -988,7 +944,7 @@ bye
 Expected output: Both tasks are restored, and `read book` is displayed as
 completed after undoing the unmark operation.
 
-## Test 57: Undo history is limited to five changes
+## Test 54: Undo history is limited to five changes
 
 Aim: Verify that only the five most recent changes can be undone.
 
@@ -1014,7 +970,7 @@ bye
 Expected output: The sixth `undo` reports that there is nothing to undo, and
 the list contains only `task 1`.
 
-## Test 58: Null and flexible saved-data parsing
+## Test 55: Null and flexible saved-data parsing
 
 Aim: Verify that invalid direct parser input is rejected and valid saved data
 with flexible delimiter spacing remains readable.
@@ -1038,7 +994,7 @@ Expected output: Null command and date input produce controlled
 `PenguinException` values, while the saved record is parsed as a normal to-do
 task.
 
-## Test 59: Past deadlines survive restart
+## Test 56: Past deadlines survive restart
 
 Aim: Verify that a valid deadline remains available after its due date has
 passed and can still be loaded from storage.
@@ -1059,7 +1015,7 @@ bye
 Expected output: The deadline is still displayed. Reload validation checks the
 record format and date validity without rejecting an expired task.
 
-## Test 60: Flexible typed-task separator whitespace
+## Test 57: Flexible typed-task separator whitespace
 
 Aim: Verify that repeated whitespace around typed-task separators is accepted.
 
@@ -1075,7 +1031,7 @@ bye
 Expected output: Both tasks are created with their correct type markers and
 date/time values.
 
-## Test 61: Past events survive restart
+## Test 58: Past events survive restart
 
 Aim: Verify that a valid event remains available after its end date has passed
 and can still be loaded from storage.
@@ -1096,7 +1052,7 @@ bye
 Expected output: The event is still displayed. Reload validation checks its
 record format and chronological ordering without rejecting an expired event.
 
-## Test 62: GUI reports startup storage warnings
+## Test 59: GUI reports startup storage warnings
 
 Aim: Verify that the GUI does not hide malformed-record warnings produced while
 loading saved tasks.
@@ -1113,7 +1069,7 @@ Input: Start the GUI and select the `What's on my iceberg?` suggestion.
 Expected output: A Penguin dialog reports that the invalid saved task was
 skipped. The later list response still contains `valid task`.
 
-## Test 63: Failed persistence leaves task state unchanged
+## Test 60: Failed persistence leaves task state unchanged
 
 Aim: Verify that an in-memory change is rolled back when its updated task list
 cannot be saved.
@@ -1132,7 +1088,7 @@ bye
 Expected output: Penguin reports the save failure. The subsequent list is still
 empty because the failed addition and its undo-history entry were rolled back.
 
-## Test 64: Pip personality remains consistent
+## Test 61: Pip personality remains consistent
 
 Aim: Verify that the chatbot uses its distinctive name and penguin-themed
 phrases without obscuring task results.

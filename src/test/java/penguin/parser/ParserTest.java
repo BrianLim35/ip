@@ -131,6 +131,13 @@ class ParserTest {
     }
 
     @Test
+    void parseTodo_repeatedDescriptionWhitespace_returnsNormalizedTask()
+            throws PenguinException {
+        assertEquals("[T][ ] read book",
+                TaskCommandParser.parse("todo read    book").toString());
+    }
+
+    @Test
     void parseDeadline_duplicateBySeparators_throwsException() {
         assertThrows(PenguinException.class,
                 () -> Parser.parseCommand("deadline report /by 2099-12-31 1800"
