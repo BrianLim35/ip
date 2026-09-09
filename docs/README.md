@@ -212,7 +212,9 @@ installation's `data` folder.
 > **Warning:** Editing `penguin.txt` manually can corrupt individual records.
 > Back up the file before editing it. When Penguin encounters a malformed
 > record, it displays a warning, skips that record, and continues loading other
-> valid records.
+> valid records. A skipped record is not kept in memory. The next successful
+> command that changes the task list rewrites the file using only the valid
+> loaded records, permanently removing any skipped records from the file.
 
 ## FAQ
 
