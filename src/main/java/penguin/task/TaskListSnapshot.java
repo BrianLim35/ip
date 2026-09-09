@@ -51,9 +51,9 @@ public final class TaskListSnapshot {
      * @return copied tasks in their original order.
      */
     private static List<Task> copyTasks(List<Task> sourceTasks) {
-        return sourceTasks.stream().
-                map(Task::copy).
-                collect(Collectors.toCollection(ArrayList::new));
+        return sourceTasks.stream()
+                .map(Task::copy)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**

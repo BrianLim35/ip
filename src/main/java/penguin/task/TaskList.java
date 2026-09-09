@@ -168,9 +168,9 @@ public class TaskList {
      * @return independent task copies in their current order.
      */
     private List<Task> copyTasks() {
-        return tasks.stream().
-                map(Task::copy).
-                collect(Collectors.toCollection(ArrayList::new));
+        return tasks.stream()
+                .map(Task::copy)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -179,9 +179,9 @@ public class TaskList {
      * @return task data formatted as storage lines.
      */
     public List<String> toStorageLines() {
-        return tasks.stream().
-                map(Task::toStorageFormat).
-                collect(Collectors.toCollection(ArrayList::new));
+        return tasks.stream()
+                .map(Task::toStorageFormat)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -191,10 +191,10 @@ public class TaskList {
      * @return matching tasks with their original one-based task numbers.
      */
     public List<TaskSearchResult> findTasksOnDate(LocalDate date) {
-        return IntStream.range(0, tasks.size()).
-                filter(index -> tasks.get(index).occursOn(date)).
-                mapToObj(index -> new TaskSearchResult(index + 1, tasks.get(index))).
-                collect(Collectors.toCollection(ArrayList::new));
+        return IntStream.range(0, tasks.size())
+                .filter(index -> tasks.get(index).occursOn(date))
+                .mapToObj(index -> new TaskSearchResult(index + 1, tasks.get(index)))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -205,9 +205,9 @@ public class TaskList {
      *         one-based task numbers.
      */
     public List<TaskSearchResult> findMatchingTasks(String keyword) {
-        return IntStream.range(0, tasks.size()).
-                filter(index -> tasks.get(index).containsKeyword(keyword)).
-                mapToObj(index -> new TaskSearchResult(index + 1, tasks.get(index))).
-                collect(Collectors.toCollection(ArrayList::new));
+        return IntStream.range(0, tasks.size())
+                .filter(index -> tasks.get(index).containsKeyword(keyword))
+                .mapToObj(index -> new TaskSearchResult(index + 1, tasks.get(index)))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
