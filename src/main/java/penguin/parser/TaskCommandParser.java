@@ -83,8 +83,9 @@ public final class TaskCommandParser {
      */
     private static Task parseTodo(String command) throws PenguinException {
         String keyword = CommandType.TODO.getKeyword();
-        String description = command.length() <= keyword.length()
+        String rawDescription = command.length() <= keyword.length()
                 ? "" : command.substring(keyword.length()).trim();
+        String description = rawDescription.replaceAll("\\s+", " ");
 
         if (description.isEmpty()) {
             throw new PenguinException("The description of a todo cannot be empty.");
