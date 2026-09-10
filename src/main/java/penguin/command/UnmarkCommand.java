@@ -27,7 +27,8 @@ public class UnmarkCommand extends Command {
      * @param tasks task list to modify.
      * @param ui interface used for output.
      * @param storage storage used to persist the change.
-     * @throws PenguinException if the index is invalid or persistence fails.
+     * @throws PenguinException if the index is invalid, the task is already
+     *                          unmarked, or persistence fails.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws PenguinException {
@@ -42,6 +43,8 @@ public class UnmarkCommand extends Command {
             ui.showMessage("No worries! The following task has been unmarked.\n" + task);
         } catch (IndexOutOfBoundsException e) {
             throw new PenguinException("Invalid task index!");
+        } catch (IllegalStateException e) {
+            throw new PenguinException(e.getMessage());
         }
     }
 }

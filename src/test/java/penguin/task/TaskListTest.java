@@ -75,6 +75,31 @@ class TaskListTest {
     }
 
     @Test
+    void markTask_alreadyMarked_rejectsWithoutAddingUndoHistory() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new Todo("read book"));
+        tasks.markTask(0);
+
+        assertThrows(IllegalStateException.class, () -> tasks.markTask(0));
+        tasks.undo();
+
+        assertEquals("[T][ ] read book", tasks.getTasks().get(0).toString());
+    }
+
+    @Test
+    void unmarkTask_alreadyUnmarked_rejectsWithoutAddingUndoHistory() {
+        TaskList tasks = new TaskList();
+        tasks.addTask(new Todo("read book"));
+        tasks.markTask(0);
+        tasks.unmarkTask(0);
+
+        assertThrows(IllegalStateException.class, () -> tasks.unmarkTask(0));
+        tasks.undo();
+
+        assertEquals("[T][X] read book", tasks.getTasks().get(0).toString());
+    }
+
+    @Test
     void undo_sixthChange_keepsOnlyFiveUndoStates() {
         TaskList tasks = new TaskList();
         for (int i = 1; i <= 6; i++) {

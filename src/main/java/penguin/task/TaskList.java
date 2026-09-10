@@ -69,9 +69,13 @@ public class TaskList {
      * @param index zero-based index of the task to mark.
      * @return the task after it has been marked as completed.
      * @throws IndexOutOfBoundsException if the index is invalid.
+     * @throws IllegalStateException if the task is already completed.
      */
     public Task markTask(int index) {
         Task task = tasks.get(index);
+        if (task.isDone()) {
+            throw new IllegalStateException("This task is already marked.");
+        }
         saveState();
         task.markDone();
         return task;
@@ -83,9 +87,13 @@ public class TaskList {
      * @param index zero-based index of the task to unmark.
      * @return the task after it has been marked as incomplete.
      * @throws IndexOutOfBoundsException if the index is invalid.
+     * @throws IllegalStateException if the task is already incomplete.
      */
     public Task unmarkTask(int index) {
         Task task = tasks.get(index);
+        if (!task.isDone()) {
+            throw new IllegalStateException("This task is already unmarked.");
+        }
         saveState();
         task.markUndone();
         return task;

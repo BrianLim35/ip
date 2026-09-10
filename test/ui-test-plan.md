@@ -1106,3 +1106,26 @@ bye
 Expected output: Responses use the `Pip:` prefix and the phrases `Ice work!`,
 `Flipper-five!`, `No worries!`, and `Splash!`. The farewell retains the normal
 goodbye and adds `Stay cool and keep making progress!`.
+
+## Test 62: Repeated mark and unmark commands preserve undo history
+
+Aim: Verify that marking an already completed task or unmarking an incomplete
+task is rejected without adding a misleading undo-history entry.
+
+Input:
+
+```text
+todo read book
+mark 1
+mark 1
+undo
+list
+unmark 1
+list
+bye
+```
+
+Expected output: The second `mark` reports that the task is already marked.
+`undo` then reverses the first successful `mark`, so the task is displayed as
+`1. [T][ ] read book`. The following `unmark` reports that the task is already
+unmarked, and the final list still displays `1. [T][ ] read book`.
